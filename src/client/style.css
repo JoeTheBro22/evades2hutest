@@ -114,11 +114,12 @@ canvas {
   align-items: center;
 }
 .serverList {
-    border-radius: 20px;
-    width: 50vw;
-    height: 50vh;
-    background-color: rgb(100, 100, 100);
-    overflow: auto;
+  border-radius: 20px;
+  text-align: center;
+  width: 80vw;
+  height: 60vh;
+  background-color: rgb(100, 100, 100);
+  overflow: auto;
 }
 .serverBox {
     width: 85%;
@@ -136,6 +137,27 @@ canvas {
     padding: 5px;
     font-family: "Exo 2", "Helvetica";
 }
+.heroBox {
+  width: 40%;
+  height: auto;
+  display: -webkit-inline-flex;
+  background-color: rgb(55, 55, 55);
+  font-size: 3vh;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  transition: 1s all;
+  padding: 5px;
+  font-family: "Exo 2", "Helvetica";
+}
+
+/*.heroDesc {
+	position: absolute;
+}*/
+
 .serverBox:hover {
     background-color: rgb(80, 80, 80);
     cursor: pointer;
@@ -149,16 +171,185 @@ canvas {
 .permanent {
   background-color: rgb(20, 20, 20);
 }
+.magmaxDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: rgb(200, 0, 0);
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.magmaxDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.ramesesDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #989b4a;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.ramesesDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.parvDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #9042e3;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.parvDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.ptahDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #665333;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.ptahDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.jotunnDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #5cacff;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.jotunnDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.kindleDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #ed6f3e;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.kindleDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.neuidDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #0d6d82;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.neuidDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.orbitalDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #510a6e;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.orbitalDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.cimexDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #777777;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.cimexDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.janusDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #8ad1bb;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(20, 20, 20);
+  overflow: hidden;
+}
+.janusDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.turrDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #bd8b0d;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.turrDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
 .permanent:hover {
-    background-color: rgb(35, 35, 35);
+  background-color: rgb(35, 35, 35);
 }
 #chatUI {
-    position: fixed;
+    position: absolute;
+    z-index: 2;
     display: block;
     border: none;
     outline: none;
-    left: 0px;
-    top: 0px;
 }
 #chat::-webkit-scrollbar {
     display: none;

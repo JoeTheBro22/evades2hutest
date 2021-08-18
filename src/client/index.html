@@ -19,22 +19,20 @@
         </div>
       </div>
       <div class="joinDiv" style="display: none">
-        <h1>Choose Hero</h1>
+        <h1>Choose hero</h1>
         <div class="serverList"></div>
-        <div class="playDiv">
-          <button class="back">Back</a>
-        </div>
       </div>
       <div class="game" style="display: none">
         <canvas id="canvas" width="1280" height="720" style="z-index: -1"></canvas>
         <div id="chatUI">
           <div id="chat" oncontextmenu="return!1"></div>
-          <input id="chatInput" oncontextmenu="return!1" autocomplete=false></input>
+          <input id="chatInput" oncontextmenu="return!1" autocomplete="off"></input>
         </div>
       </div>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
     <script src="player.js"></script>
     <script src="enemy.js"></script>
+    <script src="projectile.js"></script>
     <script src="lerp.js"></script>
     <script src="client.js"></script>
   </body>

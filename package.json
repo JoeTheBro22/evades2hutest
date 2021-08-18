@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm install express ws uuid path msgpack-lite && node ./src/server/index.js",
+    "start": "node ./src/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "msgpack-lite": "^0.1.26",
     "socket.io": "^4.1.3",
     "uuid": "^8.3.2"
   }

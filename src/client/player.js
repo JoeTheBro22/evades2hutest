@@ -7,17 +7,79 @@ class Player{
     this.area = initPack.area;
     this.world = initPack.world;
     this.hero = initPack.hero;
-
+    this.invincible = initPack.inv;
+    this.radius = 17.14;
+    this.energy = initPack.energy;
+    this.maxEnergy = initPack.maxEnergy;
+    this.baseRadius = this.radius;
+    this.speed = initPack.speed;
+    this.regen = initPack.regen;
+    if (initPack.radius != undefined){
+      this.radius = initPack.radius;
+    }
     if(this.hero == "magmax"){
       this.color = "rgb(200, 0, 0)";
-    }else if(this.hero == "rime"){
-      this.color = "blue";
+    }
+    if(this.hero == "rameses"){
+      this.color = "#989b4a";
+    }
+    if (this.hero == "parvulus"){
+      this.color = "#9042e3";
+    }
+    if(this.hero == "ptah"){
+      this.color = "#665333";
+    }
+    if (this.hero == "jotunn"){
+      this.color = "#5cacff"
+    }
+    if (this.hero == "kindle"){
+      this.color = "#ed6f3e";
+    }
+    if (this.hero == "neuid"){
+      this.color = "#0d6d82";
+    }
+    if (this.hero == "orbital"){
+      this.color = "#510a6e";
+    }
+    if (this.hero == "cimex"){
+      this.color = "#777777";
+    }
+    if(this.hero == "janus"){
+      this.color = "#8ad1bb";
+    }
+    if (this.hero == "turr"){
+      this.color = "#bd8b0d";
+    }
+
+    this.frozen = false;
+
+    if(initPack.newt){
+      this.newtonian = initPack.newt;
     }
 
     this.harden = false;
     this.flow = false;
     
+    if(initPack.clay != undefined){
+      this.clay = initPack.clay;
+    }else{
+      this.clay = 0;
+    }
+    
     this.dead = initPack.dead;
+    
+    if(initPack.dTimer){
+      this.dTimer = initPack.dTimer;
+    }else{
+      this.dTimer = 60;
+    }
+
+    if (initPack.usingZ){
+      this.usingZ = initPack.usingZ;
+    }
+    if (initPack.ret != undefined){
+      this.retaliation = initPack.ret;
+    }
 
     this.renderX = this.x;
     this.renderY = this.y;
@@ -29,17 +91,50 @@ class Player{
     if (updatePack.y != undefined){
       this.y = updatePack.y;
     }
-    if (updatePack.area != undefined){
-      this.area = updatePack.area;
+    if (updatePack.r != undefined){
+      this.radius = updatePack.r;
     }
-    if (updatePack.world != undefined){
-      this.world = updatePack.world;
+    if (updatePack.s != undefined){
+      this.speed = updatePack.s;
     }
-    if (updatePack.dead != undefined){
-      this.dead = updatePack.dead;
+    if (updatePack.uZ != undefined){
+      this.usingZ = updatePack.uZ;
     }
-    if (updatePack.harden != undefined){
-      if(updatePack.harden == true){
+    if (updatePack.a != undefined){
+      this.area = updatePack.a;
+    }
+    if (updatePack.w != undefined){
+      this.world = updatePack.w;
+    }
+    if (updatePack.d != undefined){
+      this.dead = updatePack.d;
+    }
+    if (updatePack.e != undefined){
+      this.energy = updatePack.e;
+    }
+    if (updatePack.max != undefined){
+      this.maxEnergy = updatePack.max;
+    }
+    if (updatePack.inv != undefined){
+      this.invincible = updatePack.inv;
+    }
+    if (updatePack.ret != undefined){
+      this.retaliation = updatePack.ret;
+    }
+    if (updatePack.n != undefined){
+      this.newtonian = updatePack.n;
+    }
+    if (updatePack.regen != undefined){
+      this.regen = updatePack.regen;
+    }
+    if (updatePack.fr != undefined){
+      this.frozen = updatePack.fr;
+    }
+    if (updatePack.dT != undefined){
+      this.dTimer = updatePack.dT;
+    }
+    if (updatePack.h != undefined){
+      if(updatePack.h == true){
         this.color = "rgb(120, 0, 0)";
         this.harden = true;
       }else{
@@ -47,14 +142,17 @@ class Player{
         this.harden = false;
       }
     }
-    if (updatePack.flow != undefined){
-      if(updatePack.flow == true){
+    if (updatePack.f != undefined){
+      if(updatePack.f == true){
         this.color = "rgb(250, 100, 100)";
         this.flow = true;
       }else{
         this.color = "rgb(200, 0, 0)";
         this.flow = false;
       }
+    }
+    if (updatePack.c != undefined){
+      this.clay = updatePack.c;
     }
 
     if(this.hero == "magmax"){
@@ -65,6 +163,36 @@ class Player{
       }else{
         this.color = "rgb(200, 0, 0)";
       }
+    }
+    if(this.hero == "rameses"){
+      this.color = "#989b4a";
+    }
+    if (this.hero == "parvulus"){
+      this.color = "#9042e3";
+    }
+    if(this.hero == "ptah"){
+      this.color = "#665333";
+    }
+    if (this.hero == "jotunn"){
+      this.color = "#5cacff"
+    }
+    if (this.hero == "kindle"){
+      this.color = "#ed6f3e";
+    }
+    if (this.hero == "neuid"){
+      this.color = "#0d6d82";
+    }
+    if (this.hero == "orbital"){
+      this.color = "#510a6e";
+    }
+    if (this.hero == "cimex"){
+      this.color = "#777777";
+    }
+    if(this.hero == "janus"){
+      this.color = "#8ad1bb";
+    }
+    if (this.hero == "turr"){
+      this.color = "#bd8b0d";
     }
     if(this.dead){
       this.color = "black";

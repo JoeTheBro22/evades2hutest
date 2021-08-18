@@ -1,0 +1,415 @@
+let areaBoundaries = { x: 342.86, y: 0, width: 3085.74, height: 514.29 };
+
+function circular_move(x, y, r, a) {
+	a *= Math.PI / 180;
+	let px = x + r * Math.cos(a);
+	let py = y + r * Math.sin(a);
+	return { x: px, y: py }
+}
+
+class Projectile {
+	constructor(options) {
+		Object.assign(this, options);
+		this.killed = false;
+		this.toInit = true;
+		this.vx = Math.cos(this.angle) * this.speed;
+		this.vy = Math.sin(this.angle) * this.speed;
+		this.spawnx = this.x;
+		this.spawny = this.y;
+		this.lastRadius = this.radius;
+    this.baseRadius = this.radius;
+		this.exploding = false;
+		if (this.type == "clay" || this.type == "guard" || this.type == "portal") {
+			this.touched = [];
+		}
+		if (this.type == "portal") {
+			this.x += this.vx;
+			this.y += this.vy;
+			this.x = Math.min(Math.max(0, this.x), areaBoundaries.width + areaBoundaries.x * 2);
+			this.y = Math.min(Math.max(0, this.y), areaBoundaries.height);
+		}
+		if (this.type == "kindleBomb") {
+			this.life = 3000;
+			this.explodeTime = 350;
+		}
+		else if (this.type == "portal") {
+			this.life = 8000;
+		} else if(this.type == "octoBullet"){
+			this.life = 3000;
+		} else {
+			this.life = Infinity;
+		}
+		if (this.type == "portalBomb") {
+			this.explodeTime = 150;
+		}
+    if (this.type == "turr"){
+      this.life = 10000;
+      this.reload = 100;
+      this.emergencyTimer = 1000;
+      this.angle = 0;
+      this.lastEmergency = false;
+    }
+    if (this.type == "turrBullet"){
+      this.life = 2000;
+      this.touched = [];
+    }
+		this.growSpeed = 1;
+	}
+	getUpdatePack() {
+		let pack = {
+			x: Math.round(this.x * 50) / 50,
+			y: Math.round(this.y * 50) / 50,
+			id: this.id
+		};
+		if (this.killed == true) {
+			pack.k = true;
+		}
+		if (this.radius != this.lastRadius) {
+			pack.r = this.radius;
+		}
+    if (this.angle != undefined){
+      pack.a = this.angle;
+    }
+    if (this.emergency != undefined){
+      pack.e = this.emergency;
+    }
+		return pack;
+	}
+	getInitPack() {
+		let pack = {
+			x: Math.round(this.x * 50) / 50,
+			y: Math.round(this.y * 50) / 50,
+			radius: this.radius,
+			type: this.type,
+			area: this.area,
+			world: this.world,
+			id: this.id
+		};
+    if (this.angle != undefined){
+      pack.a = this.angle;
+    }
+    if (this.emergency != undefined){
+      pack.e = this.emergency;
+    }
+		this.toInit = false;
+		return pack
+	}
+	update(delta, players, enemies, projectiles) {
+		if (this.type == "portal" && this.toInit == true) {
+			for (let p of Object.keys(players)) {
+				const player = players[p];
+				if (player.dead == false) {
+					this.touched.push(player);
+				}
+			}
+		}
+		this.lastRadius = this.radius;
+		if (!['portal'].includes(this.type)) {
+			if (this.type == "kindleBomb") {
+				if (!this.exploding) {
+					this.x += this.vx * delta / 30;
+					this.y += this.vy * delta / 30;
+				}
+			}
+			else {
+				this.x += this.vx * delta / 30;
+				this.y += this.vy * delta / 30;
+			}
+		}
+		this.life -= delta;
+		if (this.life < 0) {
+			if (this.type != "kindleBomb") {
+				this.killed = true;
+			}
+			else {
+				this.exploding = true;
+			}
+		}
+		if (!['guard', 'web', 'portal', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
+			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
+				if (this.type != "kindleBomb") {
+					this.killed = true;
+				}
+				else {
+					this.exploding = true;
+				}
+			}
+		}
+		if (['sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
+			if (this.x - this.radius < 342.86 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 - 342.86 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
+				this.killed = true;
+			}
+		}
+
+		switch (this.type) {
+			case "clay": {
+				for (let p of Object.keys(players)) {
+					const player = players[p];
+					if (player.inGame && player.area == this.area && player.world == this.world && player.clay == 0 && player.dead == false && player.id != this.parentId && player.hero != "rameses" && player.permaNewtonian == false) {
+						if (Math.sqrt((player.pos.x - this.x) ** 2 + (player.pos.y - this.y) ** 2) < player.radius + player.clay * 2 + this.radius) {
+							player.clay = 1;
+							player.pushClay = true;
+							this.killed = true;
+						}
+					}
+				}
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (this.touched.find(e => e.id == this.id) == undefined) {
+						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && this.type != "wall") {
+							enemy.frozen = 2500;
+							this.touched.push(enemy);
+							players[this.parentId].timer += players[this.parentId].clayTime / 3;
+						}
+					}
+				}
+				if (Math.sqrt((this.spawnx - this.x) ** 2 + (this.spawny - this.y) ** 2) >= 1000) {
+					this.killed = true;
+				}
+				break;
+			}
+      case "turr": {
+        this.reload -= delta;
+        let min = 600;
+        let enemyId = null;
+        for(let i of Object.keys(enemies)){
+          const enemy = enemies[i];
+          if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < min && !enemy.immune && (enemy.deadTime < 0 || enemy.disableTime < 0)) {
+            min = Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2);
+            enemyId = i;
+          }
+        }
+        if (enemyId != null){
+          this.angle = Math.atan2(enemies[enemyId].y - this.y, enemies[enemyId].x - this.x);
+        }
+        if (this.reload < 0 && enemyId != null){
+          this.reload = 1600;
+          let angle = Math.atan2(enemies[enemyId].y - this.y, enemies[enemyId].x - this.x);
+          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle,  this.world, this.area, projectiles, null);
+          if (this.emergency){
+          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle + 0.15,  this.world, this.area, projectiles, null);
+          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle - 0.15,  this.world, this.area, projectiles, null);
+          }
+        }
+        if (this.emergency == true){
+          this.emergencyTimer -= delta;
+          this.reload -= delta * 6;
+          if (this.emergencyTimer < 0){
+            this.killed = true;
+          }
+        }
+        break;
+      }
+      case "turrBullet": {
+        for(let i of Object.keys(enemies)){
+          const enemy = enemies[i];
+          if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune && (enemy.deadTime < 0 || enemy.disableTime < 0)) {
+            if (enemy.deadTime < 3000){
+              enemy.deadTime = 3000;
+            }
+            if (enemy.disableTime < 3000){
+              enemy.disableTime = 3000;
+            }
+            this.touched.push(0);
+            if (this.touched.length > 1){
+              this.killed = true;
+            }
+          }
+        }
+        break;
+      }
+			case "sniperBullet":
+			case "octoBullet": {
+				for (let i of Object.keys(players)) {
+					if (players[i].clay > 0) {
+						if (players[i].inGame && players[i].op != true && players[i].harden == false) {
+							if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true) {
+								if (players[i].invincible == false) {
+									players[i].invincible = true;
+									players[i].clayTimer = 200;
+									players[i].clay = Math.max(players[i].clay - 1, 0);
+									players[i].pushClay = true;
+									this.killed = true;
+								}
+							}
+						}
+					} else {
+						if (players[i].inGame && players[i].op != true && players[i].harden == false && players[i].dead == false) {
+							if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + this.radius && players[i].retaliating != true) {
+								if (players[i].invincible == false) {
+									players[i].dead = true;
+									players[i].deadChanged = true;
+									this.killed = true;
+								} else {
+									players[i].bandage = false;
+									this.killed = true;
+								}
+							}
+						}
+					}
+				}
+				break;
+			}
+			case "iceSniperBullet": {
+				for (let i of Object.keys(players)) {
+					if (players[i].inGame && players[i].op != true && players[i].dead == false) {
+						if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true && players[i].harden == false) {
+							players[i].frozen = Math.max(players[i].frozen, 1000);
+							players[i].frozenChanged = true;
+							this.killed = true;
+						}
+					}
+				}
+				break;
+			}
+    		case "regenSniperBullet": {
+				for (let i of Object.keys(players)) {
+					if (players[i].inGame && players[i].op != true && players[i].dead == false) {
+						if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true) {
+							this.killed = true;
+						}
+					}
+				}
+				break;
+			}
+    		case "speedSniperBullet": {
+				for (let i of Object.keys(players)) {
+					if (players[i].inGame && players[i].op != true && players[i].dead == false) {
+						if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true) {
+							this.killed = true;
+						}
+					}
+				}
+				break;
+			}
+			case "kindleBomb": {
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius) {
+						this.exploding = true;
+					}
+				}
+				if (this.exploding) {
+					this.radius += delta / 1.5;
+					this.explodeTime -= delta;
+					if (this.explodeTime < 0) {
+						this.killed = true;
+					}
+					for (let e of Object.keys(enemies)) {
+						const enemy = enemies[e];
+						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius) {
+							if (enemy.deadTime < 3000) {
+								enemy.deadTime = 3000;
+							}
+							if (enemy.disableTime < 7000) {
+								enemy.disableTime = 7000;
+							}
+						}
+					}
+				}
+				break;
+			}
+			case "portalBomb": {
+				this.radius += delta;
+				this.explodeTime -= delta;
+				if (this.explodeTime < 0) {
+					this.killed = true;
+				}
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius) {
+						enemy.deadTime = Math.max(4000, enemy.deadTime);
+					}
+				}
+				break;
+			}
+			case "web": {
+				if (this.radius <= 299) {
+					this.radius += delta / 55 * this.growSpeed;
+					if (this.radius < 100) {
+						this.growSpeed += delta / 300;
+					}
+					if (this.radius > 200) {
+						this.growSpeed -= delta / 450;
+					}
+				}
+				if (this.radius > 300) {
+					this.radius = 300;
+				}
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.immune != true) {
+						enemy.web = true;
+					}
+				}
+				break;
+			}
+			case "guard": {
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				let speed = 10;
+				if (parent.guardAlertTimer > 0) speed = 30;
+				this.angle = (this.angle + speed * delta / 45) % 360;
+				let pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
+				this.x = pos.x;
+				this.y = pos.y;
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.type != "wall" && enemy.deadTime <= 0) {
+						enemy.deadTime = Math.max(enemy.deadTime, 1500);
+						this.touched.push(0);
+					}
+				}
+				if (this.touched.length > 23) this.killed = true;
+				break;
+			}
+			case "portal": {
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true
+				} else {
+					const pair = parent.portals.find(e => e.id != this.id);
+
+        			if  (pair != undefined)  {
+
+						  for (let p of Object.keys(players)) {
+							  const player = players[p];
+							  if (Math.sqrt((player.pos.x - this.x) ** 2 + (player.pos.y - this.y) ** 2) < player.radius + player.clay * 2 + this.radius) {
+								  if (player.inGame && player.area == this.area && player.world == this.world && this.touched.find(e => e.id == player.id) == undefined) {
+									  this.touched.push(player);
+									  player.pos.x = pair.x;
+									  player.pos.y = pair.y;
+									  pair.touched.push(player);
+								  }
+							  } else {
+								  this.touched = this.touched.filter(e => e.id != player.id);
+							  }
+						  }
+          }
+        }
+        break;
+      }
+      default: break;
+    }
+  }
+}
+
+let projectileId = 0;
+
+function createProjectile(x, y, type, radius, speed, angle, world, area, projectiles, parentId) {
+  let newProjectile = new Projectile({ x: x, y: y, type: type, radius: radius, speed: speed, angle: angle, world: world, area: area, id: projectileId, parentId: parentId })
+
+  projectiles[world][area].push(newProjectile);
+  projectileId++;
+  if(projectileId > 9999){
+    projectileId = 0;
+  }
+  return newProjectile;
+}
+
+module.exports = {
+  Projectile, createProjectile
+}

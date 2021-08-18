@@ -3,7 +3,7 @@ function lerp(start, end, delta){
 }
 
 let _delta = 0;
-const server_delta = 1/45;
+const server_delta = 1/30;
 function get_delta(delta){
 	return Math.min((performance.now() - delta) / server_delta, 1);
 }
