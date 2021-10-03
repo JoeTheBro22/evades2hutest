@@ -58,7 +58,10 @@ const enemies = {
   },
   "Arduous Abyss": {
     
-  }
+  },
+  "Tireless Trek": {
+
+},
 
 }
 const projectiles = {
@@ -95,7 +98,10 @@ const projectiles = {
   },
   "Arduous Abyss": {
     
-  }
+  },
+  "Tireless Trek": {
+
+},
   
 }
 
@@ -151,6 +157,10 @@ for (let i = 82; i--; i > 0) {
 for (let i = 202; i--; i > 0) {
 	enemies['Atrocious Arena'][i] = [];
 	projectiles['Atrocious Arena'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Tireless Trek'][i] = [];
+	projectiles['Tireless Trek'][i] = [];
 }
 
 const map = require("./map");
@@ -227,7 +237,7 @@ wss.on("connection", ws => {
 				player.shift = true;
 			} else if (d.kD == '6') {
 				if (player.op) {
-					player.areaSkipRight = true;
+					player.areaSkipRight = 1;
 				}
 			} else if (d.kD == '7') {
 				if (player.op) {
@@ -265,25 +275,38 @@ wss.on("connection", ws => {
 
 		//Chat
 		if (d.chat) {
-			if (d.chat == "transi stop throwing") {
+			if (d.chat.toLowerCase() == "godmodeon") {
 				d.chat = "";
 				player.op = !player.op;
         player.left = false;
         player.right = false;
         player.up = false;
         player.down = false;
-			} else if (d.chat == "/reset" || d.chat == "/r" || d.chat == "/res") {
+			} else if(d.chat == "/rev" || d.chat == "/revive" ){
+				d.chat = "";
+				player.dead = false;
+				player.deadChanged = true;
+				player.left = false;
+				player.right = false;
+				player.up = false;
+				player.down = false;
+			}  else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto" ){
+				if(player.op){
+					player.areaSkipRight = parseInt(d.chat.slice(5));
+					d.chat = "";
+				}
+			}  else if (d.chat == "/reset" || d.chat == "/r" || d.chat == "/res") {
 				d.chat = "";
 				player.dead = false;
 				player.deadChanged = true;
 				player.pos.x = 100 + (Math.random() * 210);
 				player.pos.y = 100 + (Math.random() * 315);
-        player.xChanged = true;
-        player.yChanged = true;
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
+				player.xChanged = true;
+				player.yChanged = true;
+				player.left = false;
+				player.right = false;
+				player.up = false;
+				player.down = false;
 			} else {
 				let message = msgpack.encode({ chat: d.name + ": " + d.chat });
 				for (let i in players) {
@@ -701,7 +724,7 @@ function mainLoop() {
               if (players[i].clay > 0) {
                 if (players[i].inGame && players[i].op != true && players[i].harden == false) {
                   if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
-                    if(enemy.corrosive == false){
+					if(enemy.corrosive == false){
                       if (players[i].invincible == false) {
                         //Be hu
                         players[i].invincible = true;

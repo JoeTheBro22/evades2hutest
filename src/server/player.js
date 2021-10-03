@@ -43,7 +43,7 @@ class Player {
 		this.projectileUpdatePack = [];
 		this.projectileRemovePack = [];
 		this.lastVel = { x: 0, y: 0 }
-		this.op = true;
+		this.op = false;
 		if (this.op) {
 			this.speed = 17;
 			this.maxSpeedReached = true;
@@ -54,7 +54,7 @@ class Player {
 		this.speedMult = 1;
 		this.disabled = false;
 		this.areaSkipLeft = false;
-		this.areaSkipRight = false;
+		this.areaSkipRight = 0;
 		this.hero = "";
 		this.x = false;
 		this.worldTeleported = false;
@@ -90,7 +90,7 @@ class Player {
 		this.lastvx = 0;
 		this.lastvy = 0;
 		this.speedChanged = false;
-    this.deathTimer = 60;
+    	this.deathTimer = 60;
 		// Ptah
 
 		this.clay = 0;
@@ -443,22 +443,17 @@ class Player {
 			this.areaSkipLeft = false;
 		}
 
-		if (this.areaSkipRight) {
-			this.pos.x = 2674.29 + 1028.6 - this.radius;
-			this.areaSkipRight = false;
-		}
-
-		if (this.areaSkipTen) {
+		if (this.areaSkipRight > 0) {
 			this.oldArea = this.area;
-      this.area = Number(this.area) + Number(9);
-      this.teleported = true;
-      this.maxSpeedReached = true;
-      this.speed = 17;
-      this.regen ++;
-      this.maxEnergy += 40;
-      this.speedChanged = true;
+			this.area = Number(this.area) + Number(this.areaSkipRight-1);
+			this.teleported = true;
+			this.maxSpeedReached = true;
+			this.speed = 17;
+			this.regen ++;
+      		this.maxEnergy += 4*this.areaSkipRight;
+      		this.speedChanged = true;
 			this.pos.x = 2674.29 + 1028.6;
-			this.areaSkipTen = false;
+			this.areaSkipRight = 0;
 		}
 
 		//Collisions:
@@ -485,7 +480,7 @@ class Player {
 			this.teleported = true;
 		}
 
-		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery") {
+		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek') {
 			if (this.area < 41) {
 				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
 					//GOes to the start of the next area (area is not victory)
@@ -612,7 +607,6 @@ class Player {
 				}
 			}
 		}
-
 		if (this.pos.x - this.radius < 342.86 && this.area == 1) {
 			//If area is one and it can collide with teleporters to switch world: (will need to change this when new worlds come into play)
 
@@ -631,6 +625,7 @@ class Player {
 				if (this.world == this.oldWorld) {
 					this.world = "Corrupted Core";
 				}
+
 			} else if (this.pos.y + this.radius > 445.72) {
 				this.pos.y = 68.57 + this.radius;
 				this.oldWorld = this.world;

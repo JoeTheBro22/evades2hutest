@@ -131,6 +131,7 @@ let crazycosmos = false;
 let crazycosmoshard = false;
 let crowdedcavern = false;
 let strangespace = false;
+let tirelesstrek = false;
 let monumentalmigration = false;
 let monumentalmigrationplus = false;
 let toilsometraverse = false;
@@ -204,6 +205,7 @@ function renderGame() {
   crazycosmoshard = false;
   crowdedcavern = false;
   strangespace = false;
+  tirelesstrek = false;
   toilsometraverse = false;
   becomesus = false;
   atrociousarena = false;
@@ -279,6 +281,8 @@ function renderGame() {
         ctx.fillStyle = "#3eed72";
       } else if (world == "Strange Space") {
         ctx.fillStyle = "#3338a3";
+      }  else if (world == "Tireless Trek") {
+        ctx.fillStyle = "#a591a8";
       } else {
         ctx.fillStyle = "white";
       }
@@ -321,6 +325,7 @@ function renderGame() {
         ctx.fillStyle = "#665333";
         ctx.fillText("Ptah", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Ptah", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = "black";
       }
       if (player.hero == "jotunn") {
         ctx.fillStyle = "#5cacff";
@@ -559,6 +564,26 @@ function renderGame() {
             const p = players[j];
 
             if (p.world == "Strange Space") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
+      else if (player.world == "Tireless Trek") {
+        ctx.font = "22px 'Exo 2'";
+        tirelesstrek = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Tireless Trek") {
               playerCount++;
               ctx.font = "18px 'Exo 2'";
               if (p.dead == false) {
@@ -1024,6 +1049,32 @@ function renderGame() {
       }
     }
   }
+  if (tirelesstrek == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Tireless Trek") {
+          playerCount++;
+          if (tirelesstrek == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            tirelesstrek = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
   if (monumentalmigration == false) {
     for (let j in players) {
       if (players[j].id != selfId) {
@@ -1305,6 +1356,12 @@ function renderGame() {
         ctx.fillStyle = "rgb(200,0,0)";
       } else if (enemies[i].type == "slippery") {
         ctx.fillStyle = "#1aacbf";
+      } else if (enemies[i].type == "tpstart") {
+        ctx.fillStyle = "#4d1c4b";
+      } else if (enemies[i].type == "playershield") {
+        ctx.fillStyle = "#43e6d2";
+      } else if (enemies[i].type == "lifeswitcher") {
+        ctx.fillStyle = "#0dbd19";
       } else if (enemies[i].type == "sneaky") {
         ctx.fillStyle = "#574d45";
       } else if (enemies[i].type == "draining") {
@@ -1346,7 +1403,7 @@ function renderGame() {
       }
       else {
         ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
-        console.log(enemies[i].type);
+        //console.log(enemies[i].type);
       }
       if (enemies[i].shattered <= 0) {
         ctx.beginPath();
@@ -1509,7 +1566,7 @@ function renderGame() {
         }
         else {
           ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
-          console.log(projectiles[i].type);
+          //console.log(projectiles[i].type);
         }
         ctx.fill();
         ctx.closePath();

@@ -2,13 +2,13 @@ const CORRUPTED_CORE = {
 	"index": 0,
 	"1": [{
 		type: "normal",
-		amount: 40,
-		radius: 18,
-		speed: 10
+		amount: 20,
+		radius: 10,
+		speed: 8
 	}],
 	"2": [{
 		type: "normal",
-		amount: 12,
+		amount: 10,
 		radius: 18,
 		speed: 5
 	}],
