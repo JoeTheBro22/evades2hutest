@@ -102,6 +102,22 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+
+  if (message.ab1cd) {
+    for (let i in message.ab1cd) {
+      if (players[message.ab1cd[i].id]) {
+        players[message.ab1cd[i].id].updatePack(message.ab1cd[i]);
+      }
+    }
+  }
+
+  if (message.ab2cd) {
+    for (let i in message.ab2cd) {
+      if (players[message.ab2cd[i].id]) {
+        players[message.ab2cd[i].id].updatePack(message.ab2cd[i]);
+      }
+    }
+  }
   if (message.prr) {
     projectiles = {};
   }
@@ -215,8 +231,6 @@ function renderGame() {
     players[i].interp(delt);
     if (players[i].id == selfId) {
       const player = players[i];
-
-
       ctx.fillStyle = "#333333";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       playername = player.name;
@@ -301,7 +315,7 @@ function renderGame() {
 
       //Hero Card
       ctx.fillStyle = "rgba(150,150,150,0.4)";
-      ctx.fillRect(canvas.width - 200, canvas.height - 170, 175, 145);
+      ctx.fillRect(canvas.width - 200, canvas.height - 200, 175, 200);
 
       ctx.font = "30px 'Exo 2'";
       ctx.strokeStyle = "black";
@@ -310,37 +324,97 @@ function renderGame() {
         ctx.fillStyle = "red";
         ctx.fillText("Magmax", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Magmax", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
+        ctx.font = "30px 'Exo 2'";
       }
       if (player.hero == "rameses") {
         ctx.fillStyle = "#989b4a";
         ctx.fillText("Rameses", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Rameses", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+      }
+      if (player.hero == "orbital") {
+        ctx.fillStyle = "#510a6e";
+        ctx.fillText("Orbital", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Orbital", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#510a6e';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/30000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/3000, 10);
       }
       if (player.hero == "parvulus") {
         ctx.fillStyle = "#9042e3";
         ctx.fillText("Parvulus", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Parvulus", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.beginPath();
+        ctx.arc(canvas.width - 150, canvas.height - 20, 17.14, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.arc(canvas.width - 75, canvas.height - 20, 17.14, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.fillStyle = "#9042e3";
+        ctx.beginPath();
+        ctx.arc(canvas.width - 150, canvas.height - 20, player.radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.arc(canvas.width - 75, canvas.height - 20, player.radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
       }
       if (player.hero == "ptah") {
         ctx.fillStyle = "#665333";
         ctx.fillText("Ptah", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Ptah", canvas.width - 110, canvas.height - 140);
-        ctx.fillStyle = "black";
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = "#665333";
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.clay/4, 10);
       }
       if (player.hero == "jotunn") {
         ctx.fillStyle = "#5cacff";
         ctx.fillText("Jotunn", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Jotunn", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#5cacff';
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
       }
       if (player.hero == "kindle") {
         ctx.fillStyle = "#ed6f3e";
         ctx.fillText("Kindle", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Kindle", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#ed6f3e';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/9000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
       }
       if (player.hero == "neuid") {
         ctx.fillStyle = "#0d6d82";
         ctx.fillText("Neuid", canvas.width - 110, canvas.height - 140);
         ctx.strokeText("Neuid", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#0d6d82';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/8000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/20000, 10);
       }
 
       ctx.fillStyle = "black";
@@ -1765,9 +1839,8 @@ const janusDiv = document.createElement("div");
 janusDiv.hero = "janus";
 janusDiv.classList.add(`heroBox`);
 janusDiv.innerText = `Janus
-First ability 30 cost
-Second ability 20 cost
-Tronsi will write description once he stops throwing.
+Portal: creates a portal that players but not enemies can cross through. Costs 30 energy
+Malfunction: causes the portals to explode, killing nearby enemes. Costs 20 energy.
 `;
 janusDiv.classList.add('janusDiv');
 janusDiv.onclick = () => {
@@ -1823,7 +1896,9 @@ const KEY_TO_ACTION = {
   "arrowup": "1",
   "arrowleft": "2",
   "arrowdown": "3",
-  "arrowright": "4"
+  "arrowright": "4",
+  "v": "11",
+  "b": "12",
 }
 
 document.onkeydown = function (e) {

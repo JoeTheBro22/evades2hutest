@@ -14,6 +14,8 @@ class Player{
     this.baseRadius = this.radius;
     this.speed = initPack.speed;
     this.regen = initPack.regen;
+    this.ability1cooldown = initPack.ab1cd;
+    this.ability2cooldown = initPack.ab2cd;
     if (initPack.radius != undefined){
       this.radius = initPack.radius;
     }
@@ -117,6 +119,12 @@ class Player{
     }
     if (updatePack.inv != undefined){
       this.invincible = updatePack.inv;
+    }
+    if (updatePack.ab1cd != undefined){
+      this.ability1cooldown = updatePack.ab1cd;
+    }
+    if (updatePack.ab2cd != undefined){
+      this.ability2cooldown = updatePack.ab2cd;
     }
     if (updatePack.ret != undefined){
       this.retaliation = updatePack.ret;

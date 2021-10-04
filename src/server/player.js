@@ -233,6 +233,16 @@ class Player {
       sendId = true;
     }
 
+	if(this.ability1cooldown > 0 && this.ability1cooldown != undefined){
+		pack.ab1cd = this.ability1cooldown;
+		sendId = true;
+	}
+
+	if(this.ability2cooldown > 0 && this.ability2cooldown != undefined){
+		pack.ab2cd = this.ability2cooldown;
+		sendId = true;
+	}
+
     if(sendId){
       pack.id = this.id;
     }
@@ -251,9 +261,11 @@ class Player {
 			dead: this.dead,
 			inv: this.invincible,
 			speed: this.speed,
-      energy: this.energy,
-      maxEnergy: this.maxEnergy,
-      regen: this.regen
+			ab1cd: this.ability1cooldown,
+			ab2cd: this.ability2cooldown,
+			energy: this.energy,
+			maxEnergy: this.maxEnergy,
+			regen: this.regen
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -449,7 +461,7 @@ class Player {
 			this.teleported = true;
 			this.maxSpeedReached = true;
 			this.speed = 17;
-			this.regen ++;
+			this.regen+=this.areaSkipRight;
       		this.maxEnergy += 4*this.areaSkipRight;
       		this.speedChanged = true;
 			this.pos.x = 2674.29 + 1028.6;
@@ -907,7 +919,8 @@ class Player {
 					}
 				}
 				if (used) {
-          this.energy -= 30;
+          			this.energy -= 30;
+					this.ability2cooldown = 100;
 					this.timer = 6000;
 				}
 			}
@@ -1017,7 +1030,7 @@ class Player {
 			}
 			if (this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy >= 20) {
         this.energy -= 20;
-				this.ability1cooldown = 30000;
+				this.ability1cooldown = 100; //30000
 				this.oradius = 0;
 				this.destoRadius = 150;
 				for (let guard of this.guards) {
