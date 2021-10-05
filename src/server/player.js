@@ -243,6 +243,11 @@ class Player {
 		sendId = true;
 	}
 
+	if(this.mousePos != undefined){
+		pack.msp = this.mousePos;
+		sendId = true;
+	}
+
     if(sendId){
       pack.id = this.id;
     }
@@ -265,7 +270,8 @@ class Player {
 			ab2cd: this.ability2cooldown,
 			energy: this.energy,
 			maxEnergy: this.maxEnergy,
-			regen: this.regen
+			regen: this.regen,
+			msp: this.mousePos,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -410,8 +416,10 @@ class Player {
 
 		if (this.shift) {
 			//Shift (slows hero by 2)
-			this.vel.x /= 2;
-			this.vel.y /= 2;
+			//this.vel.x /= 2;
+			//this.vel.y /= 2;
+			this.vel.x = 0;
+			this.vel.y = 0;
 		}
 
 		if (this.speedMult != 1) {
@@ -631,6 +639,9 @@ class Player {
 				for (let i of Object.keys(map)) {
 					if (map[i].index == currentWorldIndex + 1) {
 						this.world = i;
+						if(this.hero == 'orbital'){
+							this.ability1cooldown = 0;
+						}
 						break;
 					}
 				}
@@ -645,6 +656,9 @@ class Player {
 				for (let i of Object.keys(map)) {
 					if (map[i].index == currentWorldIndex - 1) {
 						this.world = i;
+						if(this.hero == 'orbital'){
+							this.ability1cooldown = 0;
+						}
 						break;
 					}
 				}
@@ -1026,11 +1040,11 @@ class Player {
 			if (this.guardAlertTimer <= 0) {
 				this.destoRadius = 150;
 			} else {
-				this.destoRadius = 50;
+				this.destoRadius = 40;
 			}
 			if (this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy >= 20) {
         this.energy -= 20;
-				this.ability1cooldown = 100; //30000
+				this.ability1cooldown = 30000;
 				this.oradius = 0;
 				this.destoRadius = 150;
 				for (let guard of this.guards) {
@@ -1038,8 +1052,10 @@ class Player {
 				}
 				this.guards = [];
 				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 0, this.world, this.area, projectiles, this.id));
-				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 120, this.world, this.area, projectiles, this.id));
-				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 240, this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 72, this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 144, this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 216, this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 288, this.world, this.area, projectiles, this.id));
 			}
 			if (this.x && this.ability2cooldown <= 0 && this.guards.length > 0 && this.dead == false && this.energy >= 5) {
         this.energy -= 5;

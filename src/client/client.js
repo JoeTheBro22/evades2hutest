@@ -111,6 +111,14 @@ ws.addEventListener("message", function (data) {
     }
   }
 
+  if (message.msp) {
+    for (let i in message.msp) {
+      if (players[message.msp[i].id]) {
+        players[message.msp[i].id].updatePack(message.msp[i]);
+      }
+    }
+  }
+
   if (message.ab2cd) {
     for (let i in message.ab2cd) {
       if (players[message.ab2cd[i].id]) {
@@ -333,6 +341,19 @@ function renderGame() {
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
         ctx.font = "30px 'Exo 2'";
       }
+      if (player.hero == "gunslinger") {
+        ctx.fillStyle = "#2b2b2b";
+        ctx.fillText("Gunslinger", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Gunslinger", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
+        ctx.font = "30px 'Exo 2'";
+      }
       if (player.hero == "rameses") {
         ctx.fillStyle = "#989b4a";
         ctx.fillText("Rameses", canvas.width - 110, canvas.height - 140);
@@ -383,6 +404,10 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = "#665333";
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.clay/4, 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
+        ctx.font = "30px 'Exo 2'";
       }
       if (player.hero == "jotunn") {
         ctx.fillStyle = "#5cacff";
@@ -1813,7 +1838,7 @@ const orbitalDiv = document.createElement("div");
 orbitalDiv.hero = "orbital";
 orbitalDiv.classList.add(`heroBox`);
 orbitalDiv.innerText = `Orbital 
-Guardian: Creates 3 guards which orbit around you and destroy any enemy it touches for 1.5s. It can kill 24 enemies each before dying. Cooldown 30s. Costs 20 energy.
+Guardian: Creates 5 guards which orbit around you and destroy any enemy it touches for 1.5s. It can kill 24 enemies each before dying. Cooldown 30s. Costs 20 energy.
 Emergency: Guards become closer to you and orbit much faster for 1.5 seconds. Cooldown 3s. Costs 5 energy.`;
 orbitalDiv.classList.add('orbitalDiv');
 orbitalDiv.onclick = () => {
@@ -1861,6 +1886,18 @@ turrDiv.onclick = () => {
   init('turr');
 }
 serverList.appendChild(turrDiv);
+
+const gunslingerDiv = document.createElement("div");
+gunslingerDiv.hero = "Gunslinger";
+gunslingerDiv.classList.add(`heroBox`);
+gunslingerDiv.innerText = `gunslinger
+Shoot (passive): Your mouse will kill and disable any enemy that touches it. You can still use this ability when downed
+`;
+gunslingerDiv.classList.add('gunslingerDiv');
+gunslingerDiv.onclick = () => {
+  init('gunslinger');
+}
+serverList.appendChild(gunslingerDiv);
 
 function Resize() {
   let scale = window.innerWidth / canvas.width;
@@ -1940,11 +1977,7 @@ function getCursorPosition(canvas, event) {
 
   mouseX = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
   mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
-
-  if (mouseToggleC == 2) {
-    ws.send(msgpack.encode({ mp: [mouseX, mouseY] }));
-    //socket.emit('mousePos',{x: mouseX, y: mouseY});
-  }
+  ws.send(msgpack.encode({ mp: [mouseX, mouseY] }));
 }
 window.addEventListener('mousedown', function (e) {
   clicked = true;

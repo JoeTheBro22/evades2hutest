@@ -2,9 +2,9 @@ const CORRUPTED_CORE = {
 	"index": 0,
 	"1": [{
 		type: "normal",
-		amount: 20,
-		radius: 10,
-		speed: 8
+		amount: 10,
+		radius: 15,
+		speed: 2
 	}],
 	"2": [{
 		type: "normal",

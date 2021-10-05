@@ -350,8 +350,11 @@ class Projectile {
 					this.killed = true;
 					break;
 				}
+				if(this.area != players[this.parentId].area || this.world != players[this.parentId].world){
+					console.log("aha!");
+				}
 				let speed = 10;
-				if (parent.guardAlertTimer > 0) speed = 30;
+				if (parent.guardAlertTimer > 0) speed = 50;
 				this.angle = (this.angle + speed * delta / 45) % 360;
 				let pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
 				this.x = pos.x;

@@ -574,7 +574,6 @@ class Enemy {
 					const player = players[p];
 					if (player.area == this.area && player.world == this.world) {
 						let _dist = distance(player.pos.x, player.pos.y, this.x, this.y)
-						//console.log(this.auraRadius);
 						if (_dist < player.radius + this.aura) {
 							if (player.pos.x - player.radius > 342.86 && player.pos.x + player.radius < 3085.74 + 342.86) {
 								if (this.type == "slower") {

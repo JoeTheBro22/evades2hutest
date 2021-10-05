@@ -324,7 +324,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -546,10 +546,9 @@ function mainLoop() {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
-									if (projectile.area == players[j].area && projectile.world == players[j].world) {
-										let initPack = projectile.getInitPack();
-										players[j].projectileInitPack.push(initPack);
-									}
+									let initPack = projectile.getInitPack();
+									players[j].projectileInitPack.push(initPack);
+
 								}
 							}
 						}
@@ -721,6 +720,22 @@ function mainLoop() {
               players[i].enemyUpdatePack.push(enemy.getUpdatePack());
 
               //Collision with player
+			  let canvas = { width: 1280, height: 720 };
+			  let mx = -canvas.width / 2 + players[i].mousePos.x + players[i].pos.x;
+			  let my = -canvas.height / 2 + players[i].mousePos.y + players[i].pos.y;
+			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].hero == 'gunslinger') {
+				if (enemy.deadTime < 3000){
+					enemy.deadTime = 3000;
+				  }
+				  if (enemy.disableTime < 3000){
+					enemy.disableTime = 3000;
+				  }
+				  this.touched = [];
+				  this.touched.push(0);
+				  if (this.touched.length > 1){
+					this.killed = true;
+				  }
+			  }
               if (players[i].clay > 0) {
                 if (players[i].inGame && players[i].op != true && players[i].harden == false) {
                   if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {

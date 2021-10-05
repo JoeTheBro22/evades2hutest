@@ -16,6 +16,7 @@ class Player{
     this.regen = initPack.regen;
     this.ability1cooldown = initPack.ab1cd;
     this.ability2cooldown = initPack.ab2cd;
+    this.mousePos = initPack.msp;
     if (initPack.radius != undefined){
       this.radius = initPack.radius;
     }
@@ -51,6 +52,9 @@ class Player{
     }
     if (this.hero == "turr"){
       this.color = "#bd8b0d";
+    }
+    if (this.hero == "gunslinger"){
+      this.color = "#2b2b2b";
     }
 
     this.frozen = false;
@@ -125,6 +129,9 @@ class Player{
     }
     if (updatePack.ab2cd != undefined){
       this.ability2cooldown = updatePack.ab2cd;
+    }
+    if (updatePack.msp != undefined){
+      this.mousePos = updatePack.msp;
     }
     if (updatePack.ret != undefined){
       this.retaliation = updatePack.ret;
@@ -201,6 +208,9 @@ class Player{
     }
     if (this.hero == "turr"){
       this.color = "#bd8b0d";
+    }
+    if (this.hero == "gunslinger"){
+      this.color = "#2b2b2b";
     }
     if(this.dead){
       this.color = "black";
