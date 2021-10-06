@@ -4,6 +4,8 @@ const { CROWDED_CAVERN } = require("./maps/crowded cavern");
 const { CRAZY_COSMOS_HARD } = require("./maps/crazy cosmos hard");
 const { STRANGE_SPACE } = require('./maps/strange space');
 const { TIRELESS_TREK } = require('./maps/tireless trek');
+const { ACCLIMATING_ACCELERATION } = require('./maps/acclimating acceleration');
+const { JARRING_JOURNEY } = require('./maps/jarring journey');
 const { ARDUOUS_ABYSS } = require("./maps/arduous abyss");
 
 const { METHODICAL_MONASTERY } = require("./maps/methodical monastery")
@@ -32,6 +34,8 @@ const map = {
 "Atrocious Arena": ATROCIOUS_ARENA,
 "Arduous Abyss": ARDUOUS_ABYSS,
 "Tireless Trek": TIRELESS_TREK,
+"Acclimating Acceleration": ACCLIMATING_ACCELERATION,
+"Jarring Journey": JARRING_JOURNEY,
 }
 
 module.exports = {

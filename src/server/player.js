@@ -414,12 +414,10 @@ class Player {
       this.yChanged = true;
     }
 
-		if (this.shift) {
-			//Shift (slows hero by 2)
-			//this.vel.x /= 2;
-			//this.vel.y /= 2;
-			this.vel.x = 0;
-			this.vel.y = 0;
+		if (this.shift && this.world != 'Acclimating Acceleration') {
+			// Shift (slows hero by 2)
+			this.vel.x /= 2;
+			this.vel.y /= 2;
 		}
 
 		if (this.speedMult != 1) {
@@ -519,6 +517,49 @@ class Player {
 				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
+				}
+			}
+		} else if(this.world == 'Acclimating Acceleration'){
+			this.speedMult = 1 + this.area/40; // will be 1.5x the speed at 20
+			this.speedChanged = true;
+			if (this.area < 20) {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//GOes to the start of the next area (area is not victory)
+					this.pos.x = 69 + this.radius;
+					this.oldArea = this.area;
+					this.area++;
+          			this.maxEnergy += 4;
+          			this.regen += 0.1;
+					this.teleported = true;
+				}
+			} else {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//Reached the last area, stops at the wall (area is victory)
+					this.area = 0;
+          			this.world = 'Jarring Journey';
+					this.speed = 17;
+					this.speedChanged = true;
+				}
+			}
+		} else if(this.world == 'Jarring Journey'){
+			if (this.area < 21) {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//GOes to the start of the next area (area is not victory)
+					this.pos.x = 69 + this.radius;
+					this.oldArea = this.area;
+					this.area++;
+					if (this.maxSpeedReached == false) {
+						this.speed += 1.5;
+						this.speedChanged = true;
+					}
+          			this.maxEnergy += 4;
+          			this.regen += 0.1;
+					this.teleported = true;
+				}
+			} else {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//Reached the last area, stops at the wall (area is victory)
+          			this.won = true;
 				}
 			}
 		} else if (this.world == "Strange Space") {
@@ -639,9 +680,6 @@ class Player {
 				for (let i of Object.keys(map)) {
 					if (map[i].index == currentWorldIndex + 1) {
 						this.world = i;
-						if(this.hero == 'orbital'){
-							this.ability1cooldown = 0;
-						}
 						break;
 					}
 				}
@@ -656,9 +694,6 @@ class Player {
 				for (let i of Object.keys(map)) {
 					if (map[i].index == currentWorldIndex - 1) {
 						this.world = i;
-						if(this.hero == 'orbital'){
-							this.ability1cooldown = 0;
-						}
 						break;
 					}
 				}

@@ -61,8 +61,13 @@ const enemies = {
   },
   "Tireless Trek": {
 
-},
+  },
+  "Acclimating Acceleration": {
 
+  },
+  "Jarring Journey": {
+
+  },
 }
 const projectiles = {
 	"Corrupted Core": {
@@ -101,8 +106,13 @@ const projectiles = {
   },
   "Tireless Trek": {
 
-},
-  
+  },
+  "Acclimating Acceleration": {
+
+  },
+  "Jarring Journey": {
+
+  },
 }
 
 for (let i = 122; i--; i > 0) {
@@ -161,6 +171,14 @@ for (let i = 202; i--; i > 0) {
 for (let i = 42; i--; i > 0) {
 	enemies['Tireless Trek'][i] = [];
 	projectiles['Tireless Trek'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Acclimating Acceleration'][i] = [];
+	projectiles['Acclimating Acceleration'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Jarring Journey'][i] = [];
+	projectiles['Jarring Journey'][i] = [];
 }
 
 const map = require("./map");
@@ -251,6 +269,10 @@ wss.on("connection", ws => {
 				if (player.op) {
 					player.areaSkipTen = true;
 				}
+			} else if (d.kD == '11') {
+				// v key
+			} else if (d.kD == '12') {
+				// b key
 			}
 		}
 
