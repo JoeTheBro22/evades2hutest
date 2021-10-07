@@ -568,7 +568,6 @@ function mainLoop() {
 						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null})
 						
 						//Push to object
-						console.log(newEnemy);
 						enemies[players[i].world][players[i].area].push(newEnemy);
 						enemyIdsInUse.push(id);
 
