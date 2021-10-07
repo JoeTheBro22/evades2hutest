@@ -110,6 +110,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.ae) {
+    for (let i in message.ae) {
+      if (players[message.ae[i].id]) {
+        players[message.ae[i].id].updatePack(message.ae[i]);
+      }
+    }
+  }
 
   if (message.msp) {
     for (let i in message.msp) {
@@ -157,6 +164,7 @@ let crowdedcavern = false;
 let strangespace = false;
 let tirelesstrek = false;
 let acclimatingacceleration = false;
+let makeyourownmap = false;
 let jarringjourney = false;
 let monumentalmigration = false;
 let monumentalmigrationplus = false;
@@ -233,6 +241,7 @@ function renderGame() {
   strangespace = false;
   tirelesstrek = false;
   acclimatingacceleration = false;
+  makeyourownmap = false;
   jarringjourney = false;
   toilsometraverse = false;
   becomesus = false;
@@ -723,6 +732,26 @@ function renderGame() {
           }
         }
       }
+      else if (player.world == "Make Your Own Map") {
+        ctx.font = "22px 'Exo 2'";
+        makeyourownmap = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Make Your Own Map") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
       else if (player.world == "Jarring Journey") {
         ctx.font = "22px 'Exo 2'";
         jarringjourney = true;
@@ -884,7 +913,7 @@ function renderGame() {
       ctx.strokeStyle = "#425a6d";
       ctx.font = "bold " + 35 + "px Tahoma, Verdana, Segoe, sans-serif";
       ctx.textAlign = "center";
-      if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration") {
+      if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration" && player.world != "Make Your Own Map") {
         if (player.area % 40 == 1 && player.area > 1) {
           ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
           ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
@@ -903,6 +932,9 @@ function renderGame() {
         let aName = toilsomeAreas[parseInt(player.area) - 1];
         ctx.strokeText(players[selfId].world + ': ' + aName, canvas.width / 2, 40);
         ctx.fillText(players[selfId].world + ': ' + aName, canvas.width / 2, 40);
+      } else if(player.world == "Make Your Own Map") {
+        ctx.strokeText(players[selfId].world + ': Area ' + player.area /*+ ' (type /help for commands)'*/, canvas.width / 2, 40);
+            ctx.fillText(players[selfId].world + ': Area ' + player.area /*+ ' (type /help for commands)'*/, canvas.width / 2, 40);
       } else {
         ctx.strokeText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
         ctx.fillText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
@@ -1239,6 +1271,32 @@ function renderGame() {
             ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
             worldCount++;
             acclimatingacceleration = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
+  if (makeyourownmap == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Make Your Own Map") {
+          playerCount++;
+          if (makeyourownmap == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            makeyourownmap = true;
           }
           ctx.font = "18px 'Exo 2'";
           if (p.dead == false) {

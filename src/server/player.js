@@ -33,6 +33,7 @@ class Player {
 		this.oldArea = this.area;
 		this.mouseOn = false;
 		this.mousePos = { x: 0, y: 0 };
+		this.addEnemy = { state: false, type: 'normal', radius: 10, speed: 5, world: this.world, area: this.area, id: null, count: 1, index: null};
 		this.teleported = false;
 		this.client = client;
     this.playerUpdatePack = [];
@@ -238,6 +239,11 @@ class Player {
 		sendId = true;
 	}
 
+	if(this.addEnemy.state == true && this.addEnemy != undefined){
+		pack.ae = this.addEnemy;
+		sendId = true;
+	}
+
 	if(this.ability2cooldown > 0 && this.ability2cooldown != undefined){
 		pack.ab2cd = this.ability2cooldown;
 		sendId = true;
@@ -272,6 +278,7 @@ class Player {
 			maxEnergy: this.maxEnergy,
 			regen: this.regen,
 			msp: this.mousePos,
+			ae: this.addEnemy,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -543,6 +550,27 @@ class Player {
 			}
 		} else if(this.world == 'Jarring Journey'){
 			if (this.area < 21) {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//GOes to the start of the next area (area is not victory)
+					this.pos.x = 69 + this.radius;
+					this.oldArea = this.area;
+					this.area++;
+					if (this.maxSpeedReached == false) {
+						this.speed += 1.5;
+						this.speedChanged = true;
+					}
+          			this.maxEnergy += 4;
+          			this.regen += 0.1;
+					this.teleported = true;
+				}
+			} else {
+				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+					//Reached the last area, stops at the wall (area is victory)
+          			this.won = true;
+				}
+			}
+		} else if(this.world == 'Make Your Own Map'){
+			if (this.area < 81) {
 				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;

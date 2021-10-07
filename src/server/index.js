@@ -25,94 +25,100 @@ let enemyIdsInUse = [];
 let playerIdsInUse = [];
 
 const enemies = {
-	"Corrupted Core": {
-	},
-	"Crazy Cosmos": {
-	},
-	"Crazy Cosmos Hard": {
-	},
-	"Methodical Monastery": {
-	},
-	"Methodical Monastery Hard": {
-	},
-	"Crowded Cavern": {
+"Corrupted Core": {
+},
+"Crazy Cosmos": {
+},
+"Crazy Cosmos Hard": {
+},
+"Methodical Monastery": {
+},
+"Methodical Monastery Hard": {
+},
+"Crowded Cavern": {
 
-	},
-	"Strange Space": {
+},
+"Strange Space": {
 
-	},
-	"Monumental Migration": {
+},
+"Monumental Migration": {
 
-	},
-	"Monumental Migration+": {
+},
+"Monumental Migration+": {
 
-	},
-	"Toilsome Traverse": {
+},
+"Toilsome Traverse": {
 
-	},
-  "become sus": {
+},
+"become sus": {
 
-  },
-  "Atrocious Arena": {
+},
+"Atrocious Arena": {
 
-  },
-  "Arduous Abyss": {
+},
+"Arduous Abyss": {
     
-  },
-  "Tireless Trek": {
+},
+"Tireless Trek": {
 
-  },
-  "Acclimating Acceleration": {
+},
+"Acclimating Acceleration": {
 
-  },
-  "Jarring Journey": {
+},
+"Jarring Journey": {
 
-  },
+},
+"Make Your Own Map": {
+
+},
 }
 const projectiles = {
-	"Corrupted Core": {
-	},
-	"Crazy Cosmos": {
-	},
-	"Crazy Cosmos Hard": {
-	},
-	"Methodical Monastery": {
-	},
-	"Methodical Monastery Hard": {
-	},
-	"Crowded Cavern": {
+"Corrupted Core": {
+},
+"Crazy Cosmos": {
+},
+"Crazy Cosmos Hard": {
+},
+"Methodical Monastery": {
+},
+"Methodical Monastery Hard": {
+},
+"Crowded Cavern": {
 
-	},
-	"Strange Space": {
+},
+"Strange Space": {
 
-	},
-	"Monumental Migration": {
+},
+"Monumental Migration": {
 
-	},
-  "Monumental Migration+": {
+},
+"Monumental Migration+": {
 
-	},
-	"Toilsome Traverse": {
+},
+"Toilsome Traverse": {
 
-	},
-  "become sus": {
+},
+"become sus": {
 
-  },
-  "Atrocious Arena": {
+},
+"Atrocious Arena": {
 
-  },
-  "Arduous Abyss": {
-    
-  },
-  "Tireless Trek": {
+},
+"Arduous Abyss": {
 
-  },
-  "Acclimating Acceleration": {
+},
+"Tireless Trek": {
 
-  },
-  "Jarring Journey": {
+},
+"Acclimating Acceleration": {
 
-  },
+},
+"Jarring Journey": {
+
+},
+"Make Your Own Map": {
+
+},
 }
 
 for (let i = 122; i--; i > 0) {
@@ -317,6 +323,16 @@ wss.on("connection", ws => {
 					player.areaSkipRight = parseInt(d.chat.slice(5));
 					d.chat = "";
 				}
+			}  else if(d.chat.slice(0,4) == "/add" && player.world == 'Make Your Own Map'){
+				const addEnemyValues = d.chat.split(" ");
+				player.addEnemy.type = addEnemyValues[1];
+				player.addEnemy.radius = parseInt(addEnemyValues[2]);
+				player.addEnemy.speed = parseInt(addEnemyValues[3]);
+				player.addEnemy.count = parseInt(addEnemyValues[4]);
+				player.addEnemy.state = true;
+				//state: false, type: 'normal', radius: 10, speed: 5, world: this.world, area: this.area, id: null, count: 1, index: null
+			}else if((d.chat.slice(0,6) == "/clear") && player.world == 'Make Your Own Map'){
+				player.addEnemy.state = 'clear';
 			}  else if (d.chat == "/reset" || d.chat == "/r" || d.chat == "/res") {
 				d.chat = "";
 				player.dead = false;
@@ -538,6 +554,28 @@ function mainLoop() {
 			players[i].ability(delta, enemies[world][area], projectiles);
 			players[i].disabled = false;
 
+				// Map Builder
+				if(players[i].addEnemy.state == 'clear'){
+					players[i].addEnemy.state = false;
+					enemies[players[i].world][players[i].area] = [];
+				} else if (players[i].addEnemy.state) {
+					players[i].addEnemy.state = false;
+					if(enemies[players[i].world][players[i].area] === undefined){
+						enemies[players[i].world][players[i].area] = [];
+					}
+					for (let k = 0; k < players[i].addEnemy.count; k++) {
+						let id = findFreeIds();
+						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null})
+						
+						//Push to object
+						console.log(newEnemy);
+						enemies[players[i].world][players[i].area].push(newEnemy);
+						enemyIdsInUse.push(id);
+
+						players[i].enemyInitPack.push(newEnemy.getInitPack());
+					}
+				}
+
 			if (players[i].worldTeleported == true) {
 				players[i].worldTeleported = false;
 				players[i].teleported = false;
@@ -590,7 +628,7 @@ function mainLoop() {
 							//Loop through the amount of enemies
 							for (let k = 0; k < enemyInfo.amount; k++) {
 								//Enemy:
-                let id = findFreeIds();
+                				let id = findFreeIds();
 
 								let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[i].world, area: players[i].area, id: id, count: enemyInfo.amount, index: k, path: enemyInfo.path })
 
@@ -719,7 +757,7 @@ function mainLoop() {
         }
       }
     }
-		// make suyre to do if(projectile.killed == true)
+		// make sure to do if(projectile.killed == true)
 		// then delete from the porjeciles object aand the killed 
 	}
 

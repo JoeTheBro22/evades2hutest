@@ -17,6 +17,7 @@ class Player{
     this.ability1cooldown = initPack.ab1cd;
     this.ability2cooldown = initPack.ab2cd;
     this.mousePos = initPack.msp;
+    this.addEnemy = initPack.ae;
     if (initPack.radius != undefined){
       this.radius = initPack.radius;
     }
@@ -126,6 +127,9 @@ class Player{
     }
     if (updatePack.ab1cd != undefined){
       this.ability1cooldown = updatePack.ab1cd;
+    }
+    if (updatePack.ae != undefined){
+      this.addEnemy = updatePack.ae;
     }
     if (updatePack.ab2cd != undefined){
       this.ability2cooldown = updatePack.ab2cd;
