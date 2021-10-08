@@ -350,26 +350,28 @@ class Projectile {
 					this.killed = true;
 					break;
 				}
-				let speed = 10;
+				let speed = 8 + parent.area/10;
 				if (parent.guardAlertTimer > 0) speed = 50;
 				this.angle = (this.angle + speed * delta / 45) % 360;
-				let pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
+				var pos;
+				pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
 				this.x = pos.x;
 				this.y = pos.y;
 				for (let e of Object.keys(enemies)) {
 					const enemy = enemies[e];
-					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.type != "wall" && enemy.deadTime <= 0) {
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.type != "wall") {
 						enemy.deadTime = Math.max(enemy.deadTime, 1500);
-						this.touched.push(0);
 					}
 				}
-				if (this.touched.length > 23) this.killed = true;
+				if (this.touched.length > 23){
+					this.killed = true;
+				} 
 				break;
 			}
 			case "portal": {
 				const parent = players[this.parentId];
 				if (parent == undefined) {
-					this.killed = true
+					this.killed = true;
 				} else {
 					const pair = parent.portals.find(e => e.id != this.id);
 

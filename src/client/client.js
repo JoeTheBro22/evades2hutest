@@ -325,6 +325,10 @@ function renderGame() {
       } else {
         ctx.fillStyle = "white";
       }
+
+      if(area % 40 == 1 && area != 1){
+        ctx.fillStyle = '#e0d897';
+      }
       ctx.fillRect(playerOffset.x, playerOffset.y, 2880 / 1.4 + 1028.6 + 960/1.4, 720 / 1.4);
 	    ctx.globalAlpha = 1;
 

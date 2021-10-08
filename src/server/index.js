@@ -556,8 +556,13 @@ function mainLoop() {
 
 				// Map Builder
 				if(players[i].addEnemy.state == 'clear'){
+					enemies[players[i].oldWorld][players[i].area] = [];
+					projectiles[players[i].oldWorld][players[i].area] = [];
+					players[i].client.send(msgpack.encode({
+						er: true
+					}));
 					players[i].addEnemy.state = false;
-					enemies[players[i].world][players[i].area] = [];
+					
 				} else if (players[i].addEnemy.state) {
 					players[i].addEnemy.state = false;
 					if(enemies[players[i].world][players[i].area] === undefined){
@@ -604,6 +609,8 @@ function mainLoop() {
 									if (projectile.type == "guard") {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
+										//projectiles[mapId][areaId].push(projectile);
+										//console.log(projectiles[mapId][areaId]);
 									}
 									let initPack = projectile.getInitPack();
 									players[j].projectileInitPack.push(initPack);
@@ -615,6 +622,15 @@ function mainLoop() {
 				}
 				if (checkPlayersInOldWorld(players[i]) == false) {
 					enemies[players[i].oldWorld][players[i].area] = [];
+					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
+						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
+							if(projectile.type == 'guard'){
+								projectile.area = players[projectile.parentId].area;
+								projectile.world = players[projectile.parentId].world;
+								projectiles[players[i].world][players[i].area].push(projectile);
+							}
+						}
+					}
 					projectiles[players[i].oldWorld][players[i].area] = [];
 				}
 				if (checkPlayersInNewWorld(players[i]) == false) {
@@ -642,6 +658,20 @@ function mainLoop() {
 				} else {
 					for (let enemy of enemies[players[i].world][players[i].area]) {
 						players[i].enemyInitPack.push(enemy.getInitPack());
+					}
+				}
+			}
+
+			for (let j in players) {
+				if (players[j].inGame) {
+					for (let mapId of Object.keys(projectiles)) {
+						const map = projectiles[mapId];
+						for (let areaId of Object.keys(map)) {
+							const area = map[areaId];
+							for (let projectile of area) {
+								//console.log(projectile);
+							}
+						}
 					}
 				}
 			}
@@ -686,6 +716,15 @@ function mainLoop() {
 				}
 				if (checkPlayersInOldArea(players[i]) == false) {
 					enemies[players[i].world][players[i].oldArea] = [];
+					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
+						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
+							if(projectile.type == 'guard'){
+								projectile.area = players[projectile.parentId].area;
+								projectile.world = players[projectile.parentId].world;
+								projectiles[players[i].world][players[i].area].push(projectile);
+							}
+						}
+					}
 					projectiles[players[i].world][players[i].oldArea] = [];
 				}
 				if (checkPlayersInNewArea(players[i]) == false) {
@@ -725,6 +764,8 @@ function mainLoop() {
       const map = projectiles[mapId];
       for (let areaId of Object.keys(map)) {
         const area = map[areaId];
+		//projectiles[mapId][areaId].push(projectile);
+		
         for (let projectile of area) {
           if (players[projectile.parentId]) {
             projectile.update(delta, players, enemies[players[projectile.parentId].world][players[projectile.parentId].area], projectiles);
@@ -753,7 +794,7 @@ function mainLoop() {
           if (projectile.killed == true) {
             area.splice(area.indexOf(projectile), 1);
           }
-        }
+        }		
       }
     }
 		// make sure to do if(projectile.killed == true)
