@@ -18,6 +18,7 @@ class Player{
     this.ability2cooldown = initPack.ab2cd;
     this.mousePos = initPack.msp;
     this.addEnemy = initPack.ae;
+    this.warps = initPack.wps;
     if (initPack.radius != undefined){
       this.radius = initPack.radius;
     }
@@ -56,6 +57,9 @@ class Player{
     }
     if (this.hero == "gunslinger"){
       this.color = "#2b2b2b";
+    }
+    if (this.hero == "warper"){
+      this.color = "#8d3dad";
     }
 
     this.frozen = false;
@@ -127,6 +131,9 @@ class Player{
     }
     if (updatePack.ab1cd != undefined){
       this.ability1cooldown = updatePack.ab1cd;
+    }
+    if (updatePack.wps != undefined){
+      this.warps = updatePack.wps;
     }
     if (updatePack.ae != undefined){
       this.addEnemy = updatePack.ae;
@@ -215,6 +222,9 @@ class Player{
     }
     if (this.hero == "gunslinger"){
       this.color = "#2b2b2b";
+    }
+    if (this.hero == "warper"){
+      this.color = "#8d3dad";
     }
     if(this.dead){
       this.color = "black";

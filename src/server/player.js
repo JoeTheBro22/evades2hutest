@@ -130,6 +130,10 @@ class Player {
     this.won = false;
     this.xChanged = false;
     this.yChanged = false;
+
+	// Warper
+	this.warps = 0;
+	this.warpDebt = 0;
 	}
 	getUpdatePack() {
     let sendId = false;
@@ -239,6 +243,11 @@ class Player {
 		sendId = true;
 	}
 
+	if(this.warps != undefined){
+		pack.wps = this.warps;
+		sendId = true;
+	}
+
 	if(this.addEnemy.state == true && this.addEnemy != undefined){
 		pack.ae = this.addEnemy;
 		sendId = true;
@@ -279,6 +288,7 @@ class Player {
 			regen: this.regen,
 			msp: this.mousePos,
 			ae: this.addEnemy,
+			wps: this.warps,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -492,6 +502,11 @@ class Player {
 			this.pos.x = 2674.29 + 1028.6 - this.radius;
 			this.oldArea = this.area;
 			this.area--;
+			if(this.warps > 0){
+				this.warps--;
+			} else {
+				this.warpDebt--;
+			}
 			if (this.maxSpeedReached == false) {
 				this.speed -= 1.5;
 				this.speedChanged = true;
@@ -511,6 +526,13 @@ class Player {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					this.area++;
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
@@ -534,6 +556,13 @@ class Player {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					this.area++;
           			this.maxEnergy += 4;
           			this.regen += 0.1;
@@ -555,6 +584,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -576,6 +612,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -597,6 +640,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -618,6 +668,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -639,6 +696,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -660,6 +724,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;
@@ -681,6 +752,13 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					this.area++;
+					if(this.warpDebt >= 0){
+						if(this.warps < 10){
+							this.warps++;
+						}
+					} else {
+						this.warpDebt++;
+					}
 					if (this.maxSpeedReached == false) {
 						this.speed += 1.5;
 						this.speedChanged = true;

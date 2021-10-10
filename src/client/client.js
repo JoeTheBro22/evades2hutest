@@ -110,6 +110,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.wps) {
+    for (let i in message.wps) {
+      if (players[message.wps[i].id]) {
+        players[message.wps[i].id].updatePack(message.wps[i]);
+      }
+    }
+  }
   if (message.ae) {
     for (let i in message.ae) {
       if (players[message.ae[i].id]) {
@@ -372,6 +379,21 @@ function renderGame() {
         ctx.fillStyle = "black";
         ctx.font = "16px 'Exo 2'";
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
+        ctx.font = "30px 'Exo 2'";
+      }
+      if (player.hero == "warper") {
+        ctx.fillStyle = "#8d3dad";
+        ctx.fillText("Warper", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Warper", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#8d3dad';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.warps/10, 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Warps Left: " + player.warps, canvas.width - 110, canvas.height - 15);
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
         ctx.font = "30px 'Exo 2'";
       }
@@ -2055,7 +2077,7 @@ serverList.appendChild(turrDiv);
 const gunslingerDiv = document.createElement("div");
 gunslingerDiv.hero = "Gunslinger";
 gunslingerDiv.classList.add(`heroBox`);
-gunslingerDiv.innerText = `gunslinger
+gunslingerDiv.innerText = `Gunslinger
 Shoot (passive): Your mouse will kill and disable any enemy that touches it. You can still use this ability when downed
 `;
 gunslingerDiv.classList.add('gunslingerDiv');
@@ -2063,6 +2085,26 @@ gunslingerDiv.onclick = () => {
   init('gunslinger');
 }
 serverList.appendChild(gunslingerDiv);
+
+gunslingerDiv.classList.add('gunslingerDiv');
+gunslingerDiv.onclick = () => {
+  init('gunslinger');
+}
+serverList.appendChild(gunslingerDiv);
+
+const warperDiv = document.createElement("div");
+warperDiv.hero = "Warper";
+warperDiv.classList.add(`heroBox`);
+warperDiv.innerText = `Warper
+Save: Every level you will gain a warp, unless you have more than 10. If you have at least one warp and die, you will be teleported to the beginning of the level and revived.
+Vengance (passive): If you warp, then all enemies within a certain range of your death will die of you will die for 300 seconds. 
+`;
+
+warperDiv.classList.add('warperDiv');
+warperDiv.onclick = () => {
+  init('warper');
+}
+serverList.appendChild(warperDiv);
 
 function Resize() {
   let scale = window.innerWidth / canvas.width;

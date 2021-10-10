@@ -362,7 +362,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -595,7 +595,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if (projectile.type == "guard") {
+									if (projectile.type == "guard" && projectile !== undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -606,11 +606,9 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if (projectile.type == "guard") {
+									if (projectile.type == "guard" && projectile !== undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
-										//projectiles[mapId][areaId].push(projectile);
-										//console.log(projectiles[mapId][areaId]);
 									}
 									let initPack = projectile.getInitPack();
 									players[j].projectileInitPack.push(initPack);
@@ -624,7 +622,7 @@ function mainLoop() {
 					enemies[players[i].oldWorld][players[i].area] = [];
 					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
 						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if(projectile.type == 'guard'){
+							if(projectile.type == 'guard' && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -662,20 +660,6 @@ function mainLoop() {
 				}
 			}
 
-			for (let j in players) {
-				if (players[j].inGame) {
-					for (let mapId of Object.keys(projectiles)) {
-						const map = projectiles[mapId];
-						for (let areaId of Object.keys(map)) {
-							const area = map[areaId];
-							for (let projectile of area) {
-								//console.log(projectile);
-							}
-						}
-					}
-				}
-			}
-
 			if (players[i].teleported == true) {
 				players[i].teleported = false;
 				//If player changed areas or worlds then:
@@ -690,7 +674,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if (projectile.type == "guard") {
+									if (projectile.type == "guard" && projectile !== undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -701,7 +685,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if (projectile.type == "guard") {
+									if (projectile.type == "guard" && projectile !== undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -718,7 +702,7 @@ function mainLoop() {
 					enemies[players[i].world][players[i].oldArea] = [];
 					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
 						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
-							if(projectile.type == 'guard'){
+							if(projectile.type == 'guard' && projectile !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -836,62 +820,103 @@ function mainLoop() {
 					this.killed = true;
 				  }
 			  }
-              if (players[i].clay > 0) {
-                if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-                  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
-					if(enemy.corrosive == false){
-                      if (players[i].invincible == false) {
-                        //Be hu
-                        players[i].invincible = true;
-                        players[i].clayTimer = 200;
-                        players[i].clay = Math.max(players[i].clay - 1, 0);
-                        players[i].pushClay = true;
-                      }
-                    }else{
-                      players[i].dead = true;
-                      players[i].deadChanged = true;
-                    }
-                  }
-                }
-              } else if (players[i].newtonian == false) {
-                if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-                  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
-                    // THIS IS FPS RELIANT IF SERVER FPS IS CHANGED MUST CHNAGE THIS PART (DONT DELETE)
+				if (players[i].clay > 0 && players[i].warps <= 0) {
+					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
+					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
+						if(enemy.corrosive == false){
+						  if (players[i].invincible == false) {
+							//Be hu
+							players[i].invincible = true;
+							players[i].clayTimer = 200;
+							players[i].clay = Math.max(players[i].clay - 1, 0);
+							players[i].pushClay = true;
+						  }
+						}else{
+						  players[i].dead = true;
+						  players[i].deadChanged = true;
+						}
+					  }
+					}
+				  } else if (players[i].newtonian == false) {
+					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
+					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps <= 0) {
+						// THIS IS FPS RELIANT IF SERVER FPS IS CHANGED MUST CHNAGE THIS PART (DONT DELETE)
+	
+						if (Math.sqrt((enemy.x - enemy.lastx) ** 2 + (enemy.y - enemy.lasty) ** 2) / (delta / 30) > 7 || enemy.radius > Math.sqrt(3) * 17) {
+						  if (players[i].invincible == false) {
+							players[i].dead = true;
+							players[i].deadChanged = true;
+						  } else {
+							players[i].bandage = false;
+						  }
+						}
+					  }
+					}
+				  }else if(players[i].warps > 0 && players[i].inGame && !players[i].op && players[i].dead){
+					if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius) {
+						enemy.dead = true;
+						enemy.deadTime = 5000;
+						enemy.killed = true;
+						enemy.deadChanged = true;
+					}
+					console.log();
 
-                    if (Math.sqrt((enemy.x - enemy.lastx) ** 2 + (enemy.y - enemy.lasty) ** 2) / (delta / 30) > 7 || enemy.radius > Math.sqrt(3) * 17) {
-                      if (players[i].invincible == false) {
-                        players[i].dead = true;
-                        players[i].deadChanged = true;
-                      } else {
-                        players[i].bandage = false;
-                      }
-                    }
-                  }
-                }
-              } else {
-                if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-                  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
-                    if (players[i].invincible == false) {
-                      players[i].dead = true;
-                      players[i].deadChanged = true;
-                    } else {
-                      if(enemy.corrosive == false){
-                        players[i].bandage = false;
-                      }else{
-                        players[i].bandage = false;
-                        players[i].dead = true;
-                        players[i].deadChanged = true;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+					for (let mapId of Object.keys(enemies)) {
+						  const map = enemies[mapId];
+						  for (let areaId of Object.keys(map)) {
+							const area = map[areaId];
+							for(let touchedEnemy of area){
+								if(Math.sqrt((players[i].pos.x - touchedEnemy.x) ** 2 + (players[i].pos.y - touchedEnemy.y) ** 2) < players[i].radius + players[i].clay * 2 + touchedEnemy.radius + 300 && touchedEnemy.type !== 'immune'){
+									if (touchedEnemy.deadTime < 180000){
+										touchedEnemy.deadTime = 180000;
+									  }
+									  if (touchedEnemy.disableTime < 200000){
+										touchedEnemy.disableTime = 200000;
+									  }
+									  this.touched = [];
+									  this.touched.push(0);
+									  if (this.touched.length > 1){
+										this.killed = true;
+									  }
+								}
+							}
+						}
+					}
+					
+					players[i].pos.x = 100 + (Math.random() * 210);
+					players[i].pos.y = 100 + (Math.random() * 315);
+					players[i].xChanged = true;
+					players[i].yChanged = true;
+					players[i].dead = false;
+					players[i].invincible = true;
+					players[i].invincibilityTimer = 1000;
+					players[i].changedInvincibility = true;
+					players[i].deadChanged = true;
+					players[i].warps--;
+				} else {
+					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
+					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
+						if (players[i].invincible == false) {
+						  players[i].dead = true;
+						  players[i].deadChanged = true;
+						} else {
+						  if(enemy.corrosive == false){
+							players[i].bandage = false;
+						  }else{
+							players[i].bandage = false;
+							players[i].dead = true;
+							players[i].deadChanged = true;
+						  }
+						}
+			 	      }
+					}
+				  }
+			  	}
+          	  }
+        	}
+      	}
     }
-	}
+}
 
 	for (let i in players) {
 		//Push player update pack into array
