@@ -135,13 +135,13 @@ class Enemy {
 		this.ignited = false;
 		this.auraRadius = 0;
 		this.ignitedTimer = 0;
-		if (this.type == "tornado" || this.type == "slower" || this.type == "megafreezing" || this.type == "invert" || this.type == "disabler" || this.type == "immunedisabler" || this.type == "draining" || this.type == "slippery" || this.type == "pull" || this.type == "push" || this.type == "immunepull" || this.type == "immunepush") {
+		if (this.type == "tornado" || this.type == "slower" || this.type == "megafreezing" || this.type == "invert" || this.type == "disabler" || this.type == "immunedisabler" || this.type == "draining" || this.type == "slippery" || this.type == "pull" || this.type == "push" || this.type == "immunepull" || this.type == "immunepush" || this.type == "spinner") {
 			this.aura = 160;
 		} else if (this.type == "freezing" || this.type == "subzero" || this.type == "megaDraining" || this.type == "immunefreezing") {
 			this.aura = 100;
     } else if (this.type == "nebula") {
       this.aura = 200;
-		} else if (this.type == "blackhole") {
+	} else if (this.type == "blackhole") {
       this.aura = 90;
     }  else if (this.type == "tpstart" || this.type == "playershield") {
 		this.aura = 30 * this.radius;
@@ -443,7 +443,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -569,7 +569,7 @@ class Enemy {
 					}
 				}
 			}
-			if (['slower', 'tornado', 'megafreezing', 'invert', 'subzero', 'disabler', 'immunedisabler', 'draining', 'megaDraining', 'freezing', 'slippery', 'pull', 'push', 'immunefreezing', 'immunepush', 'immunepull', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield'].includes(this.type)) {
+			if (['slower', 'tornado', 'megafreezing', 'invert', 'subzero', 'disabler', 'immunedisabler', 'draining', 'megaDraining', 'freezing', 'slippery', 'pull', 'push', 'immunefreezing', 'immunepush', 'immunepull', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
 				for (let p of Object.keys(players)) {
 					const player = players[p];
 					if (player.area == this.area && player.world == this.world) {
@@ -653,7 +653,11 @@ class Enemy {
 									}
 									this.disableTime = 1000;
 									this.disabled = true;
-								} else if (this.type == "draining") {
+								}   else if (this.type == "spinner") {
+									let spinAngle = Math.atan2(player.pos.y - this.y + Math.PI/180, player.pos.x - this.x + Math.PI/180);
+									player.pos.x = this.x + 30 * Math.cos(spinAngle);
+									player.pos.y = this.y + 30 * Math.sin(spinAngle);
+								}  else if (this.type == "draining") {
 									if (player.dead == false) {
 										player.energy -= baseDelta / 1000 * 16;
 									}
@@ -1290,7 +1294,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield'].includes(this.type)) {
+			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

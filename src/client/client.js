@@ -1646,8 +1646,10 @@ function renderGame() {
         ctx.fillStyle = "#4d1c4b";
       } else if (enemies[i].type == "playershield") {
         ctx.fillStyle = "#43e6d2";
-      } else if (enemies[i].type == "lifeswitcher") {
-        ctx.fillStyle = "#0dbd19";
+      } else if (enemies[i].type == "playershield") {
+        ctx.fillStyle = "#43e6d2";
+      } else if (enemies[i].type == "spinner") {
+        ctx.fillStyle = "#e3fc03";
       } else if (enemies[i].type == "sneaky") {
         ctx.fillStyle = "#574d45";
       } else if (enemies[i].type == "draining") {

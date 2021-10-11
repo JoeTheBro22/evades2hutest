@@ -556,11 +556,15 @@ function mainLoop() {
 
 				// Map Builder
 				if(players[i].addEnemy.state == 'clear'){
-					enemies[players[i].oldWorld][players[i].area] = [];
-					projectiles[players[i].oldWorld][players[i].area] = [];
-					players[i].client.send(msgpack.encode({
-						er: true
-					}));
+					for (let j in players) {
+						if (players[j].inGame) {
+							enemies[players[j].oldWorld][players[j].area] = [];
+							projectiles[players[j].oldWorld][players[j].area] = [];
+							players[j].client.send(msgpack.encode({
+								er: true
+							}));
+						}
+					}
 					players[i].addEnemy.state = false;
 					
 				} else if (players[i].addEnemy.state) {
@@ -568,15 +572,19 @@ function mainLoop() {
 					if(enemies[players[i].world][players[i].area] === undefined){
 						enemies[players[i].world][players[i].area] = [];
 					}
-					for (let k = 0; k < players[i].addEnemy.count; k++) {
-						let id = findFreeIds();
-						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null})
-						
-						//Push to object
-						enemies[players[i].world][players[i].area].push(newEnemy);
-						enemyIdsInUse.push(id);
-
-						players[i].enemyInitPack.push(newEnemy.getInitPack());
+					for (let j in players) {
+						if (players[j].inGame) {
+							for (let k = 0; k < players[i].addEnemy.count; k++) {
+								let id = findFreeIds();
+								let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null})
+								
+								//Push to object
+								enemies[players[i].world][players[i].area].push(newEnemy);
+								enemyIdsInUse.push(id);
+		
+								players[j].enemyInitPack.push(newEnemy.getInitPack());
+							}
+						}
 					}
 				}
 
@@ -654,8 +662,10 @@ function mainLoop() {
 						}
 					}
 				} else {
-					for (let enemy of enemies[players[i].world][players[i].area]) {
-						players[i].enemyInitPack.push(enemy.getInitPack());
+					if(enemies[players[i].world][players[i].area] != undefined){
+						for (let enemy of enemies[players[i].world][players[i].area]) {
+							players[i].enemyInitPack.push(enemy.getInitPack());
+						}
 					}
 				}
 			}
