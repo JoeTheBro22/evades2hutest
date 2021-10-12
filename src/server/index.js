@@ -745,8 +745,10 @@ function mainLoop() {
 						}
 					}
 				} else {
-					for (let enemy of enemies[players[i].world][players[i].area]) {
-						players[i].enemyInitPack.push(enemy.getInitPack());
+					if(enemies[players[i].world][players[i].area] !== undefined){
+						for (let enemy of enemies[players[i].world][players[i].area]) {
+							players[i].enemyInitPack.push(enemy.getInitPack());
+						}
 					}
 				}
 			}
