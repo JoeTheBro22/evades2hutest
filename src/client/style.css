@@ -356,6 +356,21 @@ canvas {
   z-index: 1;
 }
 
+.thornstickDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #6ba72a;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.thornstickDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
 .warperDiv {
   top: 0; right: 0; bottom: 0; left: 0;
   background-color: #8d3dad;

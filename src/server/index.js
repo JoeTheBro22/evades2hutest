@@ -362,7 +362,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -603,7 +603,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if (projectile.type == "guard" && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -614,7 +614,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if (projectile.type == "guard" && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -630,7 +630,7 @@ function mainLoop() {
 					enemies[players[i].oldWorld][players[i].area] = [];
 					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
 						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if(projectile.type == 'guard' && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -684,7 +684,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if (projectile.type == "guard" && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -695,7 +695,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if (projectile.type == "guard" && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -712,7 +712,7 @@ function mainLoop() {
 					enemies[players[i].world][players[i].oldArea] = [];
 					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
 						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
-							if(projectile.type == 'guard' && projectile !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -862,14 +862,13 @@ function mainLoop() {
 						}
 					  }
 					}
-				  }else if(players[i].warps > 0 && players[i].inGame && !players[i].op && players[i].dead){
+				  }else if(players[i].warps > 0 && players[i].inGame && !players[i].op && players[i].dead && players[i].hero == 'warper'){
 					if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius) {
 						enemy.dead = true;
 						enemy.deadTime = 5000;
 						enemy.killed = true;
 						enemy.deadChanged = true;
 					}
-					console.log();
 
 					for (let mapId of Object.keys(enemies)) {
 						  const map = enemies[mapId];

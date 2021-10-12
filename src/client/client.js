@@ -397,6 +397,21 @@ function renderGame() {
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
         ctx.font = "30px 'Exo 2'";
       }
+      if (player.hero == "thornstick") {
+        ctx.fillStyle = "#6ba72a";
+        ctx.fillText("Thornstick", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Thornstick", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#6ba72a';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/15000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/7000, 10);
+        ctx.fillStyle = 'red';
+        if(player.ability2cooldown>4000){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*(player.ability2cooldown-4000)/3000, 10);
+        }
+      }
       if (player.hero == "rameses") {
         ctx.fillStyle = "#989b4a";
         ctx.fillText("Rameses", canvas.width - 110, canvas.height - 140);
@@ -1817,13 +1832,20 @@ function renderGame() {
 
       } else {
         ctx.beginPath();
-        ctx.arc(projectiles[i].renderX + playerOffset.x, projectiles[i].renderY + playerOffset.y, projectiles[i].radius, 0, 6.28318531);
+        if(projectiles[i].type != 'thorn'){
+          ctx.arc(projectiles[i].renderX + playerOffset.x, projectiles[i].renderY + playerOffset.y, projectiles[i].radius, 0, 6.28318531);
+        } else {
+          ctx.ellipse(projectiles[i].renderX + playerOffset.x, projectiles[i].renderY + playerOffset.y, projectiles[i].radius*5, 20, projectiles[i].angle * Math.PI/180, 0, 6.28318531);
+        }
 
         if (projectiles[i].type == "clay") {
           ctx.fillStyle = "#8f754d";
         }
         else if (projectiles[i].type == "guard") {
           ctx.fillStyle = "#5c5061";
+        }
+        else if(projectiles[i].type == "thorn"){
+          ctx.fillStyle = "#b4c449";
         }
         else if (projectiles[i].type == "turrBullet") {
           ctx.fillStyle = "#bd8b0d";
@@ -2107,6 +2129,20 @@ warperDiv.onclick = () => {
   init('warper');
 }
 serverList.appendChild(warperDiv);
+
+const thornstickDiv = document.createElement("div");
+thornstickDiv.hero = "Thornstick";
+thornstickDiv.classList.add(`heroBox`);
+thornstickDiv.innerText = `Thornstick
+Thorn: Summons thorns in all cardinal directions that blocks enemies. Every time it blocks an enemy, it gets shorter until it eveutlly dissapears. Cooldown 10 seconds.
+Cactus: Places a cactus down that kills all enemies it touches. The player can move through it, but at 50% speed.
+`;
+
+thornstickDiv.classList.add('thornstickDiv');
+thornstickDiv.onclick = () => {
+  init('thornstick');
+}
+serverList.appendChild(thornstickDiv);
 
 function Resize() {
   let scale = window.innerWidth / canvas.width;

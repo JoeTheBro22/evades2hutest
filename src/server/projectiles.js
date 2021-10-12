@@ -19,7 +19,7 @@ class Projectile {
 		this.lastRadius = this.radius;
     this.baseRadius = this.radius;
 		this.exploding = false;
-		if (this.type == "clay" || this.type == "guard" || this.type == "portal") {
+		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn") {
 			this.touched = [];
 		}
 		if (this.type == "portal") {
@@ -125,7 +125,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'web', 'portal', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
+		if (!['guard', 'web', 'portal', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'thorn'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -366,6 +366,78 @@ class Projectile {
 				if (this.touched.length > 23){
 					this.killed = true;
 				} 
+				break;
+			}
+			case "thorn": {
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				if(this.angle == 0){
+					this.x = parent.pos.x + this.radius * 5;
+					this.y = parent.pos.y;
+				} else if(this.angle == 90){
+					this.x = parent.pos.x;
+					this.y = parent.pos.y + this.radius * 5;
+				} else if(this.angle == 180){
+					this.x = parent.pos.x - this.radius * 5;
+					this.y = parent.pos.y;
+				} else if(this.angle == 270){
+					this.x = parent.pos.x;
+					this.y = parent.pos.y - this.radius * 5;
+				} else {
+					this.pos.x = parent.pos.x;
+					this.pos.y = parent.pos.y;
+				}
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if(this.angle == 90 || this.angle == 270){
+						if (Math.abs(this.y - enemy.y) < Math.abs(this.radius * 5 + enemy.radius) + 10 && Math.abs(this.x - enemy.x) < Math.abs(this.radius + enemy.radius) && enemy.type != "wall") {
+							if(parent.guardAlertTimer < 0){
+								this.touched.push(0);
+								if(this.x > enemy.x){
+									enemy.x = this.x + 2*this.radius + 1;
+								} else {
+									enemy.x = this.x - 2*this.radius - 1;
+								}
+							}	else {
+								if (enemy.deadTime < 3000){
+									enemy.deadTime = 3000;
+								  }
+								  if (enemy.disableTime < 3000){
+									enemy.disableTime = 3000;
+								  }
+							}
+						}
+					} else {
+						if (Math.abs(this.x - enemy.x) < Math.abs(this.radius * 5 + enemy.radius) + 10 && Math.abs(this.y - enemy.y) < Math.abs(this.radius + enemy.radius) && enemy.type != "wall") {
+							if(parent.guardAlertTimer < 0){
+								this.touched.push(0);
+								if(this.y > enemy.y){
+									enemy.y = this.y + 2*this.radius + 1;
+								} else {
+									enemy.y = this.y - 2*this.radius - 1;
+								}
+							} else {
+								if (enemy.deadTime < 3000){
+									enemy.deadTime = 3000;
+								  }
+								  if (enemy.disableTime < 3000){
+									enemy.disableTime = 3000;
+								  }
+							}
+							
+						}
+					}
+				}
+				this.radius = 20 - this.touched.length;
+				if (this.touched.length > 10){
+					this.killed = true;
+				}
+				if(parent.dead && !this.killed){
+					this.killed = true;
+				}
 				break;
 			}
 			case "portal": {

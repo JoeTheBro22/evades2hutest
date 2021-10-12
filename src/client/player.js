@@ -58,6 +58,9 @@ class Player{
     if (this.hero == "gunslinger"){
       this.color = "#2b2b2b";
     }
+    if (this.hero == "thornstick"){
+      this.color = "#6ba72a";
+    }
     if (this.hero == "warper"){
       this.color = "#8d3dad";
     }
@@ -222,6 +225,9 @@ class Player{
     }
     if (this.hero == "gunslinger"){
       this.color = "#2b2b2b";
+    }
+    if (this.hero == "thornstick"){
+      this.color = "#6ba72a";
     }
     if (this.hero == "warper"){
       this.color = "#8d3dad";

@@ -115,6 +115,9 @@ class Player {
 		this.guardAlertTimer = 0;
 		this.guards = [];
 
+		// Thornstick
+		this.thorns = [];
+
 		//cimex
 
 		this.web = null;
@@ -528,7 +531,9 @@ class Player {
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -558,7 +563,9 @@ class Player {
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -586,7 +593,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -614,7 +623,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -642,7 +653,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -670,7 +683,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -698,7 +713,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -726,7 +743,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -754,7 +773,9 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps < 10){
-							this.warps++;
+							if(this.hero == 'warper'){
+								this.warps++;
+							}
 						}
 					} else {
 						this.warpDebt++;
@@ -1202,6 +1223,27 @@ class Player {
         this.energy -= 5;
 				this.guardAlertTimer = 1500;
 				this.ability2cooldown = 3000;
+			}
+		}
+
+		if (this.hero == "thornstick") {
+			this.guardAlertTimer -= delta;
+			if (this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy >= 20) {
+        		this.energy -= 20;
+				this.ability1cooldown = 15000;
+				for (let thorn of this.thorns) {
+					thorn.killed = true;
+				}
+				this.thorns = [];
+				this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 0, this.world, this.area, projectiles, this.id));
+				this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 90, this.world, this.area, projectiles, this.id));
+				this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 180, this.world, this.area, projectiles, this.id));
+				this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 270, this.world, this.area, projectiles, this.id));
+			}
+			if (this.x && this.ability2cooldown <= 0 && this.thorns.length > 0 && this.dead == false && this.energy >= 10) {
+        		this.energy -= 10;
+				this.guardAlertTimer = 3000;
+				this.ability2cooldown = 7000;
 			}
 		}
 
