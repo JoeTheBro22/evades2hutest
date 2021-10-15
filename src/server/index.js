@@ -191,6 +191,7 @@ const map = require("./map");
 const { Player } = require("./player");
 const { Enemy } = require("./enemy");
 const { Projectile } = require("./projectiles");
+const e = require('cors');
 
 //The clientId
 let id = 1;
@@ -832,7 +833,7 @@ function mainLoop() {
 					this.killed = true;
 				  }
 			  }
-				if (players[i].clay > 0 && players[i].warps <= 0) {
+				if (players[i].clay > 0 && players[i].warps.amount <= 0) {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
 					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
 						if(enemy.corrosive == false){
@@ -851,7 +852,7 @@ function mainLoop() {
 					}
 				  } else if (players[i].newtonian == false) {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps <= 0) {
+					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps.amount <= 0) {
 						// THIS IS FPS RELIANT IF SERVER FPS IS CHANGED MUST CHNAGE THIS PART (DONT DELETE)
 	
 						if (Math.sqrt((enemy.x - enemy.lastx) ** 2 + (enemy.y - enemy.lasty) ** 2) / (delta / 30) > 7 || enemy.radius > Math.sqrt(3) * 17) {
@@ -864,7 +865,7 @@ function mainLoop() {
 						}
 					  }
 					}
-				  }else if(players[i].warps > 0 && players[i].inGame && !players[i].op && players[i].dead && players[i].hero == 'warper'){
+				  }else if(players[i].warps.amount > 0 && players[i].inGame && !players[i].op && players[i].dead && players[i].hero == 'warper'){
 					if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius) {
 						enemy.dead = true;
 						enemy.deadTime = 5000;
@@ -877,7 +878,7 @@ function mainLoop() {
 						  for (let areaId of Object.keys(map)) {
 							const area = map[areaId];
 							for(let touchedEnemy of area){
-								if(Math.sqrt((players[i].pos.x - touchedEnemy.x) ** 2 + (players[i].pos.y - touchedEnemy.y) ** 2) < players[i].radius + players[i].clay * 2 + touchedEnemy.radius + 300 && touchedEnemy.type !== 'immune'){
+								if(Math.sqrt((players[i].pos.x - touchedEnemy.x) ** 2 + (players[i].pos.y - touchedEnemy.y) ** 2) < players[i].radius + players[i].clay * 2 + touchedEnemy.radius + 300 && touchedEnemy.type !== 'immune' && players[i].warps.type == false){
 									if (touchedEnemy.deadTime < 180000){
 										touchedEnemy.deadTime = 180000;
 									  }
@@ -894,16 +895,26 @@ function mainLoop() {
 						}
 					}
 					
-					players[i].pos.x = 100 + (Math.random() * 210);
-					players[i].pos.y = 100 + (Math.random() * 315);
-					players[i].xChanged = true;
-					players[i].yChanged = true;
+					if(!players[i].warps.type){
+						players[i].pos.x = 100 + (Math.random() * 210);
+						players[i].pos.y = 100 + (Math.random() * 315);
+						players[i].xChanged = true;
+						players[i].yChanged = true;
+					}
 					players[i].dead = false;
 					players[i].invincible = true;
 					players[i].invincibilityTimer = 1000;
 					players[i].changedInvincibility = true;
 					players[i].deadChanged = true;
-					players[i].warps--;
+					if(players[i].warps.type){
+						players[i].warps.amount -= delta/60;
+						if (players[i].invincible == false && players[i].warps.amount < 0) {
+							players[i].dead = true;
+							players[i].deadChanged = true;
+						}
+					} else {
+						players[i].warps.amount--;
+					}
 				} else {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
 					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {

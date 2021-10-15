@@ -390,11 +390,24 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#8d3dad';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.warps/10, 10);
+        if(player.warps.amount > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.warps.amount/10, 10);
+        }
         ctx.fillStyle = "black";
         ctx.font = "16px 'Exo 2'";
-        ctx.fillText("Warps Left: " + player.warps, canvas.width - 110, canvas.height - 15);
-        ctx.fillText("Passive", canvas.width - 110, canvas.height - 0);
+        if(player.warps.type == false){
+          ctx.fillText("Warps Left: " + player.warps.amount, canvas.width - 110, canvas.height - 15);
+        } else {
+          ctx.font = "13px 'Exo 2'";
+          if(player.warps.amount != 1 && player.warps.amount > 0){
+            ctx.fillText("Invincibility Left: " + Math.round(player.warps.amount) + ' seconds', canvas.width - 110, canvas.height - 15);
+          } else if(player.warps.amount == 1) {
+            ctx.fillText("Invincibility Left: " + Math.round(player.warps.amount) + ' second', canvas.width - 110, canvas.height - 15);
+          } else {
+            ctx.fillText("Invincibility Left: 0 seconds", canvas.width - 110, canvas.height - 15);
+          }
+        }
+        
         ctx.font = "30px 'Exo 2'";
       }
       if (player.hero == "thornstick") {
@@ -1845,7 +1858,13 @@ function renderGame() {
           ctx.fillStyle = "#5c5061";
         }
         else if(projectiles[i].type == "thorn"){
-          ctx.fillStyle = "#b4c449";
+          if(projectiles[i].guardAlertTimer > 0){
+            ctx.fillStyle = 'red';
+          }
+          else {
+            ctx.fillStyle = "#b4c449";
+          }
+          console.log(projectiles[i].guardAlertTimer);
         }
         else if (projectiles[i].type == "turrBullet") {
           ctx.fillStyle = "#bd8b0d";
@@ -2120,8 +2139,8 @@ const warperDiv = document.createElement("div");
 warperDiv.hero = "Warper";
 warperDiv.classList.add(`heroBox`);
 warperDiv.innerText = `Warper
-Save: Every level you will gain a warp, unless you have more than 10. If you have at least one warp and die, you will be teleported to the beginning of the level and revived.
-Vengance (passive): If you warp, then all enemies within a certain range of your death will die of you will die for 300 seconds. 
+Save: Every level you will gain a warp, unless you have more than 10. If you have at least one warp and die, you will be teleported to the beginning of the level and revived. If you warp, enemies surrounding the place where you warped will be disabled and dead for 5 minutes.
+Swap: switches between defense methods. It swaps between the ability previously described, and the same concept but with invincibility. This invincibility allows you to walk through enemies for the time shown.
 `;
 
 warperDiv.classList.add('warperDiv');
@@ -2134,7 +2153,7 @@ const thornstickDiv = document.createElement("div");
 thornstickDiv.hero = "Thornstick";
 thornstickDiv.classList.add(`heroBox`);
 thornstickDiv.innerText = `Thornstick
-Thorn: Summons thorns in all cardinal directions that blocks enemies. Every time it blocks an enemy, it gets shorter until it eveutlly dissapears. Cooldown 10 seconds.
+Thorn: Summons thorns in all cardinal directions that blocks enemies. Every time it blocks an enemy, it gets shorter until it eventually dissapears. Cooldown 10 seconds.
 Cactus: Places a cactus down that kills all enemies it touches. The player can move through it, but at 50% speed.
 `;
 

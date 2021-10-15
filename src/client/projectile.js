@@ -8,6 +8,7 @@ class Projectile{
     this.world = initPack.world;
     this.type = initPack.type;
     this.killed = false;
+    this.guardAlertTimer = initPack.guardAlertTimer;
     if (initPack.a != undefined){
       this.angle = initPack.a;
     }
@@ -35,6 +36,9 @@ class Projectile{
     }
     if (updatePack.k != undefined){
       this.killed = updatePack.k;
+    }
+    if (updatePack.guardAlertTimer != undefined){
+      this.guardAlertTimer = updatePack.guardAlertTimer;
     }
   }
   interp(delta){

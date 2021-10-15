@@ -17,6 +17,7 @@ class Projectile {
 		this.spawnx = this.x;
 		this.spawny = this.y;
 		this.lastRadius = this.radius;
+		this.guardAlertTimer = 0;
     this.baseRadius = this.radius;
 		this.exploding = false;
 		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn") {
@@ -59,7 +60,8 @@ class Projectile {
 		let pack = {
 			x: Math.round(this.x * 50) / 50,
 			y: Math.round(this.y * 50) / 50,
-			id: this.id
+			id: this.id,
+			guardAlertTimer: this.guardAlertTimer,
 		};
 		if (this.killed == true) {
 			pack.k = true;
@@ -83,7 +85,8 @@ class Projectile {
 			type: this.type,
 			area: this.area,
 			world: this.world,
-			id: this.id
+			id: this.id,
+			guardAlertTimer: this.guardAlertTimer,
 		};
     if (this.angle != undefined){
       pack.a = this.angle;
@@ -390,6 +393,7 @@ class Projectile {
 					this.pos.x = parent.pos.x;
 					this.pos.y = parent.pos.y;
 				}
+				this.guardAlertTimer = parent.guardAlertTimer;
 				for (let e of Object.keys(enemies)) {
 					const enemy = enemies[e];
 					if(this.angle == 90 || this.angle == 270){

@@ -135,7 +135,7 @@ class Player {
     this.yChanged = false;
 
 	// Warper
-	this.warps = 0;
+	this.warps = { amount: 0, type: false };
 	this.warpDebt = 0;
 	}
 	getUpdatePack() {
@@ -505,8 +505,8 @@ class Player {
 			this.pos.x = 2674.29 + 1028.6 - this.radius;
 			this.oldArea = this.area;
 			this.area--;
-			if(this.warps > 0){
-				this.warps--;
+			if(this.warps.amount > 0){
+				this.warps.amount--;
 			} else {
 				this.warpDebt--;
 			}
@@ -530,9 +530,9 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -562,9 +562,9 @@ class Player {
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -592,9 +592,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -622,9 +622,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -652,9 +652,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -682,9 +682,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -712,9 +712,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -742,9 +742,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -772,9 +772,9 @@ class Player {
 					this.oldArea = this.area;
 					this.area++;
 					if(this.warpDebt >= 0){
-						if(this.warps < 10){
+						if(this.warps.amount < 10){
 							if(this.hero == 'warper'){
-								this.warps++;
+								this.warps.amount++;
 							}
 						}
 					} else {
@@ -1245,6 +1245,12 @@ class Player {
 				this.guardAlertTimer = 3000;
 				this.ability2cooldown = 7000;
 			}
+		}
+
+		if(this.hero == 'warper' && this.x && this.ability2cooldown <= 0){
+			this.ability2cooldown = 500;
+			this.warps.type = !this.warps.type;
+			this.warps.amount = Math.round(this.warps.amount);
 		}
 
 		if (this.hero == "cimex") {
