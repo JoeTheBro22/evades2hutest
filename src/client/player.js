@@ -15,6 +15,7 @@ class Player{
     this.speed = initPack.speed;
     this.regen = initPack.regen;
     this.ability1cooldown = initPack.ab1cd;
+    this.areaWidth = initPack.aw;
     this.ability2cooldown = initPack.ab2cd;
     this.mousePos = initPack.msp;
     this.addEnemy = initPack.ae;
@@ -63,6 +64,9 @@ class Player{
     }
     if (this.hero == "warper"){
       this.color = "#8d3dad";
+    }
+    if (this.hero == "flylie"){
+      this.color = "#de5721";
     }
 
     this.frozen = false;
@@ -134,6 +138,9 @@ class Player{
     }
     if (updatePack.ab1cd != undefined){
       this.ability1cooldown = updatePack.ab1cd;
+    }
+    if (updatePack.aw != undefined){
+      this.areaWidth = updatePack.aw;
     }
     if (updatePack.wps != undefined){
       this.warps = updatePack.wps;
@@ -231,6 +238,9 @@ class Player{
     }
     if (this.hero == "warper"){
       this.color = "#8d3dad";
+    }
+    if (this.hero == "flylie"){
+      this.color = "#de5721";
     }
     if(this.dead){
       this.color = "black";

@@ -1,3 +1,5 @@
+const { map } = require("./map");
+
 let areaBoundaries = { x: 342.86, y: 0, width: 3085.74, height: 514.29 };
 
 function circular_move(x, y, r, a) {
@@ -98,6 +100,12 @@ class Projectile {
 		return pack
 	}
 	update(delta, players, enemies, projectiles) {
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		}
+		if(areaBoundaries.width === undefined){
+			areaBoundaries.width = 3085.74;
+		}
 		if (this.type == "portal" && this.toInit == true) {
 			for (let p of Object.keys(players)) {
 				const player = players[p];

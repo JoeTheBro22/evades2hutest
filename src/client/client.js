@@ -110,6 +110,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.aw) {
+    for (let i in message.aw) {
+      if (players[message.aw[i].id]) {
+        players[message.aw[i].id].updatePack(message.aw[i]);
+      }
+    }
+  }
   if (message.wps) {
     for (let i in message.wps) {
       if (players[message.wps[i].id]) {
@@ -179,6 +186,7 @@ let toilsometraverse = false;
 let becomesus = false;
 let atrociousarena = false;
 let arduousabyss = false;
+let centralcrossing = false;
 
 toilsomeAreas = [
   "Desert 1-1", "Desert 1-2", "Desert 1-3", "Desert 1-4",
@@ -254,6 +262,7 @@ function renderGame() {
   becomesus = false;
   atrociousarena = false;
   arduousabyss = false;
+  centralcrossing = false;
 
   for (let i in players) {
     players[i].interp(delt);
@@ -264,6 +273,7 @@ function renderGame() {
       playername = player.name;
       area = player.area;
       world = player.world;
+      areaWidth = player.areaWidth;
 
       playerOffset.x = (player.renderX - 640) * -1;
       playerOffset.y = (player.renderY - 360) * -1;
@@ -271,7 +281,7 @@ function renderGame() {
       //Safe Zones
       ctx.fillStyle = "rgba(195,195,195,1)";
       ctx.fillRect(playerOffset.x, playerOffset.y, 384 / 1.4 + 96 / 1.4, 720 / 1.4);
-      ctx.fillRect(3360 / 1.4 + 1028.6 + playerOffset.x, playerOffset.y, 384 / 1.4, 720 / 1.4);
+      ctx.fillRect(342.86 + areaWidth + playerOffset.x, playerOffset.y, 384 / 1.4, 720 / 1.4);
 
       if (area == 1) {
         //Teleporting between worlds
@@ -286,16 +296,16 @@ function renderGame() {
         }
 
         ctx.fillStyle = "rgba(255,244,108,1)";
-        ctx.fillRect(3744 / 1.4 + 1028.6 + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
+        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
       } else {
         ctx.fillStyle = "rgba(255,244,108,1)";
         ctx.fillRect(playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
-        ctx.fillRect(3744 / 1.4 + 1028.6 + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
+        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
       }
 
       //Area
       ctx.fillStyle = "rgb(255, 255, 255)"
-      ctx.fillRect(playerOffset.x + 480/1.4, playerOffset.y, 2880 / 1.4 + 1028.6, 720 / 1.4);
+      ctx.fillRect(playerOffset.x + 480/1.4, playerOffset.y, areaWidth, 720 / 1.4);
       ctx.globalAlpha = 0.4; // change if it doesnt look good
       if (world == "Arduous Abyss") {
         ctx.fillStyle = "#d49b83";
@@ -325,6 +335,8 @@ function renderGame() {
         ctx.fillStyle = "#3338a3";
       } else if (world == "Tireless Trek") {
         ctx.fillStyle = "#a591a8";
+      } else if (world == "Central Crossing") {
+        ctx.fillStyle = "#21326b";
       } else if (world == "Acclimating Acceleration") {
         ctx.fillStyle = "#5b7fab";
       } else if (world == "Jarring Journey") {
@@ -336,7 +348,7 @@ function renderGame() {
       if(area % 40 == 1 && area != 1){
         ctx.fillStyle = '#e0d897';
       }
-      ctx.fillRect(playerOffset.x, playerOffset.y, 2880 / 1.4 + 1028.6 + 960/1.4, 720 / 1.4);
+      ctx.fillRect(playerOffset.x, playerOffset.y, areaWidth + 960/1.4, 720 / 1.4);
 	    ctx.globalAlpha = 1;
 
       //Grid
@@ -409,6 +421,17 @@ function renderGame() {
         }
         
         ctx.font = "30px 'Exo 2'";
+      }
+      if (player.hero == "flylie") {
+        ctx.fillStyle = "#de5721";
+        ctx.fillText("Flylie", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Flylie", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#de5721';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/5000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/5000, 10);
       }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
@@ -766,6 +789,26 @@ function renderGame() {
           }
         }
       }
+      else if (player.world == "Central Crossing") {
+        ctx.font = "22px 'Exo 2'";
+        centralcrossing = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Central Crossing") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
       else if (player.world == "Acclimating Acceleration") {
         ctx.font = "22px 'Exo 2'";
         acclimatingacceleration = true;
@@ -969,8 +1012,14 @@ function renderGame() {
       ctx.textAlign = "center";
       if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration" && player.world != "Make Your Own Map") {
         if (player.area % 40 == 1 && player.area > 1) {
-          ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
-          ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+          if(player.world !== "Central Crossing"){
+            ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+            ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+          } else {
+            ctx.strokeText(players[selfId].world + ': Area ' + player.area + " - It's Not Over Yet!", canvas.width / 2, 40);
+            ctx.fillText(players[selfId].world + ': Area ' + player.area + " - It's Not Over Yet!", canvas.width / 2, 40);
+          }
+          
         }
         else {
           if (player.area % 10 == 0) {
@@ -996,7 +1045,7 @@ function renderGame() {
 
       //Minimap (scale 9.149, 7.346)
       ctx.fillStyle = "rgba(100,100,100,0.1)";
-      ctx.fillRect(15, canvas.height - 75, 300 * 1.37, 60);
+      ctx.fillRect(15, canvas.height - 75, (areaWidth + 617.15/2 + 96 / 1.4)/7.509, 60);
       ctx.arc((player.renderX / 9.149) + 15, (player.renderY / 8.4) + canvas.height - 75, 4, 0, 6.28318531);
       if (player.dead == false) {
         ctx.fillStyle = player.color;
@@ -1311,6 +1360,32 @@ function renderGame() {
       }
     }
   }
+  if (centralcrossing == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Central Crossing") {
+          playerCount++;
+          if (centralcrossing == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            centralcrossing = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
   if (acclimatingacceleration == false) {
     for (let j in players) {
       if (players[j].id != selfId) {
@@ -1588,6 +1663,8 @@ function renderGame() {
         ctx.fillStyle = "#a05353";
       } else if (enemies[i].type == "octo") {
         ctx.fillStyle = "#d3134f";
+      } else if (enemies[i].type == "offsetocto") {
+        ctx.fillStyle = "yellow";
       } else if (enemies[i].type == "icicle") {
         ctx.fillStyle = "#adf8ff";
       } else if (enemies[i].type == "ice sniper") {
@@ -1672,7 +1749,11 @@ function renderGame() {
         ctx.fillStyle = "#1aacbf";
       } else if (enemies[i].type == "tpstart") {
         ctx.fillStyle = "#4d1c4b";
-      } else if (enemies[i].type == "playershield") {
+      } else if (enemies[i].type == "toxic") {
+        ctx.fillStyle = "#0dff00";
+      } else if(enemies[i].type == "immunetoxic"){
+        ctx.fillStyle = "#033300";
+      }else if (enemies[i].type == "playershield") {
         ctx.fillStyle = "#43e6d2";
       } else if (enemies[i].type == "playershield") {
         ctx.fillStyle = "#43e6d2";
@@ -1864,7 +1945,6 @@ function renderGame() {
           else {
             ctx.fillStyle = "#b4c449";
           }
-          console.log(projectiles[i].guardAlertTimer);
         }
         else if (projectiles[i].type == "turrBullet") {
           ctx.fillStyle = "#bd8b0d";
@@ -2162,6 +2242,22 @@ thornstickDiv.onclick = () => {
   init('thornstick');
 }
 serverList.appendChild(thornstickDiv);
+
+/*const flylieDiv = document.createElement("div");
+flylieDiv.hero = "Flylie";
+flylieDiv.classList.add(`heroBox`);
+flylieDiv.innerText = `Flylie
+Slice: Throws a projectile that latches onto the wall and teleports you there. Kills all enemies it touches for 2 seconds. Cooldown: 5 seconds.
+Force: Toggles an aura. When toggled from on to off, teleports the player to the furthest enemy right and gives the player invincibility. Cooldown: 5 seconds.
+`;
+
+flylieDiv.classList.add('flylieDiv');
+flylieDiv.onclick = () => {
+  init('flylie');
+}
+serverList.appendChild(flylieDiv);*/
+
+
 
 function Resize() {
   let scale = window.innerWidth / canvas.width;

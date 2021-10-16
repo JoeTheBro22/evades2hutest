@@ -1,3 +1,5 @@
+const { map } = require("./map");
+
 let areaBoundaries = { x: 342.86, y: 0, width: 3085.74, height: 514.29 };
 
 let canvas = { width: 1280, height: 720 };
@@ -78,6 +80,12 @@ class Enemy {
 		this.shattered = -1000;
 		this.decay = 0;
 		this.dwindleFactor = 1;
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		}
+		if(areaBoundaries.width === undefined){
+			areaBoundaries.width = 3085.74;
+		}
 		if (this.x == undefined) {
 			this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
 		}
@@ -88,6 +96,7 @@ class Enemy {
 		this.baseY = this.y;
 		this.toPush = false;
 		this.timer = 1;
+		this.cycle = 0;
 		if (this.type == "wavy") {
 			this.dir = 1;
 			this.vy = rand_polar();
@@ -158,12 +167,12 @@ class Enemy {
 			this.jumpType = false;
 			this.speed *= 1.33333333;
 		}
-		if (this.type == "immune" || this.type == "immunedisabler" || this.type == "immunefreezing" || this.type == "immunepull" || this.type == "immunepush" || this.type == "blackhole") {
+		if (this.type == "immune" || this.type == "immunedisabler" || this.type == "immunefreezing" || this.type == "immunepull" || this.type == "immunepush" || this.type == "blackhole" || this.type == 'immunetoxic') {
 			this.immune = true;
 		}else{
       this.immune = false;
     }
-    if(this.type == "blackhole"){
+    if(this.type == "blackhole" || this.type == 'toxic'|| this.type == 'immunetoxic'){
       this.corrosive = true;
     }
 		this.disabled = false;
@@ -443,7 +452,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -521,7 +530,7 @@ class Enemy {
 				}
 				this.lastStop = this.stop;
 			}
-			if (['sniper', 'octo', 'ice sniper', 'speed sniper', 'regen sniper'].includes(this.type)) {
+			if (['sniper', 'octo', 'ice sniper', 'speed sniper', 'regen sniper', 'offsetocto'].includes(this.type)) {
 				this.reloadTimer -= delta;
 				if (this.type == "octo") {
 					if (this.reloadTimer <= 0) {
@@ -535,7 +544,38 @@ class Enemy {
 						createProjectile(this.x, this.y, "octoBullet", 8, 10, 270 * Math.PI / 180, this.world, this.area, projectiles);
 						createProjectile(this.x, this.y, "octoBullet", 8, 10, 315 * Math.PI / 180, this.world, this.area, projectiles);
 					}
-				} else {
+				} else if(this.type == 'offsetocto'){
+					if (this.reloadTimer <= 0) {
+						this.reloadTimer = this.reloadTime/10;
+						this.cycle++;
+						if(this.cycle >= 10){
+							this.cycle = 0;
+						}
+						if(this.cycle == 0){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 0 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 1){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 36 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 2){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 72 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 3){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 108 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 4){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 144 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 5){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 180 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 6){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 216 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 7){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 252 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 8){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 288 * Math.PI / 180, this.world, this.area, projectiles);
+						} else if(this.cycle == 9){
+							createProjectile(this.x, this.y, "octoBullet", 8, 10, 324 * Math.PI / 180, this.world, this.area, projectiles);
+						} else {
+							console.log(this.cycle);
+						}
+					}
+				}else {
 					let closestDist = 656.25;
 					let closest;
 					for (let p of Object.keys(players)) {
@@ -1294,7 +1334,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
+			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

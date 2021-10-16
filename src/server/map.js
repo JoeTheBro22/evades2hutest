@@ -20,6 +20,8 @@ const { BECOME_SUS } = require("./maps/become sus");
 const { ATROCIOUS_ARENA } = require("./maps/atrocious arena");
 const { MAKE_YOUR_OWN_MAP } = require("./maps/make your own map");
 
+const { CENTRAL_CROSSING } = require("./maps/central crossing");
+
 const map = {
 "Corrupted Core": CORRUPTED_CORE,
 "Crazy Cosmos": CRAZY_COSMOS,
@@ -38,6 +40,7 @@ const map = {
 "Acclimating Acceleration": ACCLIMATING_ACCELERATION,
 "Jarring Journey": JARRING_JOURNEY,
 "Make Your Own Map": MAKE_YOUR_OWN_MAP,
+"Central Crossing": CENTRAL_CROSSING,
 }
 
 module.exports = {

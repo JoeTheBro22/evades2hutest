@@ -71,6 +71,9 @@ const enemies = {
 "Make Your Own Map": {
 
 },
+"Central Crossing": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -117,6 +120,9 @@ const projectiles = {
 
 },
 "Make Your Own Map": {
+
+},
+"Central Crossing": {
 
 },
 }
@@ -185,6 +191,10 @@ for (let i = 42; i--; i > 0) {
 for (let i = 42; i--; i > 0) {
 	enemies['Jarring Journey'][i] = [];
 	projectiles['Jarring Journey'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Central Crossing'][i] = [];
+	projectiles['Central Crossing'][i] = [];
 }
 
 const map = require("./map");
@@ -363,7 +373,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -820,7 +830,7 @@ function mainLoop() {
 			  let canvas = { width: 1280, height: 720 };
 			  let mx = -canvas.width / 2 + players[i].mousePos.x + players[i].pos.x;
 			  let my = -canvas.height / 2 + players[i].mousePos.y + players[i].pos.y;
-			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].hero == 'gunslinger') {
+			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].hero == 'gunslinger' && players[i].world !== "Central Crossing") {
 				if (enemy.deadTime < 3000){
 					enemy.deadTime = 3000;
 				  }

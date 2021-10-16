@@ -92,6 +92,8 @@ class Player {
 		this.lastvy = 0;
 		this.speedChanged = false;
     	this.deathTimer = 60;
+		this.areaWidth = 3085.74;
+		//console.log(map[this.world].width);
 		// Ptah
 
 		this.clay = 0;
@@ -245,6 +247,10 @@ class Player {
 		pack.ab1cd = this.ability1cooldown;
 		sendId = true;
 	}
+	if(this.areaWidth != undefined){
+		pack.aw = this.areaWidth;
+		sendId = true;
+	}
 
 	if(this.warps != undefined){
 		pack.wps = this.warps;
@@ -292,6 +298,7 @@ class Player {
 			msp: this.mousePos,
 			ae: this.addEnemy,
 			wps: this.warps,
+			aw: this.areaWidth,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -322,12 +329,15 @@ class Player {
 		return pack;
 	}
 	move(delta, enemies) {
-    this.lastMaxEnergy = this.maxEnergy;
-    this.lastRegen = this.regen;
+		if (map[this.world].width !== undefined){
+			this.areaWidth = map[this.world].width[this.area-1];
+		}
+    	this.lastMaxEnergy = this.maxEnergy;
+    	this.lastRegen = this.regen;
 		this.lastVel.x = this.vel.x;
 		this.lastVel.y = this.vel.y;
-    let currentX = this.pos.x;
-    let currentY = this.pos.y;
+    	let currentX = this.pos.x;
+    	let currentY = this.pos.y;
 
 
 		//Reset velocity
@@ -496,13 +506,27 @@ class Player {
 
 		//Collisions:
 		if (this.area == 1) {
+			if (map[this.world].width !== undefined){
+				this.areaWidth = map[this.world].width[this.area-1];
+			} else {
+				this.areaWidth = 3085.74;
+			}
 			if (this.pos.x - this.radius < 0) {
 				//Stops at left wall at spawn (area is 1)
 				this.pos.x = this.radius;
 			}
 		} else if (this.pos.x - this.radius < 68.57) {
 			//Goes to the end of the previous area (area is not 1)
-			this.pos.x = 2674.29 + 1028.6 - this.radius;
+			if (map[this.world].width !== undefined){
+				this.areaWidth = map[this.world].width[this.area-1];
+			} else {
+				this.areaWidth = 3085.74;
+			}
+			if (map[this.world].width !== undefined){
+				this.pos.x = map[this.world].width[this.area-2] + 617.15 - this.radius;
+			} else {
+				this.pos.x = this.areaWidth + 617.15 - this.radius;
+			}
 			this.oldArea = this.area;
 			this.area--;
 			if(this.warps.amount > 0){
@@ -523,9 +547,15 @@ class Player {
 			this.teleported = true;
 		}
 
-		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek') {
+		if (map[this.world].width !== undefined){
+			this.areaWidth = map[this.world].width[this.area-1];
+		}
+		if(this.areaWidth === undefined){
+			this.areaWidth = 3085.74;
+		}
+		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Central Crossing") {
 			if (this.area < 41) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -548,7 +578,7 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
@@ -557,7 +587,7 @@ class Player {
 			this.speedMult = 1 + this.area/40; // will be 1.5x the speed at 20
 			this.speedChanged = true;
 			if (this.area < 20) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -576,8 +606,7 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
-					//Reached the last area, stops at the wall (area is victory)
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					this.area = 0;
           			this.world = 'Jarring Journey';
 					this.speed = 17;
@@ -586,7 +615,7 @@ class Player {
 			}
 		} else if(this.world == 'Jarring Journey'){
 			if (this.area < 21) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -609,14 +638,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           			this.won = true;
 				}
 			}
 		} else if(this.world == 'Make Your Own Map'){
 			if (this.area < 81) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -639,14 +668,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           			this.won = true;
 				}
 			}
 		} else if (this.world == "Strange Space") {
 			if (this.area < 21) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -669,14 +698,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
 			}
     } else if (this.world == "Corrupted Core") {
 			if (this.area < 82) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -699,14 +728,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
 			}
     } else if (this.world == "Monumental Migration") {
 			if (this.area < 481) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -729,14 +758,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
 			}
     } else if (this.world == "Crowded Cavern" || this.world == "Crowded Cavern Hard" || this.world == "Toilsome Traverse" || this.world == "Arduous Abyss") {
 			if (this.area < 81) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -759,14 +788,14 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
 			}
     } else {
 			if (this.area < 481) {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
 					this.oldArea = this.area;
@@ -789,7 +818,7 @@ class Player {
 					this.teleported = true;
 				}
 			} else {
-				if (this.pos.x + this.radius > 2674.29 + 1028.6) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//Reached the last area, stops at the wall (area is victory)
           this.won = true;
 				}
@@ -836,6 +865,15 @@ class Player {
 					}
 					this.world = name;
 				}
+				if(map[this.world].width !== undefined){
+					this.areaWidth = map[this.world].width[this.area-1];
+				}
+				if(this.areaWidth === undefined){
+					this.areaWidth = map[this.world].width[map[this.world].width.length - 1];
+					if (this.areaWidth === undefined){
+						this.areaWidth = 3085.74;
+					}
+				}
 			}
 		} else {
 			//Normal wall collision
@@ -868,7 +906,10 @@ class Player {
       this.yChanged = true;
     }
 	}
-	ability(delta, enemies, projectiles) {
+ability(delta, enemies, projectiles) {
+	if(this.world == "Central Crossing"){
+		return;
+	}
     this.lastEnergy = this.energy;
     this.energy += delta * this.regen / 1000;
     if (this.energy > this.maxEnergy){
@@ -1338,7 +1379,6 @@ class Player {
 						angle = 0;
 					}
 				}
-
 				if (this.mouseOn == true) {
 					angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 				}
