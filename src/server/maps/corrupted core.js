@@ -1,5 +1,6 @@
 const CORRUPTED_CORE = {
 	"index": 0,
+	"width": [ 1000, 1000, 100 ],
 	"1": [{
 		type: "normal",
 		amount: 1,
@@ -8,20 +9,15 @@ const CORRUPTED_CORE = {
 	}],
 	"2": [{
 		type: "normal",
-		amount: 10,
-		radius: 18,
-		speed: 5
+		amount: 1,
+		radius: 15,
+		speed: 2
 	}],
 	"3": [{
 		type: "normal",
-		amount: 21,
-		radius: 18,
-		speed: 5
-	}, {
-		type: "warp",
-		amount: 2,
-		radius: 18,
-		speed: 5
+		amount: 1,
+		radius: 15,
+		speed: 2
 	}],
 	"4": [{
 		type: "normal",

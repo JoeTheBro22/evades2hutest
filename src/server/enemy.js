@@ -80,12 +80,6 @@ class Enemy {
 		this.shattered = -1000;
 		this.decay = 0;
 		this.dwindleFactor = 1;
-		if (map[this.world].width !== undefined){
-			areaBoundaries.width = map[this.world].width[this.area-1];
-		}
-		if(areaBoundaries.width === undefined){
-			areaBoundaries.width = 3085.74;
-		}
 		if (this.x == undefined) {
 			this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
 		}
@@ -303,10 +297,10 @@ class Enemy {
 		return pack;
 	}
 	move(delta, players, enemies, projectiles) {
-    this.xChanged = false;
-    this.yChanged = false;
-    let lX = this.x;
-    let lY = this.y;
+		this.xChanged = false;
+		this.yChanged = false;
+		let lX = this.x;
+		let lY = this.y;
 		this.lastx = this.x;
 		this.lasty = this.y;
 		this.lastDead = this.dead;
@@ -481,6 +475,15 @@ class Enemy {
           }
         }
       }
+			for (let p of Object.keys(players)) {
+				if(map[players[p].world].width[players[p].area-1] !== areaBoundaries.width && this.area == players[p].area && this.world == players[p].world){
+					if (map[this.world].width !== undefined){
+						areaBoundaries.width = map[this.world].width[this.area-1];
+					} else {
+						areaBoundaries.width = 3085.74;
+					}
+				}
+			}
 			if (this.type == "scared") {
 				let stop = 1;
 				for (let p of Object.keys(players)) {
@@ -571,8 +574,6 @@ class Enemy {
 							createProjectile(this.x, this.y, "octoBullet", 8, 10, 288 * Math.PI / 180, this.world, this.area, projectiles);
 						} else if(this.cycle == 9){
 							createProjectile(this.x, this.y, "octoBullet", 8, 10, 324 * Math.PI / 180, this.world, this.area, projectiles);
-						} else {
-							console.log(this.cycle);
 						}
 					}
 				}else {
