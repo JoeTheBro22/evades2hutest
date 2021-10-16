@@ -1129,12 +1129,6 @@ const CENTRAL_CROSSING = {
 		radius: 20,
 		speed: 5
 	}],
-	"41": [{
-		type: "offsetocto",
-		amount: 5,
-		radius: 30,
-		speed: 10
-	}]
 }
 
 let i = 0;

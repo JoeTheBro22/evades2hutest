@@ -1012,14 +1012,8 @@ function renderGame() {
       ctx.textAlign = "center";
       if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration" && player.world != "Make Your Own Map") {
         if (player.area % 40 == 1 && player.area > 1) {
-          if(player.world !== "Central Crossing"){
-            ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
-            ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
-          } else {
-            ctx.strokeText(players[selfId].world + ': Area ' + player.area + " - It's Not Over Yet!", canvas.width / 2, 40);
-            ctx.fillText(players[selfId].world + ': Area ' + player.area + " - It's Not Over Yet!", canvas.width / 2, 40);
-          }
-          
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
         }
         else {
           if (player.area % 10 == 0) {
