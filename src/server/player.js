@@ -93,6 +93,7 @@ class Player {
 		this.speedChanged = false;
     	this.deathTimer = 60;
 		this.areaWidth = 3085.74;
+		this.areaHeight = 514.29;
 		//console.log(map[this.world].width);
 		// Ptah
 
@@ -119,6 +120,8 @@ class Player {
 
 		// Thornstick
 		this.thorns = [];
+		
+		//Flylie
 
 		//cimex
 
@@ -251,6 +254,10 @@ class Player {
 		pack.aw = this.areaWidth;
 		sendId = true;
 	}
+	if(this.areaHeight != undefined){
+		pack.ah = this.areaHeight;
+		sendId = true;
+	}
 
 	if(this.warps != undefined){
 		pack.wps = this.warps;
@@ -299,6 +306,7 @@ class Player {
 			ae: this.addEnemy,
 			wps: this.warps,
 			aw: this.areaWidth,
+			ah: this.areaHeight,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -331,6 +339,9 @@ class Player {
 	move(delta, enemies) {
 		if (map[this.world].width !== undefined){
 			this.areaWidth = map[this.world].width[this.area-1];
+		}
+		if (map[this.world].height !== undefined){
+			this.areaHeight = map[this.world].height[this.area-1];
 		}
     	this.lastMaxEnergy = this.maxEnergy;
     	this.lastRegen = this.regen;
@@ -511,6 +522,11 @@ class Player {
 			} else {
 				this.areaWidth = 3085.74;
 			}
+			if (map[this.world].height !== undefined){
+				this.areaHeight = map[this.world].height[this.area-1];
+			} else {
+				this.areaHeight = 514.29;
+			}
 			if (this.pos.x - this.radius < 0) {
 				//Stops at left wall at spawn (area is 1)
 				this.pos.x = this.radius;
@@ -526,6 +542,11 @@ class Player {
 				this.pos.x = map[this.world].width[this.area-2] + 617.15 - this.radius;
 			} else {
 				this.pos.x = this.areaWidth + 617.15 - this.radius;
+			}
+			if (map[this.world].height !== undefined){
+				this.areaHeight = map[this.world].height[this.area-1];
+			} else {
+				this.areaHeight = 514.29;
 			}
 			this.oldArea = this.area;
 			this.area--;
@@ -552,6 +573,12 @@ class Player {
 		}
 		if(this.areaWidth === undefined){
 			this.areaWidth = 3085.74;
+		}
+		if (map[this.world].height !== undefined){
+			this.areaHeight = map[this.world].height[this.area-1];
+		}
+		if(this.areaHeight === undefined){
+			this.areaHeight = 514.29;
 		}
 		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Central Crossing") {
 			if (this.area < 41) {
@@ -827,8 +854,8 @@ class Player {
 		if (this.pos.x - this.radius < 342.86 && this.area == 1) {
 			//If area is one and it can collide with teleporters to switch world: (will need to change this when new worlds come into play)
 
-			if (this.pos.y - this.radius < 68.57) {
-				this.pos.y = 445.72 - this.radius;
+			if (this.pos.y - this.radius + this.areaHeight - 514.29 < 68.57) {
+				this.pos.y = 445.72 + this.areaHeight - 514.29 - this.radius;
 				this.oldWorld = this.world;
 				let currentWorldIndex = map[this.world].index;
 				this.worldTeleported = true;
@@ -874,14 +901,23 @@ class Player {
 						this.areaWidth = 3085.74;
 					}
 				}
+				if(map[this.world].height !== undefined){
+					this.areaHeight = map[this.world].height[this.area-1];
+				}
+				if(this.areaHeight === undefined){
+					this.areaHeight = map[this.world].height[map[this.world].height.length - 1];
+					if (this.areaHeight === undefined){
+						this.areaHeight = 514.29;
+					}
+				}
 			}
 		} else {
 			//Normal wall collision
 			if (this.pos.y - this.radius < 0) {
 				this.pos.y = this.radius;
 				this.slippery = false;
-			} else if (this.pos.y + this.radius > 514.29) {
-				this.pos.y = 514.29 - this.radius;
+			} else if (this.pos.y + this.radius > this.areaHeight) {
+				this.pos.y = this.areaHeight - this.radius;
 				this.slippery = false;
 			}
 		}
@@ -1234,6 +1270,71 @@ ability(delta, enemies, projectiles) {
 						}
 					}
 				}
+			}
+		}
+
+		if (this.hero == "flylie") {
+			if (!this.dead) {
+				if (this.z && this.ability1cooldown < 0 && this.energy >= 20) {
+          			this.energy -= 20;
+					this.ability1cooldown = 4500;
+					let latcherAngle = 0;
+					if (this.lastvx < 0) {
+						if (this.lastvy < 0) {
+							latcherAngle = 225;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 135;
+						} else {
+							latcherAngle = 180;
+						}
+					} else if (this.lastvx > 0) {
+						if (this.lastvy < 0) {
+							latcherAngle = 315;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 45;
+						} else {
+							latcherAngle = 0;
+						}
+					} else {
+						if (this.lastvy < 0) {
+							latcherAngle = 270;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 90;
+						} else {
+							latcherAngle = 0;
+						}
+					}
+
+					if (this.mouseOn == true) {
+						latcherAngle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+					}
+					createProjectile(this.pos.x, this.pos.y, "wallLatcher", 22, 20, (latcherAngle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+				}
+				if (this.x && this.ability2cooldown <= 0 && this.dead == false && this.energy >= 10) {
+					this.energy -= 10;
+					this.ability2cooldown = 300;
+					let furthestEnemy = null;
+					for (let i of Object.keys(enemies)) {
+						let enemy = enemies[i];
+						if (Math.sqrt(Math.pow(enemy.x - this.pos.x, 2) + Math.pow(enemy.y - this.pos.y, 2)) < 210 + enemy.radius) {
+							if(furthestEnemy === null || enemy.x > furthestEnemy.x){
+								furthestEnemy = enemy;
+							}
+						}
+					}
+					if(furthestEnemy !== null){
+						this.pos.x = furthestEnemy.x;
+						this.pos.y = furthestEnemy.y;
+						this.xChanged = true;
+						this.yChanged = true;
+						this.invincibilityTimer = 2000;
+						this.invincible = true;
+						this.lastInvincible = Date.now();
+					}
+				}
+
+				/**/
+				//2nd ability "force" with aura is 2.5 sec cooldown
 			}
 		}
 

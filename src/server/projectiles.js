@@ -22,7 +22,7 @@ class Projectile {
 		this.guardAlertTimer = 0;
     this.baseRadius = this.radius;
 		this.exploding = false;
-		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn") {
+		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
 			this.touched = [];
 		}
 		if (this.type == "portal") {
@@ -39,7 +39,9 @@ class Projectile {
 			this.life = 8000;
 		} else if(this.type == "octoBullet"){
 			this.life = 3000;
-		} else {
+		} else if(this.type == "wallLatcher"){
+			this.life = 10000;
+		}else {
 			this.life = Infinity;
 		}
 		if (this.type == "portalBomb") {
@@ -57,6 +59,17 @@ class Projectile {
       this.touched = [];
     }
 		this.growSpeed = 1;
+		if(map[this.world].width !== undefined){
+			if(map[this.world].width[this.area-1] !== undefined){
+				areaBoundaries.width = map[this.world].width[this.area-1];
+			}
+		}
+		
+		if(map[this.world].height !== undefined){
+			if(map[this.world].height[this.area-1] !== undefined){
+				areaBoundaries.height = map[this.world].height[this.area-1];
+			}
+		}
 	}
 	getUpdatePack() {
 		let pack = {
@@ -100,12 +113,6 @@ class Projectile {
 		return pack
 	}
 	update(delta, players, enemies, projectiles) {
-		if (map[this.world].width !== undefined){
-			areaBoundaries.width = map[this.world].width[this.area-1];
-		}
-		if(areaBoundaries.width === undefined){
-			areaBoundaries.width = 3085.74;
-		}
 		if (this.type == "portal" && this.toInit == true) {
 			for (let p of Object.keys(players)) {
 				const player = players[p];
@@ -136,7 +143,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'web', 'portal', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'thorn'].includes(this.type)) {
+		if (!['guard', 'web', 'portal', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -211,6 +218,41 @@ class Projectile {
         }
         break;
       }
+	  case "wallLatcher": {
+		const parent = players[this.parentId];
+		if (parent == undefined) {
+			this.killed = true;
+			break;
+		}
+		if (this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
+			this.killed = true;
+		}
+		if(this.x - this.radius < 342.86 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 - 342.86){
+			if(this.x - this.radius < 342.86){
+				this.x = this.radius + 342.86 + 1;
+			}
+			if(this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 - 342.86){
+				this.x = areaBoundaries.width + areaBoundaries.x * 2 - 342.86 - this.radius - 1;
+			}
+			if(this.vx < 0){
+				this.vx = Math.abs(this.vx);
+			} else {
+				this.vx = -Math.abs(this.vx);
+			}
+		}
+		for(let i of Object.keys(enemies)){
+			const enemy = enemies[i];
+			if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune && (enemy.deadTime < 0 || enemy.disableTime < 0)) {
+			  if (enemy.deadTime < 2300){
+				enemy.deadTime = 2300;
+			  }
+			  if (enemy.disableTime < 2300){
+				enemy.disableTime = 2300;
+			  }
+			  this.touched.push(0);
+			}
+		}
+	}
       case "turrBullet": {
         for(let i of Object.keys(enemies)){
           const enemy = enemies[i];

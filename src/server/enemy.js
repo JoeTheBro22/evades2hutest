@@ -311,7 +311,7 @@ class Enemy {
 		this.slowdown = 1;
 		this.disabled = false;
 		this.type = this.baseType;
-		if (this.type != "sizing") {
+		if (this.type != "sizing" && this.type != 'expanding') {
 			this.radius = this.baseRadius;
 		} else {
 			this.radius = this.sizingRadius;
@@ -446,7 +446,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -476,12 +476,27 @@ class Enemy {
         }
       }
 			for (let p of Object.keys(players)) {
-				if(map[players[p].world].width[players[p].area-1] !== areaBoundaries.width && this.area == players[p].area && this.world == players[p].world){
-					if (map[this.world].width !== undefined){
-						areaBoundaries.width = map[this.world].width[this.area-1];
-					} else {
-						areaBoundaries.width = 3085.74;
+				if(map[players[p].world].width !== undefined){
+					if(this.area == players[p].area && this.world == players[p].world){
+						if (map[this.world].width !== undefined){
+							areaBoundaries.width = map[this.world].width[this.area-1];
+						} else {
+							areaBoundaries.width = 3085.74;
+						}
 					}
+				} else {
+					areaBoundaries.width = 3085.74;
+				}
+				if(map[players[p].world].height !== undefined){
+					if(this.area == players[p].area && this.world == players[p].world){
+						if (map[this.world].height !== undefined){
+							areaBoundaries.height = map[this.world].height[this.area-1];
+						} else {
+							areaBoundaries.height = 514.29;
+						}
+					}
+				} else {
+					areaBoundaries.height = 514.29;
 				}
 			}
 			if (this.type == "scared") {
@@ -1204,6 +1219,35 @@ class Enemy {
 					this.y += this.vy * this.speed * delta;
 				}
 			}
+			if (this.type == "expanding") {
+				let closestDist = 10000;
+				let min = 200;
+				let index;
+				for (var i in players) {
+					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
+						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
+							if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+								min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
+								index = i;
+							}
+						}
+					}
+				}
+				if (min < 200) {
+					this.sizingRadius += ((delta / 30) * 0.3) * this.lowRadius;
+					if (this.radius > this.maxRadius) {
+						this.radius = this.maxRadius;
+					}
+				} else {
+					if(this.sizingRadius > this.lowRadius){
+						this.sizingRadius -= ((delta / 30) * 0.2) * this.lowRadius;
+					}
+					if (this.radius < this.minRadius) {
+						this.radius = this.minRadius;
+					}
+				}
+				this.changeRadius = true;
+			}
       if (this.type == "mine") {
 				let closestDist = 10000;
 				let min = 250;
@@ -1335,7 +1379,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

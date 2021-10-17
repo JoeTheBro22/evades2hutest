@@ -16,6 +16,7 @@ class Player{
     this.regen = initPack.regen;
     this.ability1cooldown = initPack.ab1cd;
     this.areaWidth = initPack.aw;
+    this.areaHeight = initPack.ah;
     this.ability2cooldown = initPack.ab2cd;
     this.mousePos = initPack.msp;
     this.addEnemy = initPack.ae;
@@ -141,6 +142,9 @@ class Player{
     }
     if (updatePack.aw != undefined){
       this.areaWidth = updatePack.aw;
+    }
+    if (updatePack.ah != undefined){
+      this.areaHeight = updatePack.ah;
     }
     if (updatePack.wps != undefined){
       this.warps = updatePack.wps;

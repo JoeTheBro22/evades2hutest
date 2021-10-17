@@ -274,38 +274,39 @@ function renderGame() {
       area = player.area;
       world = player.world;
       areaWidth = player.areaWidth;
+      areaHeight = player.areaHeight;
 
       playerOffset.x = (player.renderX - 640) * -1;
       playerOffset.y = (player.renderY - 360) * -1;
 
       //Safe Zones
       ctx.fillStyle = "rgba(195,195,195,1)";
-      ctx.fillRect(playerOffset.x, playerOffset.y, 384 / 1.4 + 96 / 1.4, 720 / 1.4);
-      ctx.fillRect(342.86 + areaWidth + playerOffset.x, playerOffset.y, 384 / 1.4, 720 / 1.4);
+      ctx.fillRect(playerOffset.x, playerOffset.y, 384 / 1.4 + 96 / 1.4, 720 / 1.4 + areaHeight - 514.29);
+      ctx.fillRect(342.86 + areaWidth + playerOffset.x, playerOffset.y, 384 / 1.4, 720 / 1.4 + areaHeight - 514.29);
 
       if (area == 1) {
         //Teleporting between worlds
         ctx.fillStyle = "rgba(106,208,222,1)";
         ctx.fillRect(playerOffset.x, playerOffset.y, 480 / 1.4, 96 / 1.4);
-        ctx.fillRect(playerOffset.x, 624 / 1.4 + playerOffset.y, 480 / 1.4, 96 / 1.4);
+        ctx.fillRect(playerOffset.x, 624 / 1.4 + playerOffset.y + areaHeight - 514.29, 480 / 1.4, 96 / 1.4);
 
         //Teleporting between areas
         if (player.world == "Corrupted Core") {
           ctx.fillStyle = "rgba(85,176,179,1)";
-          ctx.fillRect(playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
+          ctx.fillRect(playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4 + areaHeight - 514.29);
         }
 
         ctx.fillStyle = "rgba(255,244,108,1)";
-        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
+        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4 + areaHeight - 514.29);
       } else {
         ctx.fillStyle = "rgba(255,244,108,1)";
-        ctx.fillRect(playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
-        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4);
+        ctx.fillRect(playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4 + areaHeight - 514.29);
+        ctx.fillRect(617.15 + areaWidth + playerOffset.x, playerOffset.y, 96 / 1.4, 720 / 1.4 + areaHeight - 514.29);
       }
 
       //Area
       ctx.fillStyle = "rgb(255, 255, 255)"
-      ctx.fillRect(playerOffset.x + 480/1.4, playerOffset.y, areaWidth, 720 / 1.4);
+      ctx.fillRect(playerOffset.x + 480/1.4, playerOffset.y, areaWidth, 720 / 1.4 + areaHeight - 514.29);
       ctx.globalAlpha = 0.4; // change if it doesnt look good
       if (world == "Arduous Abyss") {
         ctx.fillStyle = "#d49b83";
@@ -348,7 +349,7 @@ function renderGame() {
       if(area % 40 == 1 && area != 1){
         ctx.fillStyle = '#e0d897';
       }
-      ctx.fillRect(playerOffset.x, playerOffset.y, areaWidth + 960/1.4, 720 / 1.4);
+      ctx.fillRect(playerOffset.x, playerOffset.y, areaWidth + 960/1.4, 720 / 1.4 + areaHeight - 514.29);
 	    ctx.globalAlpha = 1;
 
       //Grid
@@ -430,8 +431,8 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#de5721';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/5000, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/5000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/300, 10);
       }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
@@ -562,6 +563,17 @@ function renderGame() {
       }
 
       ctx.beginPath();
+      if(player.hero == "flylie"){
+        ctx.fillStyle = player.color;
+        ctx.globalAlpha = 0.3;
+        ctx.arc(640, 360, 200, 0, 6.28318531);
+        ctx.fill();
+      }
+      
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.globalAlpha = 1;
       ctx.arc(640, 360, player.radius, 0, 6.28318531);
       if (player.dead == false) {
         ctx.fillStyle = player.color;
@@ -1715,6 +1727,8 @@ function renderGame() {
         ctx.fillStyle = "yellow";
       } else if (enemies[i].type == "liquid") {
         ctx.fillStyle = "#6789ef";
+      } else if (enemies[i].type == "expanding") {
+        ctx.fillStyle = "#6dad51";
       } else if (enemies[i].type == "frog") {
         ctx.fillStyle = "#541087";
       } else if (enemies[i].type == "evilfrog") {
@@ -1945,6 +1959,9 @@ function renderGame() {
         }
         else if (projectiles[i].type == "kindleBomb") {
           ctx.fillStyle = "#ed6f3e";
+        }
+        else if (projectiles[i].type == "wallLatcher") {
+          ctx.fillStyle = "#b81845";
         }
         else if (projectiles[i].type == "web") {
           ctx.fillStyle = "#333333";
@@ -2237,19 +2254,19 @@ thornstickDiv.onclick = () => {
 }
 serverList.appendChild(thornstickDiv);
 
-/*const flylieDiv = document.createElement("div");
+const flylieDiv = document.createElement("div");
 flylieDiv.hero = "Flylie";
 flylieDiv.classList.add(`heroBox`);
 flylieDiv.innerText = `Flylie
-Slice: Throws a projectile that latches onto the wall and teleports you there. Kills all enemies it touches for 2 seconds. Cooldown: 5 seconds.
-Force: Toggles an aura. When toggled from on to off, teleports the player to the furthest enemy right and gives the player invincibility. Cooldown: 5 seconds.
+Slice: Throws a projectile that latches onto the wall and teleports you there, giving you invincibility for 2 seconds. Kills all enemies it touches for 2 seconds. Cooldown: 4.5 seconds, takes 20 energy.
+Force: Teleports the player to the furthest enemy right in a 200px radius, and gives the player invincibility for 2 seconds. Cooldown .3 seconds, takes 10 energy.
 `;
 
 flylieDiv.classList.add('flylieDiv');
 flylieDiv.onclick = () => {
   init('flylie');
 }
-serverList.appendChild(flylieDiv);*/
+serverList.appendChild(flylieDiv);
 
 
 

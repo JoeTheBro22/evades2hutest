@@ -799,6 +799,14 @@ function mainLoop() {
           }
 
           if (projectile.killed == true) {
+			if(projectile.type == "wallLatcher" && projectile.life > 0){
+				  players[projectile.parentId].pos.x = projectile.x;
+				  players[projectile.parentId].pos.y = projectile.y;
+				  players[projectile.parentId].xChanged = true;
+				  players[projectile.parentId].yChanged = true;
+				  players[projectile.parentId].invincibilityTimer = 2000;
+				  players[projectile.parentId].invincible = true;
+			}
             area.splice(area.indexOf(projectile), 1);
           }
         }		
