@@ -432,7 +432,7 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#de5721';
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/300, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
       }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
@@ -2259,7 +2259,7 @@ flylieDiv.hero = "Flylie";
 flylieDiv.classList.add(`heroBox`);
 flylieDiv.innerText = `Flylie
 Slice: Throws a projectile that latches onto the wall and teleports you there, giving you invincibility for 2 seconds. Kills all enemies it touches for 2 seconds. Cooldown: 4.5 seconds, takes 20 energy.
-Force: Teleports the player to the furthest enemy right in a 200px radius, and gives the player invincibility for 2 seconds. Cooldown .3 seconds, takes 10 energy.
+Force: Teleports the player to the furthest enemy right in a 200px radius, and gives the player invincibility for 2 seconds. Cooldown 1 second, takes 10 energy.
 `;
 
 flylieDiv.classList.add('flylieDiv');

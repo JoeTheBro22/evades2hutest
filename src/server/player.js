@@ -1312,7 +1312,7 @@ ability(delta, enemies, projectiles) {
 				}
 				if (this.x && this.ability2cooldown <= 0 && this.dead == false && this.energy >= 10) {
 					this.energy -= 10;
-					this.ability2cooldown = 300;
+					this.ability2cooldown = 1000;
 					let furthestEnemy = null;
 					for (let i of Object.keys(enemies)) {
 						let enemy = enemies[i];
