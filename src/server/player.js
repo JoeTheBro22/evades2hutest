@@ -1327,7 +1327,7 @@ ability(delta, enemies, projectiles) {
 						this.pos.y = furthestEnemy.y;
 						this.xChanged = true;
 						this.yChanged = true;
-						this.invincibilityTimer = 2000;
+						this.invincibilityTimer = 740;
 						this.invincible = true;
 						this.lastInvincible = Date.now();
 					}
