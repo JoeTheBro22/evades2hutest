@@ -48,6 +48,7 @@ function warpAround(rect, lengthT) {
 }
 
 class Enemy {
+	// for more ideas visit: https://hub.adiprk.repl.co/
 	constructor(options) {
 		Object.assign(this, options);
 		if (Array.isArray(this.type)) {

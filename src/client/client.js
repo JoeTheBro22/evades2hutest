@@ -2213,6 +2213,7 @@ gunslingerDiv.hero = "Gunslinger";
 gunslingerDiv.classList.add(`heroBox`);
 gunslingerDiv.innerText = `Gunslinger
 Shoot (passive): Your mouse will kill and disable any enemy that touches it. You can still use this ability when downed
+Autocorrect (passive): You will gravitate away from all enemies, with a stronger force if you are closer. Max gravitation is 10 speed.
 `;
 gunslingerDiv.classList.add('gunslingerDiv');
 gunslingerDiv.onclick = () => {

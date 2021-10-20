@@ -834,8 +834,36 @@ function mainLoop() {
               //Send update pack
               players[i].enemyUpdatePack.push(enemy.getUpdatePack());
 
-              //Collision with player
+              
 			  let canvas = { width: 1280, height: 720 };
+
+			  //Gunslinger Autocorrect
+			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead){
+				  let amountToPushX = ((players[i].pos.x - enemy.x)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
+				  let amountToPushY = ((players[i].pos.y - enemy.y)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
+				  if(amountToPushX*6800 < 10 && amountToPushX*6800 > -10){
+					players[i].pos.x += amountToPushX*6800;
+				  } else {
+					if(players[i].pos.x - enemy.x < 0){
+						players[i].pos.x -= 10;
+					} else {
+						players[i].pos.x += 10;
+					}
+				  }
+				  if(amountToPushY*6800 < 10 && amountToPushY*6800 > -10){
+					players[i].pos.y += amountToPushY*6800;
+				  } else {
+					if(players[i].pos.y - enemy.y < 0){
+						players[i].pos.y -= 10;
+					} else {
+						players[i].pos.y += 10;
+					}
+				  }
+				  players[i].xChanged = true;
+				  players[i].yChanged = true;
+			  }
+
+			  //Collision with player
 			  let mx = -canvas.width / 2 + players[i].mousePos.x + players[i].pos.x;
 			  let my = -canvas.height / 2 + players[i].mousePos.y + players[i].pos.y;
 			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].hero == 'gunslinger' && players[i].world !== "Central Crossing") {
