@@ -317,6 +317,10 @@ class Enemy {
 		} else {
 			this.radius = this.sizingRadius;
 		}
+		if(this.type == "tpshooter"){
+			this.xChanged = true;
+			this.yChanged = true;
+		}
 		this.shattered -= delta;
 		this.frozen -= delta;
 		this.deadTime -= delta;
@@ -447,7 +451,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -549,7 +553,7 @@ class Enemy {
 				}
 				this.lastStop = this.stop;
 			}
-			if (['sniper', 'octo', 'ice sniper', 'speed sniper', 'regen sniper', 'offsetocto'].includes(this.type)) {
+			if (['sniper', 'octo', 'ice sniper', 'speed sniper', 'regen sniper', 'offsetocto', 'tpshooter'].includes(this.type)) {
 				this.reloadTimer -= delta;
 				if (this.type == "octo") {
 					if (this.reloadTimer <= 0) {
@@ -617,7 +621,10 @@ class Enemy {
 						if (this.type == "speed sniper") {
 							type = "speedSniperBullet";
 						}
-						if (this.type == "sniper") {
+						if(this.type == 'tpshooter'){
+							type = 'tpBullet';
+							createProjectile(this.x, this.y, type, this.radius/4 + 5, 10, Math.atan2(closest.pos.y - this.y, closest.pos.x - this.x), this.world, this.area, projectiles, this.id);
+						} else if (this.type == "sniper") {
 							createProjectile(this.x, this.y, type, this.radius / 2, 10, Math.atan2(closest.pos.y - this.y, closest.pos.x - this.x), this.world, this.area, projectiles);
 						}
 						else {
@@ -1126,7 +1133,7 @@ class Enemy {
 					this.timer = Math.random() * 10;
 				}
 			}
-			if (this.type == "homing") {
+			if (this.type == "homing" || this.type == "superhoming") {
 				let min = 200;
 				let index;
 				for (var i in players) {
@@ -1145,15 +1152,19 @@ class Enemy {
 					var dY = (players[index].pos.y) - this.y;
 					this.targetAngle = Math.atan2(dY, dX);
 
-					var dif = this.targetAngle - this.angle;
-					var angleDif = Math.atan2(Math.sin(dif), Math.cos(dif));
-					var angleIncrement = 0.04;
-					if (Math.abs(angleDif) >= angleIncrement) {
-						if (angleDif < 0) {
-							this.angle -= angleIncrement * (20 / 30)
-						} else {
-							this.angle += angleIncrement * (20 / 30)
+					if(this.type == "homing"){
+						var dif = this.targetAngle - this.angle;
+						var angleDif = Math.atan2(Math.sin(dif), Math.cos(dif));
+						var angleIncrement = 0.04;
+						if (Math.abs(angleDif) >= angleIncrement) {
+							if (angleDif < 0) {
+								this.angle -= angleIncrement * (20 / 30)
+							} else {
+								this.angle += angleIncrement * (20 / 30)
+							}
 						}
+					} else {
+						this.angle = this.targetAngle;
 					}
 				}
 				this.vx = Math.cos(this.angle);
@@ -1380,7 +1391,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

@@ -2,20 +2,15 @@ const CORRUPTED_CORE = {
 	"index": 0,
 	"1": [{
 		type: "normal",
-		amount: 1,
+		amount: 2,
 		radius: 10,
-		speed: 5
+		speed: 0
 	}],
 	"2": [{
-		type: ["expanding", "liquid"],
-		amount: 1,
-		radius: 30,
-		speed: 5
-	}, {
-		type: "expanding",
-		amount: 1,
-		radius: 30,
-		speed: 2
+		type: "tpshooter",
+		amount: 2,
+		radius: 10,
+		speed: 0
 	}],
 	"3": [{
 		type: "normal",

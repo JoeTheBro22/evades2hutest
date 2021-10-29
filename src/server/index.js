@@ -74,6 +74,9 @@ const enemies = {
 "Central Crossing": {
 
 },
+"Terrifing Trials": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -123,6 +126,9 @@ const projectiles = {
 
 },
 "Central Crossing": {
+
+},
+"Terrifing Trials": {
 
 },
 }
@@ -195,6 +201,10 @@ for (let i = 42; i--; i > 0) {
 for (let i = 42; i--; i > 0) {
 	enemies['Central Crossing'][i] = [];
 	projectiles['Central Crossing'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Terrifing Trials'][i] = [];
+	projectiles['Terrifing Trials'][i] = [];
 }
 
 const map = require("./map");

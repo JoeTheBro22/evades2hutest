@@ -580,7 +580,7 @@ class Player {
 		if(this.areaHeight === undefined){
 			this.areaHeight = 514.29;
 		}
-		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Central Crossing") {
+		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Central Crossing" || this.world == "Terrifing Trials") {
 			if (this.area < 41) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)

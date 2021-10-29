@@ -143,7 +143,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'web', 'portal', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
+		if (!['guard', 'web', 'portal', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -153,7 +153,7 @@ class Projectile {
 				}
 			}
 		}
-		if (['sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet'].includes(this.type)) {
+		if (['sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 342.86 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 - 342.86 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				this.killed = true;
 			}
@@ -329,6 +329,22 @@ class Projectile {
 				for (let i of Object.keys(players)) {
 					if (players[i].inGame && players[i].op != true && players[i].dead == false) {
 						if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true) {
+							this.killed = true;
+						}
+					}
+				}
+				break;
+			}
+			case "tpBullet": {
+				for (let i of Object.keys(players)) {
+					if (players[i].inGame && players[i].op != true && players[i].dead == false) {
+						if (Math.sqrt((players[i].pos.x - this.x) ** 2 + (players[i].pos.y - this.y) ** 2) < players[i].radius + players[i].clay * 2 + this.radius && players[i].retaliating != true) {
+							for (let e of Object.keys(enemies)) {
+								if(enemies[e].id == this.parentId){
+									enemies[e].x = players[i].pos.x - Math.cos(this.angle) * 60;
+									enemies[e].y = players[i].pos.y - Math.sin(this.angle) * 60;
+								}
+							}
 							this.killed = true;
 						}
 					}

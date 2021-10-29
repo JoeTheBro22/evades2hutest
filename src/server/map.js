@@ -21,6 +21,7 @@ const { ATROCIOUS_ARENA } = require("./maps/atrocious arena");
 const { MAKE_YOUR_OWN_MAP } = require("./maps/make your own map");
 
 const { CENTRAL_CROSSING } = require("./maps/central crossing");
+const { TERRIFING_TRIALS } = require("./maps/terrifing trials");
 
 const map = {
 "Corrupted Core": CORRUPTED_CORE,
@@ -41,6 +42,7 @@ const map = {
 "Jarring Journey": JARRING_JOURNEY,
 "Make Your Own Map": MAKE_YOUR_OWN_MAP,
 "Central Crossing": CENTRAL_CROSSING,
+"Terrifing Trials": TERRIFING_TRIALS,
 }
 
 module.exports = {

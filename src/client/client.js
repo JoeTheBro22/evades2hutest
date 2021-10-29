@@ -187,6 +187,7 @@ let becomesus = false;
 let atrociousarena = false;
 let arduousabyss = false;
 let centralcrossing = false;
+let terrifingtrials = false;
 
 toilsomeAreas = [
   "Desert 1-1", "Desert 1-2", "Desert 1-3", "Desert 1-4",
@@ -263,6 +264,7 @@ function renderGame() {
   atrociousarena = false;
   arduousabyss = false;
   centralcrossing = false;
+  terrifingtrials = false;
 
   for (let i in players) {
     players[i].interp(delt);
@@ -338,6 +340,8 @@ function renderGame() {
         ctx.fillStyle = "#a591a8";
       } else if (world == "Central Crossing") {
         ctx.fillStyle = "#21326b";
+      } else if (world == "Terrifing Trials") {
+        ctx.fillStyle = "black";
       } else if (world == "Acclimating Acceleration") {
         ctx.fillStyle = "#5b7fab";
       } else if (world == "Jarring Journey") {
@@ -821,6 +825,37 @@ function renderGame() {
           }
         }
       }
+      else if (player.world == "Terrifing Trials") {
+        ctx.font = "22px 'Exo 2'";
+        terrifingtrials = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Terrifing Trials") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+
+              if(p.area <= 10){
+                ctx.fillText(p.name + " [" + p.area + "]" + ' - Normal', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+              } else if (p.area <= 20){
+                ctx.fillText(p.name + " [" + p.area + "]" + ' - Auras', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+              } else if (p.area <= 30){
+                ctx.fillText(p.name + " [" + p.area + "]" + ' - Turrets', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+              } else if (p.area <= 40){
+                ctx.fillText(p.name + " [" + p.area + "]" + ' - Combos', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+              } else {
+                ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+              }
+            }
+          }
+        }
+      }
       else if (player.world == "Acclimating Acceleration") {
         ctx.font = "22px 'Exo 2'";
         acclimatingacceleration = true;
@@ -1008,11 +1043,23 @@ function renderGame() {
         ctx.fillStyle = "rgb(255,0,0)";
       }
 
-      if (player.world != "Toilsome Traverse") {
+      if (player.world != "Toilsome Traverse" && player.world != "Terrifing Trials") {
         ctx.fillText(player.name + " [" + player.area + "]", canvas.width - 110, 110);
       } else if(player.world == "Toilsome Traverse") {
         let aName = toilsomeAreas[parseInt(player.area) - 1];
         ctx.fillText(player.name + " [" + aName + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+      } else if (player.world == "Terrifing Trials"){
+        if(player.area <= 10){
+          ctx.fillText(player.name + " [" + player.area + "]" + ' - Normal', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        } else if (player.area <= 20){
+          ctx.fillText(player.name + " [" + player.area + "]" + ' - Auras', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        } else if (player.area <= 30){
+          ctx.fillText(player.name + " [" + player.area + "]" + ' - Turrets', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        } else if (player.area <= 40){
+          ctx.fillText(player.name + " [" + player.area + "]" + ' - Combos', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        } else {
+          ctx.fillText(player.name + " [" + player.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
       }
 
       //Title
@@ -1022,7 +1069,7 @@ function renderGame() {
       ctx.strokeStyle = "#425a6d";
       ctx.font = "bold " + 35 + "px Tahoma, Verdana, Segoe, sans-serif";
       ctx.textAlign = "center";
-      if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration" && player.world != "Make Your Own Map") {
+      if (player.world != "Toilsome Traverse"  && player.world != "Acclimating Acceleration" && player.world != "Make Your Own Map" && player.world != "Terrifing Trials") {
         if (player.area % 40 == 1 && player.area > 1) {
           ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
           ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
@@ -1043,8 +1090,28 @@ function renderGame() {
         ctx.fillText(players[selfId].world + ': ' + aName, canvas.width / 2, 40);
       } else if(player.world == "Make Your Own Map") {
         ctx.strokeText(players[selfId].world + ': Area ' + player.area /*+ ' (type /help for commands)'*/, canvas.width / 2, 40);
-            ctx.fillText(players[selfId].world + ': Area ' + player.area /*+ ' (type /help for commands)'*/, canvas.width / 2, 40);
-      } else {
+        ctx.fillText(players[selfId].world + ': Area ' + player.area /*+ ' (type /help for commands)'*/, canvas.width / 2, 40);
+      } else if(player.world == "Terrifing Trials"){
+        if(player.area <= 10){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + ' - Normal', canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + ' - Normal', canvas.width / 2, 40);
+        } else if (player.area <= 20){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + ' - Auras', canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + ' - Auras', canvas.width / 2, 40);
+        } else if (player.area <= 30){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + ' - Turrets', canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + ' - Turrets', canvas.width / 2, 40);
+        } else if (player.area < 40){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + ' - Combos', canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + ' - Combos', canvas.width / 2, 40);
+        } else if (player.area == 40){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + ' - The ULTIMATE Combo', canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + ' - The ULTIMATE Combo', canvas.width / 2, 40);
+        } else {
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area, canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area, canvas.width / 2, 40);
+        }
+      }else {
         ctx.strokeText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
         ctx.fillText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
       }
@@ -1392,6 +1459,42 @@ function renderGame() {
       }
     }
   }
+  if (terrifingtrials == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Terrifing Trials") {
+          playerCount++;
+          if (terrifingtrials == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            terrifingtrials = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          if(p.area <= 10){
+            ctx.fillText(p.name + " [" + p.area + "]" + ' - Normal', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+          } else if (p.area <= 20){
+            ctx.fillText(p.name + " [" + p.area + "]" + ' - Auras', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+          } else if (p.area <= 30){
+            ctx.fillText(p.name + " [" + p.area + "]" + ' - Turrets', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+          } else if (p.area <= 40){
+            ctx.fillText(p.name + " [" + p.area + "]" + ' - Combos', canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+          } else {
+            ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+          }
+        }
+      }
+    }
+  }
   if (acclimatingacceleration == false) {
     for (let j in players) {
       if (players[j].id != selfId) {
@@ -1667,6 +1770,8 @@ function renderGame() {
         ctx.fillStyle = "#336600";
       } else if (enemies[i].type == "sniper") {
         ctx.fillStyle = "#a05353";
+      } else if (enemies[i].type == "tpshooter") {
+        ctx.fillStyle = "#6a419c";
       } else if (enemies[i].type == "octo") {
         ctx.fillStyle = "#d3134f";
       } else if (enemies[i].type == "offsetocto") {
@@ -1705,6 +1810,8 @@ function renderGame() {
         ctx.fillStyle = "purple";
       } else if (enemies[i].type == "homing") {
         ctx.fillStyle = "rgb(160, 120, 10)";
+      } else if (enemies[i].type == "superhoming") {
+        ctx.fillStyle = "#ca980c";
       } else if (enemies[i].type == "tp") {
         ctx.fillStyle = "rgb(160,160,220)";
       } else if (enemies[i].type == "snake") {
@@ -1983,6 +2090,9 @@ function renderGame() {
         }
         else if (projectiles[i].type == "regenSniperBullet") {
           ctx.fillStyle = "#00cc8e";
+        }
+        else if (projectiles[i].type == "tpBullet") {
+          ctx.fillStyle = "#8c3fd4";
         }
         else {
           ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
