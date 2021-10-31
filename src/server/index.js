@@ -339,22 +339,24 @@ wss.on("connection", ws => {
 				player.right = false;
 				player.up = false;
 				player.down = false;
-			}  else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto" ){
+			} else if(d.chat == "/random"){
+				d.chat = "";
+				player.hero = "???";
+			} else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto" ){
 				if(player.op){
 					player.areaSkipRight = parseInt(d.chat.slice(5));
 					d.chat = "";
 				}
-			}  else if(d.chat.slice(0,4) == "/add" && player.world == 'Make Your Own Map'){
+			} else if(d.chat.slice(0,4) == "/add" && player.world == 'Make Your Own Map'){
 				const addEnemyValues = d.chat.split(" ");
 				player.addEnemy.type = addEnemyValues[1];
 				player.addEnemy.radius = parseInt(addEnemyValues[2]);
 				player.addEnemy.speed = parseInt(addEnemyValues[3]);
 				player.addEnemy.count = parseInt(addEnemyValues[4]);
 				player.addEnemy.state = true;
-				//state: false, type: 'normal', radius: 10, speed: 5, world: this.world, area: this.area, id: null, count: 1, index: null
-			}else if((d.chat.slice(0,6) == "/clear") && player.world == 'Make Your Own Map'){
+			} else if((d.chat.slice(0,6) == "/clear") && player.world == 'Make Your Own Map'){
 				player.addEnemy.state = 'clear';
-			}  else if (d.chat == "/reset" || d.chat == "/r" || d.chat == "/res") {
+			} else if (d.chat == "/reset" || d.chat == "/r" || d.chat == "/res") {
 				d.chat = "";
 				player.dead = false;
 				player.deadChanged = true;
@@ -383,7 +385,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -413,7 +415,6 @@ wss.on("connection", ws => {
 					}
 				}
 			}
-
 			//Send player their id
 			players[clientId].client.send(msgpack.encode({ si: clientId }));
 
@@ -635,7 +636,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -921,7 +922,7 @@ function mainLoop() {
 						}
 					  }
 					}
-				  }else if(players[i].warps.amount > 0 && players[i].inGame && !players[i].op && players[i].dead && players[i].hero == 'warper'){
+				  }else if(players[i].warps.amount > 0 && players[i].inGame && !players[i].op && players[i].dead && (players[i].hero == 'warper' || players[i].hero == '???')){
 					if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius) {
 						enemy.dead = true;
 						enemy.deadTime = 5000;
@@ -959,7 +960,9 @@ function mainLoop() {
 					}
 					players[i].dead = false;
 					players[i].invincible = true;
-					players[i].invincibilityTimer = 1000;
+					if(players[i].hero == "warper"){
+						players[i].invincibilityTimer = 1000;
+					}
 					players[i].changedInvincibility = true;
 					players[i].deadChanged = true;
 					if(players[i].warps.type){

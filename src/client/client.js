@@ -373,6 +373,19 @@ function renderGame() {
       ctx.font = "30px 'Exo 2'";
       ctx.strokeStyle = "black";
       ctx.lineWidth = 1;
+      if (player.hero == "???") {
+        ctx.fillStyle = "rgba(255, 255, 255, 20)";
+        ctx.fillText("???", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("???", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = "rgba(255, 255, 255, 20)";
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/100, 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Warps Left: " + player.warps.amount, canvas.width - 110, canvas.height - 15);
+      }
       if (player.hero == "magmax") {
         ctx.fillStyle = "red";
         ctx.fillText("Magmax", canvas.width - 110, canvas.height - 140);
@@ -583,6 +596,9 @@ function renderGame() {
         ctx.fillStyle = player.color;
         if (player.newtonian == false) {
           ctx.globalAlpha = 0.4;
+          if(player.hero == "???"){
+            ctx.fillStyle = "rgba(0,0,255,0.3)";
+          }
         }
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -1183,6 +1199,10 @@ function renderGame() {
         if (player.dead == false) {
           if (player.newtonian == false) {
             ctx.globalAlpha = 0.4;
+            if(player.hero == "???"){
+              ctx.fillStyle = "rgba(0,0,255,0.3)";
+            }
+            
           }
           ctx.fillStyle = player.color;
           ctx.fill();
@@ -2378,6 +2398,20 @@ flylieDiv.onclick = () => {
   init('flylie');
 }
 serverList.appendChild(flylieDiv);
+
+const secretDiv = document.createElement("div");
+secretDiv.hero = "???";
+secretDiv.classList.add(`heroBox`);
+secretDiv.innerText = `Flylie
+Slice: Throws a projectile that latches onto the wall and teleports you there, giving you invincibility for 2 seconds. Kills all enemies it touches for 2 seconds. Cooldown: 4.5 seconds, takes 20 energy.
+Force: Teleports the player to the furthest enemy right in a 200px radius, and gives the player invincibility for 2 seconds. Cooldown 1 second, takes 10 energy.
+`; // same text as flylie to always make the same length
+
+secretDiv.classList.add('secretDiv');
+secretDiv.onclick = () => {
+  init('???');
+}
+serverList.appendChild(secretDiv);
 
 
 

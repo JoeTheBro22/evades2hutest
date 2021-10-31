@@ -69,6 +69,9 @@ class Player{
     if (this.hero == "flylie"){
       this.color = "#de5721";
     }
+    if (this.hero == "???"){
+      this.color = "rgba(0,0,0,0.1)";
+    }
 
     this.frozen = false;
 
@@ -196,12 +199,10 @@ class Player{
     }
 
     if(this.hero == "magmax"){
-      if(this.harden){
-        this.color = "rgb(120, 0, 0)";
-      }else if(this.flow){
+      if(this.flow){
         this.color = "rgb(250, 100, 100)";
       }else{
-        this.color = "rgb(200, 0, 0)";
+        this.color = "rgba(200, 0, 0)";
       }
     }
     if(this.hero == "rameses"){
@@ -245,6 +246,13 @@ class Player{
     }
     if (this.hero == "flylie"){
       this.color = "#de5721";
+    }
+    if (this.hero == "???"){
+      if(this.flow){
+        this.color = "rgba(255,100,100,0.1)";
+      } else {
+        this.color = "rgba(0,0,0,0.1)";
+      }
     }
     if(this.dead){
       this.color = "black";

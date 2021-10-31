@@ -22,6 +22,16 @@ class Projectile {
 		this.guardAlertTimer = 0;
     this.baseRadius = this.radius;
 		this.exploding = false;
+		if(map[this.world].width !== undefined){
+			if(map[this.world].width[this.area-1] !== undefined){
+				areaBoundaries.width = map[this.world].width[this.area-1];
+			}
+		}
+		if(map[this.world].height !== undefined){
+			if(map[this.world].height[this.area-1] !== undefined){
+				areaBoundaries.height = map[this.world].height[this.area-1];
+			}
+		}
 		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
 			this.touched = [];
 		}
@@ -59,17 +69,6 @@ class Projectile {
       this.touched = [];
     }
 		this.growSpeed = 1;
-		if(map[this.world].width !== undefined){
-			if(map[this.world].width[this.area-1] !== undefined){
-				areaBoundaries.width = map[this.world].width[this.area-1];
-			}
-		}
-		
-		if(map[this.world].height !== undefined){
-			if(map[this.world].height[this.area-1] !== undefined){
-				areaBoundaries.height = map[this.world].height[this.area-1];
-			}
-		}
 	}
 	getUpdatePack() {
 		let pack = {
@@ -113,6 +112,16 @@ class Projectile {
 		return pack
 	}
 	update(delta, players, enemies, projectiles) {
+		if(map[this.world].width !== undefined){
+			if(map[this.world].width[this.area-1] !== undefined){
+				areaBoundaries.width = map[this.world].width[this.area-1];
+			}
+		}
+		if(map[this.world].height !== undefined){
+			if(map[this.world].height[this.area-1] !== undefined){
+				areaBoundaries.height = map[this.world].height[this.area-1];
+			}
+		}
 		if (this.type == "portal" && this.toInit == true) {
 			for (let p of Object.keys(players)) {
 				const player = players[p];
@@ -143,7 +152,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'web', 'portal', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
+		if (!['guard', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;

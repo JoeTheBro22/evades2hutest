@@ -400,6 +400,16 @@ canvas {
   z-index: 1;
 }
 
+.secretDiv {
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: rgba(0, 0, 0, 0);
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgba(20, 20, 20, 0);
+  color: rgba(200, 200, 200, 0);
+  overflow: hidden;
+}
+
 .permanent:hover {
   background-color: rgb(35, 35, 35);
 }

@@ -81,6 +81,16 @@ class Enemy {
 		this.shattered = -1000;
 		this.decay = 0;
 		this.dwindleFactor = 1;
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		} else {
+			areaBoundaries.width = 3085.74;
+		}
+		if (map[this.world].height !== undefined){
+			areaBoundaries.height = map[this.world].height[this.area-1];
+		} else {
+			areaBoundaries.height = 514.29;
+		}
 		if (this.x == undefined) {
 			this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
 		}
@@ -298,6 +308,16 @@ class Enemy {
 		return pack;
 	}
 	move(delta, players, enemies, projectiles) {
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		} else {
+			areaBoundaries.width = 3085.74;
+		}
+		if (map[this.world].height !== undefined){
+			areaBoundaries.height = map[this.world].height[this.area-1];
+		} else {
+			areaBoundaries.height = 514.29;
+		}
 		this.xChanged = false;
 		this.yChanged = false;
 		let lX = this.x;
@@ -480,30 +500,7 @@ class Enemy {
           }
         }
       }
-			for (let p of Object.keys(players)) {
-				if(map[players[p].world].width !== undefined){
-					if(this.area == players[p].area && this.world == players[p].world){
-						if (map[this.world].width !== undefined){
-							areaBoundaries.width = map[this.world].width[this.area-1];
-						} else {
-							areaBoundaries.width = 3085.74;
-						}
-					}
-				} else {
-					areaBoundaries.width = 3085.74;
-				}
-				if(map[players[p].world].height !== undefined){
-					if(this.area == players[p].area && this.world == players[p].world){
-						if (map[this.world].height !== undefined){
-							areaBoundaries.height = map[this.world].height[this.area-1];
-						} else {
-							areaBoundaries.height = 514.29;
-						}
-					}
-				} else {
-					areaBoundaries.height = 514.29;
-				}
-			}
+			
 			if (this.type == "scared") {
 				let stop = 1;
 				for (let p of Object.keys(players)) {

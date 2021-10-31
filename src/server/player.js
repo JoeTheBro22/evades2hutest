@@ -94,7 +94,6 @@ class Player {
     	this.deathTimer = 60;
 		this.areaWidth = 3085.74;
 		this.areaHeight = 514.29;
-		//console.log(map[this.world].width);
 		// Ptah
 
 		this.clay = 0;
@@ -104,7 +103,7 @@ class Player {
 
 		// neuid
 
-		this.newtonian = true;
+		this.newtonian = false;
 		this.newtonianChanged = false;
 		this.newtonianTimer = 0;
 		this.permaNewtonian = false;
@@ -142,6 +141,10 @@ class Player {
 	// Warper
 	this.warps = { amount: 0, type: false };
 	this.warpDebt = 0;
+
+	//???
+	this.setAbility = false;
+	this.setAbilityNumber = 1;
 	}
 	getUpdatePack() {
     let sendId = false;
@@ -185,7 +188,7 @@ class Player {
 			pack.dT = Number(this.deathTimer.toFixed(0));
       sendId = true;
 		}
-		if (this.hero == "magmax") {
+		if (this.hero == "magmax" || this.hero == "???") {
 			if (this.ability1toggler == 2) {
 				pack.f = true;
         sendId = true;
@@ -317,7 +320,7 @@ class Player {
 		if(this.deathTimer < 60){
 			pack.dTimer = Number(this.deathTimer.toFixed(0));
 		}
-		if (this.hero == "magmax") {
+		if (this.hero == "magmax" || this.hero == "???") {
 			if (this.ability1toggler == 2) {
 				pack.flow = true;
 			} else if (this.ability1toggler == 4) {
@@ -588,7 +591,7 @@ class Player {
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -620,7 +623,7 @@ class Player {
 					this.oldArea = this.area;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -649,7 +652,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -679,7 +682,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -709,7 +712,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -739,7 +742,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -769,7 +772,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -799,7 +802,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -829,7 +832,7 @@ class Player {
 					this.area++;
 					if(this.warpDebt >= 0){
 						if(this.warps.amount < 10){
-							if(this.hero == 'warper'){
+							if(this.hero == 'warper' || this.hero == '???'){
 								this.warps.amount++;
 							}
 						}
@@ -1197,7 +1200,7 @@ ability(delta, enemies, projectiles) {
 
 			}
 			if (this.z && this.ability1cooldown < 0 && this.permaNewtonian == false && this.energy >= 10) {
-        this.energy -= 10;
+        		this.energy -= 10;
 				this.newtonianChanged = true;
 				this.newtonianTimer = 3000;
 				this.ability1cooldown = 8000;
@@ -1332,9 +1335,231 @@ ability(delta, enemies, projectiles) {
 						this.lastInvincible = Date.now();
 					}
 				}
+			}
+		}
 
-				/**/
-				//2nd ability "force" with aura is 2.5 sec cooldown
+		if(this.hero == "???"){
+			this.guardAlertTimer = -1;
+			this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
+			this.timer -= delta;
+			this.newtonianTimer -= delta;
+			if(this.newtonianTimer < 0){
+				this.permaNewtonian = false;
+				this.newtonian = true;
+				this.newtonianChanged = true;
+			}
+			if (this.z && this.ability1cooldown < 0 && !this.dead) {
+				// Ability Initinalazation/Management
+				if(this.web !== null){
+					this.web.killed = true;
+					this.web = null;
+				}
+				
+				this.ability1cooldown = 10;
+				if (this.permaNewtonian == false){
+					this.newtonian = true;
+					this.newtonianChanged = true;
+				}
+				var randomAbilityNumber;
+				if(this.setAbility){
+					randomAbilityNumber = this.setAbilityNumber;					
+				} else {
+					randomAbilityNumber = Math.floor(Math.random()*15);
+				}
+				// List of all heroes (that i have added): magmax parvulus ptah jotunn kindle neuid orbital cimex janus turr warper thornstick flylie
+				if(randomAbilityNumber <= 1){
+					if (this.ability1toggler == 1) {
+						this.flow = true;
+						this.harden = false;
+						this.ability1toggler = 2;
+					} else if (this.ability1toggler == 3) {
+						this.flow = false;
+						this.ability1toggler = 4;
+					} else {
+						if (this.ability1toggler == 2) {
+							this.ability1toggler = 3;
+						} else if (this.ability1toggler == 4) {
+							this.ability1toggler = 1;
+						}
+					}
+				} else if(randomAbilityNumber <= 2){
+					this.invincibilityTimer = 3000;
+					this.invincible = true;
+					this.lastInvincible = Date.now();
+				} else if(randomAbilityNumber <= 3){
+					if(this.radius > 2){
+						this.radius /= 2;
+					}
+				} else if(randomAbilityNumber <= 4){
+					if(this.clay <= 10){
+						this.clay++;
+						this.pushClay = true;
+					}
+				} else if(randomAbilityNumber <= 5){
+					for (let i of Object.keys(enemies)) {
+						const enemy = enemies[i];
+						if (Math.sqrt(Math.pow(enemy.x - this.pos.x, 2) + Math.pow(enemy.y - this.pos.y, 2)) < this.radius + enemy.radius + 170) {
+							enemy.decay++;
+							enemy.shattered = 4000;
+						}
+					}
+					this.timer = 6000;
+				} else if(randomAbilityNumber <= 6){
+					let angle = 0;
+					if (this.lastvx < 0) {
+						if (this.lastvy < 0) {
+							angle = 225;
+						} else if (this.lastvy > 0) {
+							angle = 135;
+						} else {
+							angle = 180;
+						}
+					} else if (this.lastvx > 0) {
+						if (this.lastvy < 0) {
+							angle = 315;
+						} else if (this.lastvy > 0) {
+							angle = 45;
+						} else {
+							angle = 0;
+						}
+					} else {
+						if (this.lastvy < 0) {
+							angle = 270;
+						} else if (this.lastvy > 0) {
+							angle = 90;
+						} else {
+							angle = 0;
+						}
+					}
+
+					if (this.mouseOn == true) {
+						angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+					}
+					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 22, 20, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+				} else if(randomAbilityNumber <= 7){
+					// Neuid
+					this.newtonian = !this.newtonian;
+					this.newtonianTimer = 3000;
+					this.permaNewtonian = true;
+					this.newtonianChanged = true;
+				} else if(randomAbilityNumber <= 8){
+					this.oradius = 0;
+					this.destoRadius = 150;
+					for (let guard of this.guards) {
+						guard.killed = true;
+					}
+					this.guards = [];
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 0, this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 72, this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 144, this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 216, this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "guard", 17, 0, 288, this.world, this.area, projectiles, this.id));
+				} else if(randomAbilityNumber <= 9){
+					this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius / 4, 0, 0, this.world, this.area, projectiles, this.id);
+				} else if(randomAbilityNumber <= 10){
+					let angle = 0;
+					if (this.lastvx < 0) {
+						if (this.lastvy < 0) {
+							angle = 225;
+						} else if (this.lastvy > 0) {
+							angle = 135;
+						} else {
+							angle = 180;
+						}
+					} else if (this.lastvx > 0) {
+						if (this.lastvy < 0) {
+							angle = 315;
+						} else if (this.lastvy > 0) {
+							angle = 45;
+						} else {
+							angle = 0;
+						}
+					} else {
+						if (this.lastvy < 0) {
+							angle = 270;
+						} else if (this.lastvy > 0) {
+							angle = 90;
+						} else {
+							angle = 0;
+						}
+					}
+					if (this.mouseOn == true) {
+						angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+					}
+					for (let portal of this.portals) {
+						portal.killed = true;
+					}
+					this.portals = [];
+					const spawnInFront = 100; // how much it spawns in front
+					// speed property will be how far it is from player
+					this.portalCharge = Math.min(Math.max(this.portalCharge, 10000), 30000);
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, spawnInFront, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, (this.portalCharge / 1000 - 10) * 15 + spawnInFront + 200, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+					this.portalCharge = 0;
+				} else if(randomAbilityNumber <= 11){
+					if(Math.random() < 0.1){
+						this.turrets.push(createProjectile(this.pos.x - 30, this.pos.y, "turr", 50, 0, 0, this.world, this.area, projectiles, this.id));
+						this.turrets.push(createProjectile(this.pos.x + 30, this.pos.y, "turr", 50, 0, 0, this.world, this.area, projectiles, this.id));
+						this.turrets.push(createProjectile(this.pos.x, this.pos.y + 30, "turr", 50, 0, 0, this.world, this.area, projectiles, this.id));
+						this.turrets.push(createProjectile(this.pos.x, this.pos.y - 30, "turr", 50, 0, 0, this.world, this.area, projectiles, this.id));
+					} else {
+						this.turrets.push(createProjectile(this.pos.x, this.pos.y, "turr", 50, 0, 0, this.world, this.area, projectiles, this.id));
+					}
+				} else if(randomAbilityNumber <= 12){
+					if(this.warps.amount < 10){
+						this.warps.amount++;
+					}
+				} else if(randomAbilityNumber <= 13){
+					for (let thorn of this.thorns) {
+						thorn.killed = true;
+					}
+					this.thorns = [];
+					this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 0, this.world, this.area, projectiles, this.id));
+					this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 90, this.world, this.area, projectiles, this.id));
+					this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 180, this.world, this.area, projectiles, this.id));
+					this.thorns.push(createProjectile(this.pos.x, this.pos.y, "thorn", 20, 0, 270, this.world, this.area, projectiles, this.id));
+				} else if(randomAbilityNumber <= 14){
+					let latcherAngle = 0;
+					if (this.lastvx < 0) {
+						if (this.lastvy < 0) {
+							latcherAngle = 225;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 135;
+						} else {
+							latcherAngle = 180;
+						}
+					} else if (this.lastvx > 0) {
+						if (this.lastvy < 0) {
+							latcherAngle = 315;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 45;
+						} else {
+							latcherAngle = 0;
+						}
+					} else {
+						if (this.lastvy < 0) {
+							latcherAngle = 270;
+						} else if (this.lastvy > 0) {
+							latcherAngle = 90;
+						} else {
+							latcherAngle = 0;
+						}
+					}
+
+					if (this.mouseOn == true) {
+						latcherAngle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+					}
+					createProjectile(this.pos.x, this.pos.y, "wallLatcher", 22, 20, (latcherAngle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+				}
+			}
+
+			if (this.x && this.ability2cooldown < 0) {
+				this.ability2cooldown = 100;
+				this.setAbility = true;
+				this.setAbilityNumber++;
+				if(this.setAbilityNumber >= 15){
+					this.setAbilityNumber = 1;
+				}
 			}
 		}
 
@@ -1535,7 +1760,7 @@ ability(delta, enemies, projectiles) {
       }
     }
 
-		if (this.hero != "rameses") {
+		if (this.hero != "rameses" && this.hero != "???") {
 			if (this.invincibilityTimer > 0) {
 				this.invincibilityTimer -= delta;
 			}
