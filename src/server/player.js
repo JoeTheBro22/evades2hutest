@@ -103,7 +103,7 @@ class Player {
 
 		// neuid
 
-		this.newtonian = false;
+		this.newtonian = true;
 		this.newtonianChanged = false;
 		this.newtonianTimer = 0;
 		this.permaNewtonian = false;
@@ -141,6 +141,13 @@ class Player {
 	// Warper
 	this.warps = { amount: 0, type: false };
 	this.warpDebt = 0;
+
+	// Rogue
+	this.barrage = false;
+	this.barrageLeft = 0;
+	this.dash = false;
+	this.dashLeft = 0;
+	this.intervalTimer = 0;
 
 	//???
 	this.setAbility = false;
@@ -1334,6 +1341,77 @@ ability(delta, enemies, projectiles) {
 						this.invincible = true;
 						this.lastInvincible = Date.now();
 					}
+				}
+			}
+		}
+
+		if (this.hero == "rogue") {
+			this.dashLeft--;
+			if (!this.dead) {
+				if (this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy >= 10) {
+					this.energy -= 10;
+					this.ability1cooldown = 2000;
+					this.dash = true;
+					this.dashLeft = 10;
+					this.invincibilityTimer = 1000;
+					this.invincible = true;
+					this.lastInvincible = Date.now();
+				}
+				if (this.x && this.ability2cooldown < 0 && this.energy >= 20) {
+					this.energy -= 15;
+				  	this.ability2cooldown = 2800;
+					this.barrage = true;
+					this.barrageLeft = 6;
+			  	}
+
+				if(this.barrageLeft>0){
+					if(this.intervalTimer <= 0){
+						this.intervalTimer = 3;
+						this.barrageLeft--;
+						let angle = 0;
+						if (this.lastvx < 0) {
+							if (this.lastvy < 0) {
+								angle = 225;
+							} else if (this.lastvy > 0) {
+								angle = 135;
+							} else {
+								angle = 180;
+							}
+						} else if (this.lastvx > 0) {
+							if (this.lastvy < 0) {
+								angle = 315;
+							} else if (this.lastvy > 0) {
+								angle = 45;
+							} else {
+								angle = 0;
+							}
+						} else {
+							if (this.lastvy < 0) {
+								angle = 270;
+							} else if (this.lastvy > 0) {
+								angle = 90;
+							} else {
+								angle = 0;
+							}
+						}
+
+						if (this.mouseOn == true) {
+							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+						}
+						createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					} else {
+						this.intervalTimer--;
+					}
+				} else if(this.barrage == true){
+					this.barrage = false;
+				}
+				
+				if(this.dashLeft>0){
+					this.dashLeft--;
+					this.speedMult = 2;// will be 1.5x the speed at 20
+					this.speedChanged = true;
+				} else if(this.dash == true){
+					this.dash = false;
 				}
 			}
 		}

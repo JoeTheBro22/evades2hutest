@@ -2,9 +2,9 @@ const CORRUPTED_CORE = {
 	"index": 0,
 	"1": [{
 		type: "normal",
-		amount: 2,
-		radius: 10,
-		speed: 0
+		amount: 10,
+		radius: 50,
+		speed: 1
 	}],
 	"2": [{
 		type: "tpshooter",

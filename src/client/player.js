@@ -69,6 +69,9 @@ class Player{
     if (this.hero == "flylie"){
       this.color = "#de5721";
     }
+    if (this.hero == "rogue"){
+      this.color = "#d64531";
+    }
     if (this.hero == "???"){
       this.color = "rgba(0,0,0,0.1)";
     }
@@ -246,6 +249,9 @@ class Player{
     }
     if (this.hero == "flylie"){
       this.color = "#de5721";
+    }
+    if (this.hero == "rogue"){
+      this.color = "rgb(235, 64, 52)";
     }
     if (this.hero == "???"){
       if(this.flow){

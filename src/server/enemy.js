@@ -55,9 +55,9 @@ class Enemy {
 			this.type = this.type[Math.floor(Math.random() * this.type.length)];
 		}
 		this.timer = 0;
-    this.corrosive = false;
-    this.xChanged = false;
-    this.yChanged = false;
+    	this.corrosive = false;
+    	this.xChanged = false;
+    	this.yChanged = false;
 		this.lastx = this.x;
 		this.lasty = this.y;
 		this.angle = Math.random() * 6.28318531;

@@ -451,6 +451,17 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
       }
+      if (player.hero == "rogue") {
+        ctx.fillStyle = "#d64531";
+        ctx.fillText("Rogue", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Rogue", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#d64531';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2800, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2000, 10);
+      }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
         ctx.fillText("Thornstick", canvas.width - 110, canvas.height - 140);
@@ -1935,7 +1946,6 @@ function renderGame() {
       }
       else {
         ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
-        //console.log(enemies[i].type);
       }
       if (enemies[i].shattered <= 0) {
         ctx.beginPath();
@@ -2073,6 +2083,9 @@ function renderGame() {
         else if (projectiles[i].type == "guard") {
           ctx.fillStyle = "#5c5061";
         }
+        else if (projectiles[i].type == "enemypusher") {
+          ctx.fillStyle = "#03eaff";
+        }
         else if(projectiles[i].type == "thorn"){
           if(projectiles[i].guardAlertTimer > 0){
             ctx.fillStyle = 'red';
@@ -2116,7 +2129,6 @@ function renderGame() {
         }
         else {
           ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
-          //console.log(projectiles[i].type);
         }
         ctx.fill();
         ctx.closePath();
@@ -2399,19 +2411,30 @@ flylieDiv.onclick = () => {
 }
 serverList.appendChild(flylieDiv);
 
-const secretDiv = document.createElement("div");
+const rogueDiv = document.createElement("div");
+rogueDiv.hero = "Rogue";
+rogueDiv.classList.add(`heroBox`);
+rogueDiv.innerText = `Rogue
+Slide: Boosts the player in the direction they're facing while providing invincibility for 1 sec. Cooldown: 2 secs. Costs 10 energy.
+Barrage: shoots 6 bullets at opposing enemies at the player's direction. These bullets pull enemies in their direction. Costs 20 energy. Cooldown 2.8 secs.
+`;
+
+rogueDiv.classList.add('rogueDiv');
+rogueDiv.onclick = () => {
+  init('rogue');
+}
+serverList.appendChild(rogueDiv);
+
+/*const secretDiv = document.createElement("div");
 secretDiv.hero = "???";
 secretDiv.classList.add(`heroBox`);
-secretDiv.innerText = `Flylie
-Slice: Throws a projectile that latches onto the wall and teleports you there, giving you invincibility for 2 seconds. Kills all enemies it touches for 2 seconds. Cooldown: 4.5 seconds, takes 20 energy.
-Force: Teleports the player to the furthest enemy right in a 200px radius, and gives the player invincibility for 2 seconds. Cooldown 1 second, takes 10 energy.
-`; // same text as flylie to always make the same length
+secretDiv.innerText = `bruh xd`;
 
 secretDiv.classList.add('secretDiv');
 secretDiv.onclick = () => {
   init('???');
 }
-serverList.appendChild(secretDiv);
+serverList.appendChild(secretDiv);*/
 
 
 

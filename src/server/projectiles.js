@@ -446,6 +446,24 @@ class Projectile {
 				} 
 				break;
 			}
+			case "enemypusher": {
+				for(let i of Object.keys(enemies)){
+					const enemy = enemies[i];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune) {
+						if (enemy.deadTime < 1500){
+							enemy.deadTime = 1500;
+						}
+						if (enemy.disableTime < 2500){
+							enemy.disableTime = 2500;
+						}
+					  	enemies[i].x = this.x;
+					  	enemies[i].y = this.y;
+					  	enemies[i].xChanged = true;
+					 	enemies[i].yChanged = true;
+					}
+				  }
+				break;
+			}
 			case "thorn": {
 				const parent = players[this.parentId];
 				if (parent == undefined) {
