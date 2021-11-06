@@ -148,6 +148,7 @@ class Player {
 	this.dash = false;
 	this.dashLeft = 0;
 	this.intervalTimer = 0;
+	this.luckyBarrage = 0;
 
 	//???
 	this.setAbility = false;
@@ -1369,6 +1370,7 @@ ability(delta, enemies, projectiles) {
 				  	this.ability2cooldown = 2400;
 					this.barrage = true;
 					this.barrageLeft = 6;
+					this.luckyBarrage = Math.floor(Math.random()*30);
 			  	}
 
 				if(this.barrageLeft>0){
@@ -1405,50 +1407,25 @@ ability(delta, enemies, projectiles) {
 						if (this.mouseOn == true) {
 							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 						}
-						if(this.x){
-							createProjectile(this.pos.x, this.pos.y, "enemypusher", 20, 34, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						if(this.luckyBarrage == 0){
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (30 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (60 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (90 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (120 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (150 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (180 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (210 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (240 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (270 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (300 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (330 * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (360 * Math.PI / 180), this.world, this.area, projectiles, this.id);
 						} else {
 							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
 						}
 					} else {
 						this.intervalTimer--;
 					}
-				} else if(this.barrage == true){
-					if(this.x){
-						this.ability2cooldown += 400;
-						let angle = 0;
-						if (this.lastvx < 0) {
-							if (this.lastvy < 0) {
-								angle = 225;
-							} else if (this.lastvy > 0) {
-								angle = 135;
-							} else {
-								angle = 180;
-							}
-						} else if (this.lastvx > 0) {
-							if (this.lastvy < 0) {
-								angle = 315;
-							} else if (this.lastvy > 0) {
-								angle = 45;
-							} else {
-								angle = 0;
-							}
-						} else {
-							if (this.lastvy < 0) {
-								angle = 270;
-							} else if (this.lastvy > 0) {
-								angle = 90;
-							} else {
-								angle = 0;
-							}
-						}
-
-						if (this.mouseOn == true) {
-							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
-						}
-						createProjectile(this.pos.x, this.pos.y, "enemypusher", 20, 34, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
-					}
-					this.barrage = false;
 				}
 				
 				if(this.dashLeft>0){

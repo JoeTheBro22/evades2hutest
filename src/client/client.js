@@ -466,8 +466,8 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#d64531';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2800, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2400, 10);
       }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";

@@ -575,7 +575,9 @@ let projectileId = 0;
 function createProjectile(x, y, type, radius, speed, angle, world, area, projectiles, parentId) {
   let newProjectile = new Projectile({ x: x, y: y, type: type, radius: radius, speed: speed, angle: angle, world: world, area: area, id: projectileId, parentId: parentId })
 
-  projectiles[world][area].push(newProjectile);
+  if(newProjectile !== undefined){
+	projectiles[world][area].push(newProjectile);
+  }
   projectileId++;
   if(projectileId > 9999){
     projectileId = 0;
