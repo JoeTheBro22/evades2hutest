@@ -456,8 +456,10 @@ class Projectile {
 						if (enemy.disableTime < 2500){
 							enemy.disableTime = 2500;
 						}
-					  	enemies[i].x = this.x;
-					  	enemies[i].y = this.y;
+					  	//enemies[i].x = this.x;
+					  	//enemies[i].y = this.y;
+						  enemies[i].x += this.vx * delta / 30;
+						  enemies[i].y += this.vy * delta / 30;
 					  	enemies[i].xChanged = true;
 					 	enemies[i].yChanged = true;
 					}

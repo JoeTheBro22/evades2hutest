@@ -110,6 +110,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.inv) {
+    for (let i in message.inv) {
+      if (players[message.inv[i].id]) {
+        players[message.inv[i].id].updatePack(message.inv[i]);
+      }
+    }
+  }
   if (message.aw) {
     for (let i in message.aw) {
       if (players[message.aw[i].id]) {
@@ -627,14 +634,26 @@ function renderGame() {
       ctx.closePath();
       ctx.beginPath();
       if (player.invincible) {
-        ctx.arc(640, 360, player.radius, 0, 6.28318531);
-        ctx.strokeStyle = "rgb(220,220,220)";
-        ctx.lineWidth = 10;
-        ctx.stroke();
-        ctx.arc(640, 360, player.radius, 0, 6.28318531);
-        ctx.fillStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        if(this.hero == 'rameses'){
+          ctx.arc(640, 360, player.radius, 0, 6.28318531);
+          ctx.strokeStyle = "rgb(220,220,220)";
+          ctx.lineWidth = 10;
+          ctx.stroke();
+          ctx.arc(640, 360, player.radius, 0, 6.28318531);
+          ctx.fillStyle = "black";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        } else {
+          ctx.closePath();
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.globalAlpha = 0.5;
+          ctx.arc(640, 360, player.radius, 0, 6.28318531);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          ctx.closePath();
+          ctx.beginPath();
+        }
       }
       if (player.clay > 0) {
         ctx.arc(640, 360, player.radius + (2 * player.clay), 0, 6.28318531);
@@ -1186,14 +1205,26 @@ function renderGame() {
         ctx.beginPath();
         ctx.beginPath();
         if (player.invincible) {
-          ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius, 0, 6.28318531);
-          ctx.strokeStyle = "rgb(220,220,220)";
-          ctx.lineWidth = 10;
-          ctx.stroke();
-          ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius, 0, 6.28318531);
-          ctx.fillStyle = "black";
-          ctx.lineWidth = 2;
-          ctx.stroke();
+          if(this.hero == 'rameses'){
+            ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius, 0, 6.28318531);
+            ctx.strokeStyle = "rgb(220,220,220)";
+            ctx.lineWidth = 10;
+            ctx.stroke();
+            ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius, 0, 6.28318531);
+            ctx.fillStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          } else {
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.fillStyle = "black";
+            ctx.globalAlpha = 0.5;
+            ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius, 0, 6.28318531);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.closePath();
+            ctx.beginPath();
+          }
         }
         if (player.clay > 0) {
           ctx.arc(player.renderX + playerOffset.x, player.renderY + playerOffset.y, player.radius + (2 * player.clay), 0, 6.28318531);

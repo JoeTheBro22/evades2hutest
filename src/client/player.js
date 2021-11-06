@@ -204,7 +204,9 @@ class Player{
     if(this.hero == "magmax"){
       if(this.flow){
         this.color = "rgb(250, 100, 100)";
-      }else{
+      }else if(this.harden){
+        this.color = "rgba(150, 0, 0)";
+      } else {
         this.color = "rgba(200, 0, 0)";
       }
     }

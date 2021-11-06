@@ -260,6 +260,10 @@ class Player {
 		pack.ab1cd = this.ability1cooldown;
 		sendId = true;
 	}
+	if(this.invincible != undefined){
+		pack.inv = this.invincible;
+		sendId = true;
+	}
 	if(this.areaWidth != undefined){
 		pack.aw = this.areaWidth;
 		sendId = true;
@@ -471,7 +475,12 @@ class Player {
 			this.vel.y /= 2;
 		}
 
-		if (this.speedMult != 1) {
+		console.log(this.invincible);
+
+		if (this.speedMult != 1 || this.dash) {
+			if(this.dash){
+				this.speedMult *= 2;
+			}
 			this.vel.x *= this.speedMult;
 			this.vel.y *= this.speedMult;
 			this.speedMult = 1;
@@ -621,7 +630,7 @@ class Player {
 				}
 			}
 		} else if(this.world == 'Acclimating Acceleration'){
-			this.speedMult = 1 + this.area/40; // will be 1.5x the speed at 20
+			this.speedMult *= 1 + this.area/40; // will be 1.5x the speed at 20
 			this.speedChanged = true;
 			if (this.area < 20) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
@@ -1219,7 +1228,7 @@ ability(delta, enemies, projectiles) {
 						this.ability2cooldown = 20000;
 					} else {
 						this.permaNewtonian = true;
-						this.ability2cooldown = 100;
+						this.ability2cooldown = 1000;
 						this.newtonianChanged = true;
 						this.newtonianTimer = 1;
 						this.newtonian = true;
@@ -1359,7 +1368,7 @@ ability(delta, enemies, projectiles) {
 				}
 				if (this.x && this.ability2cooldown < 0 && this.energy >= 20) {
 					this.energy -= 15;
-				  	this.ability2cooldown = 2800;
+				  	this.ability2cooldown = 2400;
 					this.barrage = true;
 					this.barrageLeft = 6;
 			  	}
@@ -1398,17 +1407,54 @@ ability(delta, enemies, projectiles) {
 						if (this.mouseOn == true) {
 							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 						}
-						createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						if(this.x){
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 20, 34, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						} else {
+							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						}
 					} else {
 						this.intervalTimer--;
 					}
 				} else if(this.barrage == true){
+					if(this.x){
+						this.ability2cooldown += 400;
+						let angle = 0;
+						if (this.lastvx < 0) {
+							if (this.lastvy < 0) {
+								angle = 225;
+							} else if (this.lastvy > 0) {
+								angle = 135;
+							} else {
+								angle = 180;
+							}
+						} else if (this.lastvx > 0) {
+							if (this.lastvy < 0) {
+								angle = 315;
+							} else if (this.lastvy > 0) {
+								angle = 45;
+							} else {
+								angle = 0;
+							}
+						} else {
+							if (this.lastvy < 0) {
+								angle = 270;
+							} else if (this.lastvy > 0) {
+								angle = 90;
+							} else {
+								angle = 0;
+							}
+						}
+						
+						if (this.mouseOn == true) {
+							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
+						}
+						createProjectile(this.pos.x, this.pos.y, "enemypusher", 20, 34, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					}
 					this.barrage = false;
 				}
 				
 				if(this.dashLeft>0){
 					this.dashLeft--;
-					this.speedMult = 2;// will be 1.5x the speed at 20
 					this.speedChanged = true;
 				} else if(this.dash == true){
 					this.dash = false;
