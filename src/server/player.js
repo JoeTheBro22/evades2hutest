@@ -475,8 +475,6 @@ class Player {
 			this.vel.y /= 2;
 		}
 
-		console.log(this.invincible);
-
 		if (this.speedMult != 1 || this.dash) {
 			if(this.dash){
 				this.speedMult *= 2;
@@ -1444,7 +1442,7 @@ ability(delta, enemies, projectiles) {
 								angle = 0;
 							}
 						}
-						
+
 						if (this.mouseOn == true) {
 							angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 						}
