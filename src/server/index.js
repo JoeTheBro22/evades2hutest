@@ -756,7 +756,7 @@ function mainLoop() {
 					enemies[players[i].world][players[i].oldArea] = [];
 					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
 						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
-							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);

@@ -251,7 +251,7 @@ class Enemy {
 			this.immune = true;
 		}
 
-		if(this.type == "pulse" || this.type == 'mousepulse' || (this.minTimer !== undefined && this.maxTimer !== undefined)){
+		if(this.type == "pulse" || this.type == 'mousepulse' || (this.minTimer !== undefined && this.maxTimer !== undefined && this.minTimer !== null && this.maxTimer !== null)){
 			if(this.type != 'mousepulse'){
 				this.otherEnemyPulseDetector = true;
 			}
