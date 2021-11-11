@@ -199,13 +199,15 @@ class Projectile {
         this.reload -= delta;
         let min = 600;
         let enemyId = null;
-        for(let i of Object.keys(enemies)){
-          const enemy = enemies[i];
-          if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < min && !enemy.immune && (enemy.deadTime < 0 || enemy.disableTime < 0)) {
-            min = Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2);
-            enemyId = i;
-          }
-        }
+		if(Object.keys(enemies) !== undefined){
+			for(let i of Object.keys(enemies)){
+				const enemy = enemies[i];
+				if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < min && !enemy.immune && (enemy.deadTime < 0 || enemy.disableTime < 0)) {
+				  min = Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2);
+				  enemyId = i;
+				}
+			}
+		}
         if (enemyId != null){
           this.angle = Math.atan2(enemies[enemyId].y - this.y, enemies[enemyId].x - this.x);
         }

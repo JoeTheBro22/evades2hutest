@@ -44,6 +44,8 @@ setInterval(() => {
 }, 1000)
 const amogusImage = new Image();
 amogusImage.src = "./amogus.png";
+const impostorImage = new Image();
+impostorImage.src = "./impostor.png";
 ws.addEventListener("message", function (data) {
   let message = msgpack.decode(new Uint8Array(data.data));
   dataThisSecond += data.data.byteLength;
@@ -1890,6 +1892,10 @@ function renderGame() {
         ctx.fillStyle = "hsl(" + (Date.now()) + ", 50%, 50%)";
       } else if (enemies[i].type == "path") {
         ctx.fillStyle = "hsl(" + (Date.now()) + ", 50%, 50%)";
+      } else if (enemies[i].type == "pulse") {
+        ctx.fillStyle = "#db3012";
+      } else if (enemies[i].type == "mousepulse") {
+        ctx.fillStyle = "#1229db";
       } else if (enemies[i].type == "diagonal") {
         ctx.fillStyle = "rgb(160, 210, 190)";
       } else if (enemies[i].type == "wallsprayer") {
@@ -2007,9 +2013,31 @@ function renderGame() {
       }
       ctx.closePath();
       ctx.globalAlpha = 1;
+      if(enemies[i].type == 'pulse' || enemies[i].type == 'mousepulse' || enemies[i].pulseTimer !== null){
+        ctx.beginPath();
+        ctx.fillStyle = 'black';
+        let offset = 0;
+        if(enemies[i].radius > 15){
+          ctx.font = "30px 'Exo 2'";
+          offset = 45/4;
+        } else {
+          ctx.font = "8px 'Exo 2'";
+          offset = 3;
+        }
+        if(enemies[i].type == 'mousepulse'){
+          ctx.fillText(Math.round(enemies[i].pulseTimer/1000), enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y + offset);
+        } else {
+          ctx.fillText(Math.round(Math.abs(enemies[i].pulseTimer/1000)), enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y + offset);
+        }
+        ctx.closePath();
+      }
     }
     else {
-      ctx.drawImage(amogusImage, enemies[i].renderX + playerOffset.x - enemies[i].radius, enemies[i].renderY + playerOffset.y - enemies[i].radius, enemies[i].radius * 2, enemies[i].radius * 2)
+      if(enemies[i].pulseTimer !== undefined && enemies[i].pulseTimer < 0){
+        ctx.drawImage(amogusImage, enemies[i].renderX + playerOffset.x - enemies[i].radius, enemies[i].renderY + playerOffset.y - enemies[i].radius, enemies[i].radius * 2, enemies[i].radius * 2);
+      } else{
+        ctx.drawImage(impostorImage, enemies[i].renderX + playerOffset.x - enemies[i].radius, enemies[i].renderY + playerOffset.y - enemies[i].radius, enemies[i].radius * 2, enemies[i].radius * 2);
+      }
     }
 
     if (enemies[i].disabled) {
@@ -2456,7 +2484,7 @@ rogueDiv.onclick = () => {
 }
 serverList.appendChild(rogueDiv);
 
-/*const secretDiv = document.createElement("div");
+const secretDiv = document.createElement("div");
 secretDiv.hero = "???";
 secretDiv.classList.add(`heroBox`);
 secretDiv.innerText = `bruh xd`;
@@ -2465,7 +2493,7 @@ secretDiv.classList.add('secretDiv');
 secretDiv.onclick = () => {
   init('???');
 }
-serverList.appendChild(secretDiv);*/
+serverList.appendChild(secretDiv);
 
 
 

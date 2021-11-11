@@ -598,7 +598,7 @@ class Player {
 		if(this.areaHeight === undefined){
 			this.areaHeight = 514.29;
 		}
-		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Central Crossing" || this.world == "Terrifing Trials") {
+		if (this.world == "Methodical Monastery Hard" || this.world == "Crazy Cosmos" || this.world == "Crazy Cosmos Hard" || this.world == "Methodical Monastery" || this.world == 'Tireless Trek' || this.world == "Terrifing Trials") {
 			if (this.area < 41) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
@@ -629,7 +629,7 @@ class Player {
 				}
 			}
 		} else if(this.world == 'Acclimating Acceleration'){
-			this.speedMult *= 1 + this.area/40; // will be 1.5x the speed at 20
+			this.speedMult = 1 + this.area/40; // will be 1.5x the speed at 20
 			this.speedChanged = true;
 			if (this.area < 20) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
@@ -748,7 +748,7 @@ class Player {
           this.won = true;
 				}
 			}
-    } else if (this.world == "Corrupted Core") {
+    } else if (this.world == "Corrupted Core" || this.world == "Central Crossing") {
 			if (this.area < 82) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
@@ -962,6 +962,14 @@ class Player {
 	}
 ability(delta, enemies, projectiles) {
 	if(this.world == "Central Crossing"){
+		this.invincibilityTimer -= delta;
+		if(this.invincibilityTimer > 0){
+			this.lastInvincible = Date.now();
+			this.invincible = true;
+		} else {
+			this.invincible = false;
+		}
+		
 		return;
 	}
     this.lastEnergy = this.energy;
@@ -1481,10 +1489,6 @@ ability(delta, enemies, projectiles) {
 							this.ability1toggler = 1;
 						}
 					}
-				} else if(randomAbilityNumber <= 2){
-					this.invincibilityTimer = 3000;
-					this.invincible = true;
-					this.lastInvincible = Date.now();
 				} else if(randomAbilityNumber <= 3){
 					if(this.radius > 2){
 						this.radius /= 2;

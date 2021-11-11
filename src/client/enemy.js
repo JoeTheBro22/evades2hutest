@@ -12,6 +12,7 @@ class Enemy{
     this.shattered = initPack.s;
     this.dead = initPack.dea;
     this.ignited = initPack.ig;
+    this.pulseTimer = initPack.pt;
 
     this.renderX = this.x;
     this.renderY = this.y;
@@ -48,6 +49,9 @@ class Enemy{
     }
     if (updatePack.ig != undefined){
       this.ignited = updatePack.ig;
+    }
+    if(updatePack.pt != undefined){
+      this.pulseTimer = updatePack.pt;
     }
   }
   interp(delta){

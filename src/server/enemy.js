@@ -250,6 +250,28 @@ class Enemy {
 			this.nextPoint = this.points[this.pointOn + 1];
 			this.immune = true;
 		}
+
+		if(this.type == "pulse" || this.type == 'mousepulse' || (this.minTimer !== undefined && this.maxTimer !== undefined)){
+			if(this.type != 'mousepulse'){
+				this.otherEnemyPulseDetector = true;
+			}
+			if(this.maxTimer >= 1000){
+				this.pulseTimer = 1000;
+			} else{
+				this.pulseTimer = 0;
+			}
+			
+			if(this.definiteOffset !== undefined){
+				this.pulseTimer += this.definiteOffset;
+			}
+			if(this.randomOffset !== undefined){
+				this.pulseTimer += this.randomOffset * Math.random();
+			}
+			this.pulseIncreasing = false;
+			this.immune = true;
+		} else{
+			this.otherEnemyPulseDetector = null;
+		}
 	}
 	getUpdatePack() {
 		let pack = {
@@ -279,6 +301,9 @@ class Enemy {
 		if (this.lastDead != this.dead) {
 			pack.dea = this.dead;
 		}
+		if(this.pulseTimer !== undefined){
+			pack.pt = this.pulseTimer;
+		}
 		if (this.shattered > -100) {
 			pack.s = this.shattered;
 		}
@@ -303,6 +328,7 @@ class Enemy {
 			dea: this.dead,
 			ig: this.ignited,
 			aur: this.auraRadius,
+			pt: this.pulseTimer,
 		};
 		this.toInit = false;
 		return pack;
@@ -425,6 +451,39 @@ class Enemy {
 		}
 		let baseDelta = delta;
 		delta = delta * this.slowdown;
+		if(this.type == "pulse" || this.otherEnemyPulseDetector == true){
+			if(this.pulseIncreasing){
+				this.pulseTimer += delta;
+			} else {
+				this.pulseTimer -= delta;
+			}
+
+			if(this.pulseTimer > -50 && this.pulseTimer < 50){
+				if(this.pulseIncreasing){
+					this.pulseTimer = this.maxTimer;
+				} else {
+					this.pulseTimer = -this.minTimer;
+				}
+				this.pulseIncreasing = !this.pulseIncreasing;
+			}
+
+			if(this.pulseTimer < 0){
+				this.dead = true;
+				if(this.aura > 0 || this.type == 'ice sniper' || this.type == 'sniper' || this.type == 'octo' || this.type == 'speed sniper' || this.type == 'regen sniper' || this.type == 'tpshooter'){
+					this.disabled = true;
+				}
+			}
+		} else if(this.type == 'mousepulse'){
+			if(this.pulseTimer < this.maxTimer){
+				this.pulseTimer += delta;
+			}
+			if(this.pulseTimer < 0){
+				this.dead = true;
+			}
+			if(this.minTimer !== undefined && this.pulseTimer < -this.minTimer){
+				this.pulseTimer = -this.minTimer;
+			}
+		}
 		if (this.disabled == true) {
 			this.x += this.vx * this.speed * delta;
 			this.y += this.vy * this.speed * delta;
@@ -471,7 +530,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -636,7 +695,7 @@ class Enemy {
 					if (player.area == this.area && player.world == this.world) {
 						let _dist = distance(player.pos.x, player.pos.y, this.x, this.y)
 						if (_dist < player.radius + this.aura) {
-							if (player.pos.x - player.radius > 342.86 && player.pos.x + player.radius < 3085.74 + 342.86) {
+							if (player.pos.x - player.radius > 342.86 && player.pos.x + player.radius < areaBoundaries.x + areaBoundaries.width) {
 								if (this.type == "slower") {
 									player.speedMult = Math.min(player.speedMult, 0.7);
 								} else if (this.type == "megafreezing") {
@@ -707,6 +766,7 @@ class Enemy {
 								}else if (this.type == "playershield") {
 										player.invincible = true;
 										player.invincibilityTimer = 100;
+										player.lastInvincible = Date.now();
 								}   else if (this.type == "lifeswitcher") {
 									if (player.dead == true) {
 										player.dead = false;
@@ -1388,7 +1448,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic'].includes(this.type)) {
+			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

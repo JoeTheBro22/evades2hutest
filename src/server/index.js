@@ -198,7 +198,7 @@ for (let i = 42; i--; i > 0) {
 	enemies['Jarring Journey'][i] = [];
 	projectiles['Jarring Journey'][i] = [];
 }
-for (let i = 42; i--; i > 0) {
+for (let i = 82; i--; i > 0) {
 	enemies['Central Crossing'][i] = [];
 	projectiles['Central Crossing'][i] = [];
 }
@@ -407,8 +407,7 @@ wss.on("connection", ws => {
 					let enemyInfo = map['map'][players[clientId].world][players[clientId].area]['0'];
 					for (let i = 0; i < enemyInfo.amount; i++) {
 						//Enemy:
-						let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[clientId].world, area: players[clientId].area, id: enemyId, count: enemyInfo.amount, index: i, path: enemyInfo.path })
-
+						let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[clientId].world, area: players[clientId].area, id: enemyId, count: enemyInfo.amount, index: i, path: enemyInfo.path, maxTimer: enemyInfo.maxTimer, minTimer: enemyInfo.minTimer, definiteOffset: enemyInfo.definiteOffset, randomOffset: enemyInfo.randomOffset })
 						//Push to object
 						enemies[players[clientId].world][players[clientId].area].push(newEnemy);
 						enemyId++;
@@ -578,17 +577,16 @@ function mainLoop() {
 
 				// Map Builder
 				if(players[i].addEnemy.state == 'clear'){
+					players[i].addEnemy.state = false;
 					for (let j in players) {
-						if (players[j].inGame) {
-							enemies[players[j].oldWorld][players[j].area] = [];
-							projectiles[players[j].oldWorld][players[j].area] = [];
+						if (players[j].inGame && players[j].world == players[i].world && players[i].area == players[j].area) {
+							enemies[players[j].world][players[j].area] = [];
+							projectiles[players[j].world][players[j].area] = [];
 							players[j].client.send(msgpack.encode({
 								er: true
 							}));
 						}
 					}
-					players[i].addEnemy.state = false;
-					
 				} else if (players[i].addEnemy.state) {
 					players[i].addEnemy.state = false;
 					if(enemies[players[i].world][players[i].area] === undefined){
@@ -598,7 +596,7 @@ function mainLoop() {
 						if (players[j].inGame) {
 							for (let k = 0; k < players[i].addEnemy.count; k++) {
 								let id = findFreeIds();
-								let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null})
+								let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
 								
 								//Push to object
 								enemies[players[i].world][players[i].area].push(newEnemy);
@@ -636,7 +634,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -652,7 +650,7 @@ function mainLoop() {
 					enemies[players[i].oldWorld][players[i].area] = [];
 					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
 						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn") && players[projectile.parentId].inGame && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -673,7 +671,7 @@ function mainLoop() {
 								//Enemy:
                 				let id = findFreeIds();
 
-								let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[i].world, area: players[i].area, id: id, count: enemyInfo.amount, index: k, path: enemyInfo.path })
+								let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[i].world, area: players[i].area, id: id, count: enemyInfo.amount, index: k, path: enemyInfo.path, maxTimer: enemyInfo.maxTimer, minTimer: enemyInfo.minTimer, definiteOffset: enemyInfo.definiteOffset, randomOffset: enemyInfo.randomOffset })
 
 								//Push to object
 								enemies[players[i].world][players[i].area].push(newEnemy);
@@ -683,12 +681,36 @@ function mainLoop() {
 							}
 						}
 					}
+
+					for (let j in players) {
+						if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
+							if(enemies[players[i].world][players[i].area] === undefined){
+								enemies[players[i].world][players[i].area] = [];
+							}
+							for (let k = 0; k < players[i].addEnemy.count; k++) {
+								let id = findFreeIds();
+								let newEnemy = new Enemy({ type: players[j].addEnemy.type, radius: players[j].addEnemy.radius, speed: players[j].addEnemy.speed, world: players[j].world, area: players[j].area, id: id, count: players[j].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
+								
+								//Push to object
+								enemies[players[i].world][players[i].area].push(newEnemy);
+								enemyIdsInUse.push(id);
+		
+								players[i].enemyInitPack.push(newEnemy.getInitPack());
+							}
+						}
+					}
+					players[i].client.send(msgpack.encode({
+						prr: true
+					}));
 				} else {
 					if(enemies[players[i].world][players[i].area] != undefined){
 						for (let enemy of enemies[players[i].world][players[i].area]) {
 							players[i].enemyInitPack.push(enemy.getInitPack());
 						}
 					}
+					players[i].client.send(msgpack.encode({
+						prr: true
+					}));
 				}
 			}
 
@@ -754,10 +776,8 @@ function mainLoop() {
 							//Loop through the amount of enemies
 							for (let k = 0; k < enemyInfo.amount; k++) {
 								//Enemy:
-                let id = findFreeIds();
-
-								let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[i].world, area: players[i].area, id: id, count: enemyInfo.amount, index: k, path: enemyInfo.path })
-
+                				let id = findFreeIds();
+								let newEnemy = new Enemy({ type: enemyInfo.type, radius: enemyInfo.radius, speed: enemyInfo.speed, world: players[i].world, area: players[i].area, id: id, count: enemyInfo.amount, index: k, path: enemyInfo.path, maxTimer: enemyInfo.maxTimer, minTimer: enemyInfo.minTimer, definiteOffset: enemyInfo.definiteOffset, randomOffset: enemyInfo.randomOffset })
 								//Push to object
 								enemies[players[i].world][players[i].area].push(newEnemy);
 								enemyIdsInUse.push(id);
@@ -849,7 +869,7 @@ function mainLoop() {
 			  let canvas = { width: 1280, height: 720 };
 
 			  //Gunslinger Autocorrect
-			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead){
+			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead && !enemy.immune && !enemy.dead){
 				  let amountToPushX = ((players[i].pos.x - enemy.x)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
 				  let amountToPushY = ((players[i].pos.y - enemy.y)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
 				  if(amountToPushX*6800 < 10 && amountToPushX*6800 > -10){
@@ -877,18 +897,20 @@ function mainLoop() {
 			  //Collision with player
 			  let mx = -canvas.width / 2 + players[i].mousePos.x + players[i].pos.x;
 			  let my = -canvas.height / 2 + players[i].mousePos.y + players[i].pos.y;
-			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].hero == 'gunslinger' && players[i].world !== "Central Crossing") {
+			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].hero == 'gunslinger' && enemy.dead == false && players[i].world !== "Central Crossing" && enemy.type != 'mousepulse' && !enemy.immune) {
 				if (enemy.deadTime < 3000){
 					enemy.deadTime = 3000;
-				  }
-				  if (enemy.disableTime < 3000){
+				}
+				if (enemy.disableTime < 3000){
 					enemy.disableTime = 3000;
-				  }
-				  this.touched = [];
-				  this.touched.push(0);
-				  if (this.touched.length > 1){
+				}
+				this.touched = [];
+				this.touched.push(0);
+				if (this.touched.length > 1){
 					this.killed = true;
-				  }
+				}
+			  } else if(Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.type == 'mousepulse'){
+				enemy.pulseTimer -= delta*2;
 			  }
 				if (players[i].clay > 0 && players[i].warps.amount <= 0) {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
