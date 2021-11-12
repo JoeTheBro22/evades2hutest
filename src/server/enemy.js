@@ -460,7 +460,7 @@ class Enemy {
 
 			if(this.pulseTimer > this.maxTimer){
 				this.pulseIncreasing = false;
-			} else if(this.pulseTimer < this.minTimer){
+			} else if(this.pulseTimer < -this.minTimer){
 				this.pulseIncreasing = true;
 			}
 
