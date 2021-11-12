@@ -595,7 +595,7 @@ class Enemy {
 						for (var i in players) {
 							if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 								if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-									if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74) {
+									if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.width) {
 										min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 										index = i;
 									}
@@ -663,7 +663,7 @@ class Enemy {
 					let closest;
 					for (let p of Object.keys(players)) {
 						const player = players[p];
-						if (player.area == this.area && player.world == this.world && player.pos.x - player.radius > 342.86 && player.pos.x + player.radius < 3085.74 + 342.86 && player.dead == false) {
+						if (player.area == this.area && player.world == this.world && player.pos.x - player.radius > areaBoundaries.x && player.pos.x + player.radius < areaBoundaries.x + areaBoundaries.width && player.dead == false) {
 							let dist = distance(player.pos.x, player.pos.y, this.x, this.y);
 							if (dist < closestDist) {
 								closestDist = dist;
@@ -964,7 +964,7 @@ class Enemy {
 					for (var i in players) {
 						if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 							if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-								if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+								if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 									min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 									index = i;
 								}
@@ -1140,7 +1140,7 @@ class Enemy {
 					for (var i in players) {
 						if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 							if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-								if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+								if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 									min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 									index = i;
 								}
@@ -1202,7 +1202,7 @@ class Enemy {
 				for (var i in players) {
 					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-							if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+							if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 								min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 								index = i;
 							}
@@ -1242,7 +1242,7 @@ class Enemy {
 					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
 							if ((players[i].lastVel.x > 0 && this.x < players[i].pos.x) || (players[i].lastVel.x < 0 && this.x > players[i].pos.x)) {
-								if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+								if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 									min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 									index = i;
 								}
@@ -1279,7 +1279,7 @@ class Enemy {
 				for (var i in players) {
 					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-							if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+							if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 								min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 								index = i;
 							}
@@ -1301,7 +1301,7 @@ class Enemy {
 				for (var i in players) {
 					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-							if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+							if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 								min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 								index = i;
 							}
@@ -1330,7 +1330,7 @@ class Enemy {
 				for (var i in players) {
 					if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 						if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-							if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+							if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 								min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 								index = i;
 							}
@@ -1545,7 +1545,7 @@ class Enemy {
 						for (var i in players) {
 							if (players[i].area == this.area && players[i].world == this.world && players[i].dead == false) {
 								if (distance(this.x, this.y, players[i].pos.x, players[i].pos.y) < min) {
-									if (players[i].pos.x - players[i].radius > 342.86 && players[i].pos.x + players[i].radius < 3085.74 + 342.86) {
+									if (players[i].pos.x - players[i].radius > areaBoundaries.x && players[i].pos.x + players[i].radius < areaBoundaries.x + areaBoundaries.width) {
 										min = distance(this.x, this.y, players[i].pos.x, players[i].pos.y);
 										index = i;
 									}

@@ -22,15 +22,15 @@ class Projectile {
 		this.guardAlertTimer = 0;
     this.baseRadius = this.radius;
 		this.exploding = false;
-		if(map[this.world].width !== undefined){
-			if(map[this.world].width[this.area-1] !== undefined){
-				areaBoundaries.width = map[this.world].width[this.area-1];
-			}
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		} else {
+			areaBoundaries.width = 3085.74;
 		}
-		if(map[this.world].height !== undefined){
-			if(map[this.world].height[this.area-1] !== undefined){
-				areaBoundaries.height = map[this.world].height[this.area-1];
-			}
+		if (map[this.world].height !== undefined){
+			areaBoundaries.height = map[this.world].height[this.area-1];
+		} else {
+			areaBoundaries.height = 514.29;
 		}
 		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
 			this.touched = [];
@@ -112,15 +112,15 @@ class Projectile {
 		return pack
 	}
 	update(delta, players, enemies, projectiles) {
-		if(map[this.world].width !== undefined){
-			if(map[this.world].width[this.area-1] !== undefined){
-				areaBoundaries.width = map[this.world].width[this.area-1];
-			}
+		if (map[this.world].width !== undefined){
+			areaBoundaries.width = map[this.world].width[this.area-1];
+		} else {
+			areaBoundaries.width = 3085.74;
 		}
-		if(map[this.world].height !== undefined){
-			if(map[this.world].height[this.area-1] !== undefined){
-				areaBoundaries.height = map[this.world].height[this.area-1];
-			}
+		if (map[this.world].height !== undefined){
+			areaBoundaries.height = map[this.world].height[this.area-1];
+		} else {
+			areaBoundaries.height = 514.29;
 		}
 		if (this.type == "portal" && this.toInit == true) {
 			for (let p of Object.keys(players)) {
