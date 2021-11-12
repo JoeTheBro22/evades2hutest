@@ -458,6 +458,12 @@ class Enemy {
 				this.pulseTimer -= delta;
 			}
 
+			if(this.pulseTimer > this.maxTimer){
+				this.pulseIncreasing = false;
+			} else if(this.pulseTimer < this.minTimer){
+				this.pulseIncreasing = true;
+			}
+
 			if(this.pulseTimer > -50 && this.pulseTimer < 50){
 				if(this.pulseIncreasing){
 					this.pulseTimer = this.maxTimer;
