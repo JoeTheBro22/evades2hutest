@@ -32,7 +32,7 @@ class Projectile {
 		} else {
 			areaBoundaries.height = 514.29;
 		}
-		if (this.type == "clay" || this.type == "guard" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
+		if (this.type == "clay" || this.type == "guard" || this.type == "orb" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
 			this.touched = [];
 		}
 		if (this.type == "portal") {
@@ -152,7 +152,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
+		if (!['guard', 'orb', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -418,7 +418,7 @@ class Projectile {
 				}
 				for (let e of Object.keys(enemies)) {
 					const enemy = enemies[e];
-					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.immune != true) {
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
 						enemy.web = true;
 					}
 				}
@@ -439,13 +439,51 @@ class Projectile {
 				this.y = pos.y;
 				for (let e of Object.keys(enemies)) {
 					const enemy = enemies[e];
-					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && enemy.type != "wall") {
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
 						enemy.deadTime = Math.max(enemy.deadTime, 1500);
 					}
 				}
 				if (this.touched.length > 23){
 					this.killed = true;
 				} 
+				break;
+			}
+			case "orb": {
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				let speed = 0;
+				if (parent.guardAlertTimer > 0){
+					speed = 16;
+					this.radius = 80 + parent.clay*10;
+				} else {
+					this.radius = 60;
+				}
+				this.guardAlertTimer = parent.guardAlertTimer;
+				this.angle = (this.angle + speed * delta / 45) % 360;
+				var pos;
+				pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
+				this.x = pos.x;
+				this.y = pos.y;
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
+						this.touched.push(0);
+						if(parent.guardAlertTimer > 0){
+							if(enemy.shattered < 0){
+								parent.addBandCounter++;
+							}
+							enemy.shattered = 4000;
+						} else {
+							if (enemy.disableTime < 6000){
+								enemy.disableTime = 6000;
+							}
+						}
+						
+					}
+				}
 				break;
 			}
 			case "enemypusher": {

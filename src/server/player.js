@@ -117,6 +117,8 @@ class Player {
 		this.guardAlertTimer = 0;
 		this.guards = [];
 
+		this.orbs = [];
+		this.addBandCounter = 0;
 		// Thornstick
 		this.thorns = [];
 		
@@ -1473,7 +1475,6 @@ ability(delta, enemies, projectiles) {
 				} else {
 					randomAbilityNumber = Math.floor(Math.random()*15);
 				}
-				// List of all heroes (that i have added): magmax parvulus ptah jotunn kindle neuid orbital cimex janus turr warper thornstick flylie
 				if(randomAbilityNumber <= 1){
 					if (this.ability1toggler == 1) {
 						this.flow = true;
@@ -1693,6 +1694,44 @@ ability(delta, enemies, projectiles) {
         this.energy -= 5;
 				this.guardAlertTimer = 1500;
 				this.ability2cooldown = 3000;
+			}
+		}
+
+		if (this.hero == "zenith") {
+			this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
+			this.guardAlertTimer -= delta;
+			if (this.guardAlertTimer <= 0) {
+				this.destoRadius = 48;
+			} else {
+				this.destoRadius = 80;
+			}
+			if(this.orbs.length < 1){
+				this.oradius = 100;
+				for (let orb of this.orbs) {
+					orb.killed = true;
+				}
+				this.orbs = [];
+				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 30, this.world, this.area, projectiles, this.id));
+				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 150, this.world, this.area, projectiles, this.id));
+				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 270, this.world, this.area, projectiles, this.id));
+			}
+			/*this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
+			
+			*/
+			
+			if(this.addBandCounter >= 5){
+				console.log(this.addBandCounter);
+				if(this.clay < 2){
+					this.clay++;
+					this.pushClay = true;
+					this.addBandCounter = 0;
+				} else {
+					this.addBandCounter = 4;
+				}
+			}
+			if (this.x && this.ability2cooldown <= 0 && this.orbs.length > 0 && this.dead == false) {
+				this.guardAlertTimer = 1500;
+				this.ability2cooldown = 4750 - this.maxEnergy*5;
 			}
 		}
 

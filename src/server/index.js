@@ -385,7 +385,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -623,7 +623,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -634,7 +634,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -650,7 +650,7 @@ function mainLoop() {
 					enemies[players[i].oldWorld][players[i].area] = [];
 					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
 						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if((projectile.type == "guard" || projectile.type == "thorn") && players[projectile.parentId].inGame && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -728,7 +728,7 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[j] !== undefined && players[j].inGame && players[j].area != undefined && players[j].world != undefined) {
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true
@@ -739,7 +739,7 @@ function mainLoop() {
 											prr: true
 										}));
 									}
-									if ((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined) {
+									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
 										projectile.area = players[projectile.parentId].area;
 										projectile.world = players[projectile.parentId].world;
 									}
@@ -756,7 +756,7 @@ function mainLoop() {
 					enemies[players[i].world][players[i].oldArea] = [];
 					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
 						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
-							if((projectile.type == "guard" || projectile.type == "thorn") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined){
+							if((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -808,6 +808,9 @@ function mainLoop() {
           if (players[projectile.parentId]) {
             projectile.update(delta, players, enemies[players[projectile.parentId].world][players[projectile.parentId].area], projectiles);
           } else {
+			if(projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb" && projectile.parentId === undefined && !players[projectile.parentId].inGame){
+				area.pop(projectile);
+			}
             projectile.update(delta, players, enemies[mapId][areaId], projectiles);
           }
 

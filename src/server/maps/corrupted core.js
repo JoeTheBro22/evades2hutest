@@ -7,17 +7,12 @@ const CORRUPTED_CORE = {
 		amount: 20,
 		radius: 10,
 		speed: 6,
-		minTimer: 1500,
-		maxTimer: 2500,
 	}],
 	"2": [{
 		type: "normal",
 		amount: 30,
 		radius: 48,
 		speed: 2,
-		minTimer: 10000,
-		maxTimer: 1000,
-		definiteOffset: 4000
 	}],
 	"3": [{
 		type: "normal",

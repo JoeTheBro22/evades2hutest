@@ -471,6 +471,20 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2000, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2400, 10);
       }
+      if (player.hero == "zenith") {
+        ctx.fillStyle = "#443259";
+        ctx.fillText("Zenith", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Zenith", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#443259';
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/(4750 - player.maxEnergy*5), 10);
+        ctx.fillStyle = "black";
+        ctx.font = "16px 'Exo 2'";
+        ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
+        ctx.font = "30px 'Exo 2'";
+      }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
         ctx.fillText("Thornstick", canvas.width - 110, canvas.height - 140);
@@ -1982,7 +1996,7 @@ function renderGame() {
         ctx.fillStyle = "#93c1f5";
       }
       else {
-        ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
+        ctx.fillStyle = "hsl(" + Date.now()/6 + ", 50%, 50%)";
       }
       if (enemies[i].shattered <= 0) {
         ctx.beginPath();
@@ -2142,6 +2156,14 @@ function renderGame() {
         else if (projectiles[i].type == "guard") {
           ctx.fillStyle = "#5c5061";
         }
+        else if (projectiles[i].type == "orb") {
+          if(projectiles[i].guardAlertTimer > 0){
+            ctx.fillStyle = "rgba(5, 247, 243, 0.2)";
+          }
+          else {
+            ctx.fillStyle = "rgba(68, 50, 89, 0.2)";
+          }
+        }
         else if (projectiles[i].type == "enemypusher") {
           ctx.fillStyle = "#03eaff";
         }
@@ -2187,7 +2209,7 @@ function renderGame() {
           ctx.fillStyle = "#8c3fd4";
         }
         else {
-          ctx.fillStyle = "hsl(" + Date.now() + ", 50%, 50%)";
+          ctx.fillStyle = "hsl(" + Date.now()/6 + ", 50%, 50%)";
         }
         ctx.fill();
         ctx.closePath();
@@ -2483,6 +2505,20 @@ rogueDiv.onclick = () => {
   init('rogue');
 }
 serverList.appendChild(rogueDiv);
+
+const zenithDiv = document.createElement("div");
+zenithDiv.hero = "Zenith";
+zenithDiv.classList.add(`heroBox`);
+zenithDiv.innerText = `Zenith
+Cast (Passive): Gains 3 transparent orbs that overlap with the player and each other. When an enemy collides with one or more of these, it is disabled for 6 seconds.
+Analog: On activation, the orbs change color and orbit the player, with an increased radius that increases further for the number of bands the player has. Upon collision with enemies, they are disabled and shattered. For every 5 enemies shattered this way, the player gets 1 band, with a max of 2 bands. Cooldown 5 seconds minus the amount of max energy the player has divided by 200.
+`;
+
+zenithDiv.classList.add('zenithDiv');
+zenithDiv.onclick = () => {
+  init('zenith');
+}
+serverList.appendChild(zenithDiv);rogueDiv
 
 const secretDiv = document.createElement("div");
 secretDiv.hero = "???";
