@@ -872,9 +872,9 @@ function mainLoop() {
 			  let canvas = { width: 1280, height: 720 };
 
 			  //Gunslinger Autocorrect
-			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead && !enemy.immune && !enemy.dead){
-				  let amountToPushX = ((players[i].pos.x - enemy.x)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
-				  let amountToPushY = ((players[i].pos.y - enemy.y)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/(enemies[players[i].world][players[i].area].length + 40);
+			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead && !enemy.dead && Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < 150){
+				  let amountToPushX = ((players[i].pos.x - enemy.x)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/5;
+				  let amountToPushY = ((players[i].pos.y - enemy.y)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/5;
 				  if(amountToPushX*6800 < 10 && amountToPushX*6800 > -10){
 					players[i].pos.x += amountToPushX*6800;
 				  } else {
