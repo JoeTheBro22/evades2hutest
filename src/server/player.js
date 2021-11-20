@@ -517,9 +517,19 @@ class Player {
 		}
 
 		//Dev hacks
-		if (this.areaSkipLeft) {
-			this.pos.x = 69 + this.radius;
-			this.areaSkipLeft = false;
+		if (this.areaSkipLeft < 0) {
+			if(this.area > -this.areaSkipLeft){
+				this.oldArea = this.area;
+				this.area = Number(this.area) + Number(this.areaSkipLeft-1);
+				this.teleported = true;
+				this.maxSpeedReached = true;
+				this.speed = 17;
+				this.regen-=this.areaSkipLeft;
+				this.maxEnergy += 4*this.areaSkipLeft;
+				this.speedChanged = true;
+				this.pos.x = 2674.29 + 1028.6;
+			}
+			this.areaSkipLeft = 0;
 		}
 
 		if (this.areaSkipRight > 0) {
@@ -810,7 +820,37 @@ class Player {
           this.won = true;
 				}
 			}
-    } else if (this.world == "Crowded Cavern" || this.world == "Crowded Cavern Hard" || this.world == "Toilsome Traverse" || this.world == "Arduous Abyss") {
+    }  else if (this.world == "Artificial Amalgamation") {
+		if (this.area < 1201) {
+			if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+				//GOes to the start of the next area (area is not victory)
+				this.pos.x = 69 + this.radius;
+				this.oldArea = this.area;
+				this.area++;
+				if(this.warpDebt >= 0){
+					if(this.warps.amount < 10){
+						if(this.hero == 'warper' || this.hero == '???'){
+							this.warps.amount++;
+						}
+					}
+				} else {
+					this.warpDebt++;
+				}
+				if (this.maxSpeedReached == false) {
+					this.speed += 1.5;
+					this.speedChanged = true;
+				}
+	  this.maxEnergy += 4;
+	  this.regen += 0.1;
+				this.teleported = true;
+			}
+		} else {
+			if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+				//Reached the last area, stops at the wall (area is victory)
+	  this.won = true;
+			}
+		}
+		} else if (this.world == "Crowded Cavern" || this.world == "Crowded Cavern Hard" || this.world == "Toilsome Traverse" || this.world == "Arduous Abyss") {
 			if (this.area < 81) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
@@ -1720,7 +1760,6 @@ ability(delta, enemies, projectiles) {
 			*/
 			
 			if(this.addBandCounter >= 5){
-				console.log(this.addBandCounter);
 				if(this.clay < 2){
 					this.clay++;
 					this.pushClay = true;

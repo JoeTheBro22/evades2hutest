@@ -437,10 +437,12 @@ class Projectile {
 				pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
 				this.x = pos.x;
 				this.y = pos.y;
-				for (let e of Object.keys(enemies)) {
-					const enemy = enemies[e];
-					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
-						enemy.deadTime = Math.max(enemy.deadTime, 1500);
+				if(enemies && Object.keys(enemies).length > 0){
+					for (let e of Object.keys(enemies)) {
+						const enemy = enemies[e];
+						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
+							enemy.deadTime = Math.max(enemy.deadTime, 1500);
+						}
 					}
 				}
 				if (this.touched.length > 23){
@@ -618,7 +620,9 @@ function createProjectile(x, y, type, radius, speed, angle, world, area, project
   let newProjectile = new Projectile({ x: x, y: y, type: type, radius: radius, speed: speed, angle: angle, world: world, area: area, id: projectileId, parentId: parentId })
 
   if(newProjectile !== undefined){
-	projectiles[world][area].push(newProjectile);
+	if(projectiles[world][area] !== undefined){
+		projectiles[world][area].push(newProjectile);
+	}
   }
   projectileId++;
   if(projectileId > 9999){

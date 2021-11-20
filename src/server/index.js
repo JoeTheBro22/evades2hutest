@@ -77,6 +77,9 @@ const enemies = {
 "Terrifing Trials": {
 
 },
+"Artificial Amalgamation": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -131,6 +134,9 @@ const projectiles = {
 "Terrifing Trials": {
 
 },
+"Artificial Amalgamation": {
+
+},
 }
 
 for (let i = 122; i--; i > 0) {
@@ -164,6 +170,10 @@ for (let i = 22; i--; i > 0) {
 for (let i = 482; i--; i > 0) {
 	enemies['Monumental Migration'][i] = [];
 	projectiles['Monumental Migration'][i] = [];
+}
+for (let i = 1202; i--; i > 0) {
+	enemies['Artificial Amalgamation'][i] = [];
+	projectiles['Artificial Amalgamation'][i] = [];
 }
 for (let i = 402; i--; i > 0) {
 	enemies['Monumental Migration+'][i] = [];
@@ -342,12 +352,29 @@ wss.on("connection", ws => {
 			} else if(d.chat == "/random"){
 				d.chat = "";
 				player.hero = "???";
-			} else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto" ){
-				if(player.op){
-					player.areaSkipRight = parseInt(d.chat.slice(5));
+			} else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto"){
+				//if(player.op){
+					if(d.chat.slice(5,6) == '-'){
+						player.areaSkipLeft = parseInt(d.chat.slice(5));
+					} else {
+						player.areaSkipRight = parseInt(d.chat.slice(5));
+					}
+					
 					d.chat = "";
+				//}
+			} else if(d.chat.slice(0,5) == "/copy"){
+				let previousType = 0;
+				for (let j in map['map'][player.world][player.area]) {
+					let enemyInfo = map['map'][player.world][player.area][j];
+					//Loop through the amount of enemies
+					for (let k = 0; k < enemyInfo.amount; k++) {
+						if(previousType != enemyInfo.type){
+							console.log('type: ' + enemyInfo.type + ' radius: ' + enemyInfo.radius + ' speed: '+ enemyInfo.speed + ' count: '+ enemyInfo.amount);
+						}
+						previousType = enemyInfo.type;
+					}
 				}
-			} else if(d.chat.slice(0,4) == "/add" && player.world == 'Make Your Own Map'){
+			}else if(d.chat.slice(0,4) == "/add" && player.world == 'Make Your Own Map'){
 				const addEnemyValues = d.chat.split(" ");
 				player.addEnemy.type = addEnemyValues[1];
 				player.addEnemy.radius = parseInt(addEnemyValues[2]);
@@ -501,6 +528,15 @@ function checkPlayersInNewArea(player) {
 	return false;
 }
 
+function copyToClipboard(str) {
+	const el = document.createElement('textarea');
+	el.value = str;
+	document.body.appendChild(el);
+	el.select();
+	document.execCommand('copy');
+	document.body.removeChild(el);
+  };
+
 //Check if other players were in this player's old area
 function checkPlayersInOldWorld(player) {
 	for (let i in players) {
@@ -650,7 +686,7 @@ function mainLoop() {
 					enemies[players[i].oldWorld][players[i].area] = [];
 					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
 						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
+							if(projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined && (projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
@@ -760,17 +796,24 @@ function mainLoop() {
 								projectile.area = players[projectile.parentId].area;
 								projectile.world = players[projectile.parentId].world;
 								projectiles[players[i].world][players[i].area].push(projectile);
+							} else if(projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb"){
+								projectiles[players[i].world][players[i].area] = [];
+								players[i].client.send(msgpack.encode({
+									prr: true
+								}));
 							}
 						}
 					}
 					projectiles[players[i].world][players[i].oldArea] = [];
+					players[i].client.send(msgpack.encode({
+						prr: true
+					}));
 				}
 				if (checkPlayersInNewArea(players[i]) == false) {
 					//If no players in this player's current area and this area exists in the map object
 					if (map['map'][players[i].world][players[i].area]) {
 						//Loop through all items in this player's area
 						enemies[players[i].world][players[i].area] = [];
-
 						for (let j in map['map'][players[i].world][players[i].area]) {
 							let enemyInfo = map['map'][players[i].world][players[i].area][j];
 							//Loop through the amount of enemies

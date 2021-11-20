@@ -156,6 +156,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.ct) {
+    for (let i in message.ct) {
+      if (players[message.ct[i].id]) {
+        players[message.ct[i].id].updatePack(message.ct[i]);
+      }
+    }
+  }
   if (message.prr) {
     projectiles = {};
   }
@@ -190,6 +197,7 @@ let acclimatingacceleration = false;
 let makeyourownmap = false;
 let jarringjourney = false;
 let monumentalmigration = false;
+let artificialamalgamation = false;
 let monumentalmigrationplus = false;
 let toilsometraverse = false;
 let becomesus = false;
@@ -256,6 +264,7 @@ function renderGame() {
 
   delt = get_delta(delt);
   monumentalmigration = false;
+  artificialamalgamation = false;
   monumentalmigrationplus = false;
   corruptedcore = false;
   methodicalmonastery = false;
@@ -341,6 +350,8 @@ function renderGame() {
         ctx.fillStyle = "#f3e6ff";
       } else if (world == "Monumental Migration") {
         ctx.fillStyle = "#f3e6ff";
+      } else if (world == "Artificial Amalgamation") {
+        ctx.fillStyle = "#05540e";
       } else if (world == "Toilsome Traverse") {
         ctx.fillStyle = "#3eed72";
       } else if (world == "Strange Space") {
@@ -731,6 +742,26 @@ function renderGame() {
             const p = players[j];
 
             if (p.world == "Monumental Migration") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
+      else if (player.world == "Artificial Amalgamation") {
+        ctx.font = "16px 'Exo 2'";
+        artificialamalgamation = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Artificial Amalgamation") {
               playerCount++;
               ctx.font = "18px 'Exo 2'";
               if (p.dead == false) {
@@ -1176,6 +1207,12 @@ function renderGame() {
       }else {
         ctx.strokeText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
         ctx.fillText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
+      }
+      if(player.world == 'Artificial Amalgamation' && player.area == 1){
+        ctx.fillStyle = "#0ed472";
+        ctx.strokeStyle = "#04863e";
+        ctx.strokeText("Use /goto to explore all 1200 areas!", canvas.width / 2, canvas.height - 40);
+        ctx.fillText("Use /goto to explore all 1200 areas!", canvas.width / 2, canvas.height - 40);
       }
 
       //Minimap (scale 9.149, 7.346)
@@ -1665,6 +1702,33 @@ function renderGame() {
             ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
             worldCount++;
             monumentalmigration = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
+
+  if (artificialamalgamation == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Artificial Amalgamation") {
+          playerCount++;
+          if (artificialamalgamation == false) {
+            ctx.font = "18px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            artificialamalgamation = true;
           }
           ctx.font = "18px 'Exo 2'";
           if (p.dead == false) {

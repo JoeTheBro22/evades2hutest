@@ -203,7 +203,6 @@ class Player{
     if (updatePack.c != undefined){
       this.clay = updatePack.c;
     }
-
     if(this.hero == "magmax"){
       if(this.flow){
         this.color = "rgb(250, 100, 100)";
