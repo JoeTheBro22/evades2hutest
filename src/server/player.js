@@ -524,8 +524,16 @@ class Player {
 				this.teleported = true;
 				this.maxSpeedReached = true;
 				this.speed = 17;
-				this.regen-=this.areaSkipLeft;
-				this.maxEnergy += 4*this.areaSkipLeft;
+				if(this.regen -= this.areaSkipLeft > 1){
+					this.regen-=this.areaSkipLeft;
+				} else {
+					this.regen = 1;
+				}
+				if(this.maxEnergy - 4*this.areaSkipLeft > 30){
+					this.maxEnergy += 4*this.areaSkipLeft;
+				} else {
+					this.maxEnergy = 30;
+				}
 				this.speedChanged = true;
 				this.pos.x = 2674.29 + 1028.6;
 			}
