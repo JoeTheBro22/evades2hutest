@@ -268,7 +268,6 @@ class Player{
       let r = (255 - 12) * amountOfBlack + 12;
       let g = (255 - 14) * amountOfBlack + 14;
       let b = (255 - 74) * amountOfBlack + 74;
-      console.log(+ r + "," + g +"," + b);
       this.color = "rgb(" + r + "," + g +"," + b + ")";
     }
     if (this.hero == "???"){

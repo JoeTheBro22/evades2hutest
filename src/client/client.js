@@ -535,7 +535,7 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#510a6e';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/30000, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/10000, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/3000, 10);
       }
       if (player.hero == "parvulus") {

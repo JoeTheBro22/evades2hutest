@@ -667,48 +667,39 @@ function mainLoop() {
 				players[i].client.send(msgpack.encode({
 					er: true
 				}));
-				for (let j in players) {
-					if (players[j].inGame) {
-						for (let mapId of Object.keys(projectiles)) {
-							const map = projectiles[mapId];
-							for (let areaId of Object.keys(map)) {
-								const area = map[areaId];
-								for (let projectile of area) {
-									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
-										if (players[j].id != projectile.parentId) {
-											players[j].client.send(msgpack.encode({
-												prr: true
-											}));
-										}
-									} else {
+				if (checkPlayersInOldWorld(players[i]) == false) {
+					enemies[players[i].oldWorld][players[i].area] = [];	
+					projectiles[players[i].oldWorld][players[i].area] = [];
+					projectiles[players[i].world][players[i].area] = [];
+				} else {
+					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
+						for(let j in players){
+							if(players[j].world == players[i].world || players[j].area == players[i].area && players[j] != players[i]){
+								players[j].client.send(msgpack.encode({
+									prr: true
+								}));
+							}
+						}
+						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
+							let toReset = false;
+							if(projectile.type == 'guard' || projectile.type == 'thorn' || projectile.type == 'orb'){
+								toReset = true;
+								projectiles[players[i].oldWorld][players[i].area].pop(projectile);
+								projectiles[players[i].oldWorld][players[i].area].push(projectile);
+								for(let j in players){
+									if(players[j].world == players[i].world || players[j].area == players[i].area && players[j] != players[i]){
 										players[j].client.send(msgpack.encode({
 											prr: true
 										}));
 									}
-									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
-										projectile.area = players[projectile.parentId].area;
-										projectile.world = players[projectile.parentId].world;
-									}
-									let initPack = projectile.getInitPack();
-									players[j].projectileInitPack.push(initPack);
-
 								}
 							}
-						}
-					}
-				}
-				if (checkPlayersInOldWorld(players[i]) == false) {
-					enemies[players[i].oldWorld][players[i].area] = [];
-					if(projectiles[players[i].oldWorld][players[i].area] !== undefined){
-						for(let projectile of projectiles[players[i].oldWorld][players[i].area]){
-							if(projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined && (projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
-								projectile.area = players[projectile.parentId].area;
-								projectile.world = players[projectile.parentId].world;
-								projectiles[players[i].world][players[i].area].push(projectile);
+							if(toReset){
+								projectiles[players[i].oldWorld][players[i].area] = [];
+								projectiles[players[i].world][players[i].area] = [];
 							}
 						}
 					}
-					projectiles[players[i].oldWorld][players[i].area] = [];
 				}
 				if (checkPlayersInNewWorld(players[i]) == false) {
 					//If no players in this player's current area and this area exists in the map object
@@ -779,27 +770,8 @@ function mainLoop() {
 							for (let areaId of Object.keys(map)) {
 								const area = map[areaId];
 								for (let projectile of area) {
-									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[j] !== undefined && players[j].inGame && players[j].area != undefined && players[j].world != undefined) {
-										projectiles[players[j].world][players[j].area] = [];
-										area.pop(projectile);
-										if (players[j].id != projectile.parentId) {
-											players[j].client.send(msgpack.encode({
-												prr: true
-											}));
-										}
-									} else {
-										players[j].client.send(msgpack.encode({
-											prr: true
-										}));
-									}
-									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined) {
-										projectile.area = players[projectile.parentId].area;
-										projectile.world = players[projectile.parentId].world;
-									}
-									if (projectile.area == players[j].area && projectile.world == players[j].world) {
-										let initPack = projectile.getInitPack();
-										players[j].projectileInitPack.push(initPack);
-									}
+									
+									
 								}
 							}
 						}
@@ -807,24 +779,41 @@ function mainLoop() {
 				}
 				if (checkPlayersInOldArea(players[i]) == false) {
 					enemies[players[i].world][players[i].oldArea] = [];
-					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
-						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
-							if((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && projectiles[players[i].world][players[i].area] !== undefined && players[projectile.parentId] !== undefined && players[projectile.parentId].inGame && players[projectile.parentId].area != undefined && players[projectile.parentId].world != undefined){
-								projectile.area = players[projectile.parentId].area;
-								projectile.world = players[projectile.parentId].world;
-								projectiles[players[i].world][players[i].area].push(projectile);
-							} else if(projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb"){
-								projectiles[players[i].world][players[i].area] = [];
-								players[i].client.send(msgpack.encode({
-									prr: true
-								}));
-							}
-						}
-					}
+					projectiles[players[i].world][players[i].oldArea] = [];
+					projectiles[players[i].world][players[i].area] = [];
 					projectiles[players[i].world][players[i].oldArea] = [];
 					players[i].client.send(msgpack.encode({
 						prr: true
 					}));
+				} else {
+					if(projectiles[players[i].world][players[i].oldArea] !== undefined){
+						for(let j in players){
+							if(players[j].world == players[i].world || players[j].area == players[i].area && players[j] != players[i]){
+								players[j].client.send(msgpack.encode({
+									prr: true
+								}));
+							}
+						}
+						for(let projectile of projectiles[players[i].world][players[i].oldArea]){
+							let toReset = false;
+							if(projectile.type == 'guard' || projectile.type == 'thorn' || projectile.type == 'orb'){
+								toReset = true;
+								projectiles[players[i].world][players[i].oldArea].pop(projectile);
+								projectiles[players[i].world][players[i].area].push(projectile);
+								for(let j in players){
+									if(players[j].world == players[i].world || players[j].area == players[i].area && players[j] != players[i]){
+										players[j].client.send(msgpack.encode({
+											prr: true
+										}));
+									}
+								}
+							}
+							if(toReset){
+								projectiles[players[i].world][players[i].oldArea] = [];
+								projectiles[players[i].world][players[i].area] = [];
+							}
+						}
+					}
 				}
 				if (checkPlayersInNewArea(players[i]) == false) {
 					//If no players in this player's current area and this area exists in the map object
@@ -862,15 +851,10 @@ function mainLoop() {
       const map = projectiles[mapId];
       for (let areaId of Object.keys(map)) {
         const area = map[areaId];
-		//projectiles[mapId][areaId].push(projectile);
-		
         for (let projectile of area) {
           if (players[projectile.parentId]) {
             projectile.update(delta, players, enemies[players[projectile.parentId].world][players[projectile.parentId].area], projectiles);
           } else {
-			if(projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb" && projectile.parentId === undefined && !players[projectile.parentId].inGame){
-				area.pop(projectile);
-			}
             projectile.update(delta, players, enemies[mapId][areaId], projectiles);
           }
 

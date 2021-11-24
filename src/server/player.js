@@ -13,14 +13,14 @@ class Player {
 		this.radius = 17.14;
 		this.baseRadius = 17.14;
 		this.lastRadius = 17.14;
-    this.turrets = [];
+		this.turrets = [];
 		this.timer = 0;
-    this.regen = 1;
-    this.lastRegen = 1;
-    this.maxEnergy = 30;
-    this.energy = 30;
-    this.lastEnergy = 30;
-    this.lastMaxEnergy = 30;
+		this.regen = 1;
+		this.lastRegen = 1;
+		this.maxEnergy = 30;
+		this.energy = 30;
+		this.lastEnergy = 30;
+		this.lastMaxEnergy = 30;
 		this.zLock = false;
 		this.xLock = false;
 		this.left = false; this.right = false; this.up = false; this.down = false; this.shift = false;
@@ -36,7 +36,7 @@ class Player {
 		this.addEnemy = { state: false, type: 'normal', radius: 10, speed: 5, world: this.world, area: this.area, id: null, count: 1, index: null};
 		this.teleported = false;
 		this.client = client;
-    this.playerUpdatePack = [];
+    	this.playerUpdatePack = [];
 		this.enemyInitPack = [];
 		this.enemyUpdatePack = [];
 		this.enemyRemovePack = [];
@@ -49,8 +49,8 @@ class Player {
 			this.speed = 17;
 			this.maxSpeedReached = true;
 		}
-    this.maxEnergyReached = false;
-    this.maxRegenReached = false;
+		this.maxEnergyReached = false;
+		this.maxRegenReached = false;
 		this.dead = false;
 		this.speedMult = 1;
 		this.disabled = false;
@@ -132,6 +132,9 @@ class Player {
 
 		this.portals = [];
 		this.portalCharge = 0;
+
+		// turr
+		this.turrTimer = 0;
 
     //Death stuff
 
@@ -1037,9 +1040,9 @@ ability(delta, enemies, projectiles) {
 		this.ability2cooldown -= delta;
 
 		if (this.hero == "parvulus") {
-			if (this.timer > 1250) {
+			if (this.timer > 750) {
 				if (this.radius > 17.14 * 0.6) {
-					this.timer -= 1250;
+					this.timer -= 750;
 					this.radius -= 17.14 / 20;
 				}
 			}
@@ -1239,16 +1242,16 @@ ability(delta, enemies, projectiles) {
 				let used = false;
 				for (let i of Object.keys(enemies)) {
 					const enemy = enemies[i];
-					if (Math.sqrt(Math.pow(enemy.x - this.pos.x, 2) + Math.pow(enemy.y - this.pos.y, 2)) < this.radius + enemy.radius + 170) {
+					if (Math.sqrt(Math.pow(enemy.x - this.pos.x, 2) + Math.pow(enemy.y - this.pos.y, 2)) < this.radius + enemy.radius + 320) {
 						enemy.decay++;
-						if (this.x && this.timer < 0 && this.energy >= 30) {
+						if (this.x && this.timer < 0 && this.energy >= 20) {
 							used = true;
-							enemy.shattered = 4000;
+							enemy.shattered = 5000;
 						}
 					}
 				}
 				if (used) {
-          			this.energy -= 30;
+          			this.energy -= 20;
 					this.ability2cooldown = 100;
 					this.timer = 6000;
 				}
@@ -1298,7 +1301,7 @@ ability(delta, enemies, projectiles) {
 			if (!this.dead) {
 				if (this.z && this.ability1cooldown < 0 && this.energy >= 20) {
           this.energy -= 20;
-					this.ability1cooldown = 9000;
+					this.ability1cooldown = 5500;
 					let angle = 0;
 					if (this.lastvx < 0) {
 						if (this.lastvy < 0) {
@@ -1329,7 +1332,9 @@ ability(delta, enemies, projectiles) {
 					if (this.mouseOn == true) {
 						angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 					}
-					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 22, 20, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle+20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle-20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
 				}
 				if (this.x && this.ability2cooldown < 0 && this.energy >= 15) {
           this.energy -= 15;
@@ -1761,7 +1766,7 @@ ability(delta, enemies, projectiles) {
 			} else {
 				this.destoRadius = 80;
 			}
-			if(this.orbs.length < 1){
+			if(this.orbs.length < 1 || this.orbs === undefined){
 				this.oradius = 100;
 				for (let orb of this.orbs) {
 					orb.killed = true;
@@ -1929,6 +1934,12 @@ ability(delta, enemies, projectiles) {
 		}
 
     if (this.hero == "turr"){
+		this.turrTimer -= delta;
+		if(this.turrTimer < 0){
+			this.turrTimer = 10000;
+			this.turrets.push(createProjectile(this.pos.x, this.pos.y, "turr", 10, 0, 0, this.world, this.area, projectiles, this.id));
+		}
+		
       this.ability1cooldown -= delta;
       if (this.ability1cooldown < 0 && this.z && this.energy >= 15){
         this.energy -= 15;

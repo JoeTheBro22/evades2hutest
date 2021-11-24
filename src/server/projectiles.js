@@ -20,6 +20,7 @@ class Projectile {
 		this.spawny = this.y;
 		this.lastRadius = this.radius;
 		this.guardAlertTimer = 0;
+		this.closestEnemy = undefined;
     this.baseRadius = this.radius;
 		this.exploding = false;
 		if (map[this.world].width !== undefined){
@@ -196,6 +197,14 @@ class Projectile {
 				break;
 			}
       case "turr": {
+		const parent = players[this.parentId];
+		if(parent != undefined && this.radius == 10){
+			this.x = parent.pos.x;
+			this.y = parent.pos.y;
+			this.xChanged = true;
+			this.yChanged = true;
+			this.speed = 1;
+		}
         this.reload -= delta;
         let min = 600;
         let enemyId = null;
@@ -214,11 +223,15 @@ class Projectile {
         if (this.reload < 0 && enemyId != null){
           this.reload = 1600;
           let angle = Math.atan2(enemies[enemyId].y - this.y, enemies[enemyId].x - this.x);
-          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle,  this.world, this.area, projectiles, null);
-          if (this.emergency){
-          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle + 0.15,  this.world, this.area, projectiles, null);
-          createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle - 0.15,  this.world, this.area, projectiles, null);
-          }
+		  if(this.radius == 10){
+			createProjectile(this.x, this.y, "turrBullet", this.radius, 18, angle,  this.world, this.area, projectiles, null);
+		  } else {
+			createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle,  this.world, this.area, projectiles, null);
+			if (this.emergency){
+			createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle + 0.15,  this.world, this.area, projectiles, null);
+			createProjectile(this.x, this.y, "turrBullet", this.radius / 2.5, 25, angle - 0.15,  this.world, this.area, projectiles, null);
+			}
+		  }
         }
         if (this.emergency == true){
           this.emergencyTimer -= delta;
@@ -275,7 +288,7 @@ class Projectile {
               enemy.disableTime = 3000;
             }
             this.touched.push(0);
-            if (this.touched.length > 1){
+            if (this.touched.length > 2){
               this.killed = true;
             }
           }
@@ -404,17 +417,17 @@ class Projectile {
 				break;
 			}
 			case "web": {
-				if (this.radius <= 299) {
+				if (this.radius <= 499) {
 					this.radius += delta / 55 * this.growSpeed;
-					if (this.radius < 100) {
-						this.growSpeed += delta / 300;
+					if (this.radius < 175) {
+						this.growSpeed += delta / 500;
 					}
-					if (this.radius > 200) {
-						this.growSpeed -= delta / 450;
+					if (this.radius > 350) {
+						this.growSpeed -= delta / 750;
 					}
 				}
-				if (this.radius > 300) {
-					this.radius = 300;
+				if (this.radius > 500) {
+					this.radius = 500;
 				}
 				for (let e of Object.keys(enemies)) {
 					const enemy = enemies[e];
@@ -565,10 +578,10 @@ class Projectile {
 							} else {
 								if (enemy.deadTime < 3000){
 									enemy.deadTime = 3000;
-								  }
-								  if (enemy.disableTime < 3000){
-									enemy.disableTime = 3000;
-								  }
+								}
+								if (enemy.disableTime < 3000){
+								enemy.disableTime = 3000;
+								}
 							}
 							
 						}
@@ -584,29 +597,35 @@ class Projectile {
 				break;
 			}
 			case "portal": {
-				const parent = players[this.parentId];
-				if (parent == undefined) {
-					this.killed = true;
-				} else {
-					const pair = parent.portals.find(e => e.id != this.id);
-
-        			if  (pair != undefined)  {
-
-						  for (let p of Object.keys(players)) {
-							  const player = players[p];
-							  if (Math.sqrt((player.pos.x - this.x) ** 2 + (player.pos.y - this.y) ** 2) < player.radius + player.clay * 2 + this.radius) {
-								  if (player.inGame && player.area == this.area && player.world == this.world && this.touched.find(e => e.id == player.id) == undefined) {
-									  this.touched.push(player);
-									  player.pos.x = pair.x;
-									  player.pos.y = pair.y;
-									  pair.touched.push(player);
-								  }
-							  } else {
-								  this.touched = this.touched.filter(e => e.id != player.id);
-							  }
-						  }
-          }
-        }
+			const parent = players[this.parentId];
+			if (parent == undefined) {
+				this.killed = true;
+			} else {
+				const pair = parent.portals.find(e => e.id != this.id);
+				if  (pair != undefined)  {
+					for (let p of Object.keys(players)) {
+						const player = players[p];
+						if (Math.sqrt((player.pos.x - this.x) ** 2 + (player.pos.y - this.y) ** 2) < player.radius + player.clay * 2 + this.radius) {
+							if (player.inGame && player.area == this.area && player.world == this.world && this.touched.find(e => e.id == player.id) == undefined) {
+								this.touched.push(player);
+								player.pos.x = pair.x;
+								player.pos.y = pair.y;
+								pair.touched.push(player);
+							}
+						} else {
+							this.touched = this.touched.filter(e => e.id != player.id);
+						}
+					}
+				}
+			}
+			for (let e of Object.keys(enemies)) {
+				const enemy = enemies[e];
+				if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
+					if (enemy.disableTime < 3000){
+					enemy.disableTime = 3000;
+					}
+				}
+			}
         break;
       }
       default: break;
