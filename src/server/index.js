@@ -334,6 +334,21 @@ wss.on("connection", ws => {
 
 		//Chat
 		if (d.chat) {
+			if(player.hero == 'pro hero xd' && Math.random() > 0.9){
+				let randomNum = Math.random();
+				if(randomNum < 0.2){
+					d.chat = 'ez';
+				} else if (randomNum < 0.4){
+					d.chat = 'lmao ur bad';
+				} else if (randomNum < 0.6){
+					d.chat = 'skill issue';
+				} else if (randomNum < 0.8){
+					d.chat = 'bruh u noob';
+				} else if (randomNum < 1){
+					d.chat = 'why u suck lmao ?? 😂';
+				}
+				
+			}
 			if (d.chat.toLowerCase() == "godmodeon") {
 				d.chat = "";
 				player.op = !player.op;
@@ -400,10 +415,10 @@ wss.on("connection", ws => {
 				for (let i in players) {
 					players[i].client.send(message)
 				}
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
+				player.left = false;
+				player.right = false;
+				player.up = false;
+				player.down = false;
 			}
 		}
 
@@ -412,7 +427,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -765,6 +780,8 @@ function mainLoop() {
 								const area = map[areaId];
 								for (let projectile of area) {
 									if ((projectile.type == "guard" || projectile.type == "thorn" || projectile.type == "orb") && projectile !== undefined && players[j] !== undefined && players[j].inGame && players[j].area != undefined && players[j].world != undefined) {
+										projectiles[players[j].world][players[j].area] = [];
+										area.pop(projectile);
 										if (players[j].id != projectile.parentId) {
 											players[j].client.send(msgpack.encode({
 												prr: true

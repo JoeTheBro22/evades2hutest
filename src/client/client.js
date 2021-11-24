@@ -471,6 +471,15 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
       }
+      if (player.hero == "pro hero xd") {
+        ctx.fillStyle = "#0c0e4a";
+        ctx.fillText("pro hero xd", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("pro hero xd", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#0c0e4a';
+      }
       if (player.hero == "rogue") {
         ctx.fillStyle = "#d64531";
         ctx.fillText("Rogue", canvas.width - 110, canvas.height - 140);
@@ -2582,7 +2591,21 @@ zenithDiv.classList.add('zenithDiv');
 zenithDiv.onclick = () => {
   init('zenith');
 }
-serverList.appendChild(zenithDiv);rogueDiv
+serverList.appendChild(zenithDiv);
+
+const proDiv = document.createElement("div");
+proDiv.hero = "pro hero xd";
+proDiv.classList.add(`heroBox`);
+proDiv.innerText = `unnamed pro hero ;-;
+ability 1 (passive): the faster you move the smaller you are, but while not moving you are 1.2 times your normal radius
+ability 2: flex: when chatting, you have a 1/10 chance of sending a "toxic" message instead of what you really meant
+Note: hero requested by smelty :)`;
+
+proDiv.classList.add('proDiv');
+proDiv.onclick = () => {
+  init('pro hero xd');
+}
+serverList.appendChild(proDiv);
 
 const secretDiv = document.createElement("div");
 secretDiv.hero = "???";

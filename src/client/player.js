@@ -75,6 +75,9 @@ class Player{
     if (this.hero == 'zenith'){
       this.color = "#443259";
     }
+    if (this.hero == "pro hero xd"){
+      this.color = "#0c0e4a";
+    }
     if (this.hero == "???"){
       this.color = "rgba(0,0,0,0.1)";
     }
@@ -259,6 +262,14 @@ class Player{
     }
     if (this.hero == 'zenith'){
       this.color = "#443259";
+    }
+    if (this.hero == "pro hero xd"){
+      let amountOfBlack = 17.14*2/this.radius/10;
+      let r = (255 - 12) * amountOfBlack + 12;
+      let g = (255 - 14) * amountOfBlack + 14;
+      let b = (255 - 74) * amountOfBlack + 74;
+      console.log(+ r + "," + g +"," + b);
+      this.color = "rgb(" + r + "," + g +"," + b + ")";
     }
     if (this.hero == "???"){
       if(this.flow){

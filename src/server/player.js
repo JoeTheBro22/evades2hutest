@@ -549,7 +549,7 @@ class Player {
 			this.regen+=this.areaSkipRight;
       		this.maxEnergy += 4*this.areaSkipRight;
       		this.speedChanged = true;
-			this.pos.x = 2674.29 + 1028.6;
+			this.pos.x = 100000;
 			this.areaSkipRight = 0;
 		}
 
@@ -1411,6 +1411,14 @@ ability(delta, enemies, projectiles) {
 			}
 		}
 
+		if(this.hero == 'pro hero xd'){
+			if((this.xChanged || this.yChanged) && 1/Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2) * 100 < 17.14*1.2 && !this.dead){
+				this.radius = 1/Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2) * 100;
+			} else {
+				this.radius = 17.14*1.2;
+			}
+		}
+
 		if (this.hero == "rogue") {
 			this.dashLeft--;
 			if (!this.dead) {
@@ -1725,7 +1733,7 @@ ability(delta, enemies, projectiles) {
 			}
 			if (this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy >= 20) {
         this.energy -= 20;
-				this.ability1cooldown = 30000;
+				this.ability1cooldown = 10000;
 				this.oradius = 0;
 				this.destoRadius = 150;
 				for (let guard of this.guards) {
