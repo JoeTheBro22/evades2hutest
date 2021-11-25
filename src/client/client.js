@@ -18,6 +18,8 @@ let chatArea = document.getElementById("chat");
 let chatUI = document.getElementById("chatUI");
 let serverList = document.querySelector('.serverList');
 let join = document.querySelector(".joinDiv");
+let totemJoin = document.querySelector(".totemDiv");
+let totemServerList = document.querySelector('.totemServerList');
 
 var players = {};
 var enemies = {};
@@ -401,7 +403,9 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = "rgba(255, 255, 255, 20)";
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/100, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/100, 10);
+        }
         ctx.fillStyle = "black";
         ctx.font = "16px 'Exo 2'";
         ctx.fillText("Warps Left: " + player.warps.amount, canvas.width - 110, canvas.height - 15);
@@ -468,8 +472,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#de5721';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/4500, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
+        }
       }
       if (player.hero == "pro hero xd") {
         ctx.fillStyle = "#0c0e4a";
@@ -488,8 +497,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#d64531';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2000, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2400, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/2000, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/2400, 10);
+        }
       }
       if (player.hero == "zenith") {
         ctx.fillStyle = "#443259";
@@ -499,7 +513,9 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#443259';
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/(4750 - player.maxEnergy*5), 10);
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/(4750 - player.maxEnergy*5), 10);
+        }
         ctx.fillStyle = "black";
         ctx.font = "16px 'Exo 2'";
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
@@ -513,8 +529,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#1c301c';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/1750, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8500, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/1750, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8500, 10);
+        }
       }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
@@ -546,8 +567,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#510a6e';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/10000, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/3000, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/10000, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/3000, 10);
+        }
       }
       if (player.hero == "parvulus") {
         ctx.fillStyle = "#9042e3";
@@ -594,7 +620,9 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#5cacff';
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
+        }
       }
       if (player.hero == "kindle") {
         ctx.fillStyle = "#ed6f3e";
@@ -604,8 +632,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#ed6f3e';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/9000, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/9000, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8000, 10);
+        }
       }
       if (player.hero == "neuid") {
         ctx.fillStyle = "#0d6d82";
@@ -615,8 +648,13 @@ function renderGame() {
         ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
         ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
         ctx.fillStyle = '#0d6d82';
-        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/8000, 10);
-        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/20000, 10);
+        if(player.ability1cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/8000, 10);
+        }
+        
+        if(player.ability2cooldown > 0){
+          ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/20000, 10);
+        }
       }
 
       ctx.fillStyle = "black";
@@ -2355,6 +2393,7 @@ joinButton.onclick = () => {
   menu.style.display = "none";
   join.style.display = "";
   game.style.display = "none";
+  totemJoin.style.display = "none";
 }
 
 function init(hero) {
@@ -2363,12 +2402,38 @@ function init(hero) {
   } else {
     name = document.getElementById("username").value;
   }
+  chatInput.style.display = "none";
+  chatArea.style.display = "none";
+  chatUI.style.display = "none";
 
   menu.style.display = "none";
   join.style.display = "none";
   game.style.display = "";
-  inGame = true;
+  totemJoin.style.display = "";
+  inGame = false;
   ws.send(msgpack.encode({ begin: name, hero: hero }))
+  mouseToggleC = 0;
+  localStorage.setItem("name", name);
+  state = "totem";
+}
+
+function initTotem(totem) {
+  if (document.getElementById("username").value.length == 0) {
+    name = "Guest" + String(Math.floor(Math.random() * 10)) + String(Math.floor(Math.random() * 10)) + String(Math.floor(Math.random() * 10));
+  } else {
+    name = document.getElementById("username").value;
+  }
+
+  chatInput.style.display = "";
+  chatArea.style.display = "";
+  chatUI.style.display = "";
+
+  menu.style.display = "none";
+  join.style.display = "none";
+  game.style.display = "";
+  totemJoin.style.display = "none";
+  inGame = true;
+  ws.send(msgpack.encode({ totem: totem }))
   mouseToggleC = 0;
   localStorage.setItem("name", name);
   state = "game";
@@ -2652,7 +2717,62 @@ secretDiv.onclick = () => {
 }
 serverList.appendChild(secretDiv);
 
+// Totemdiv
+const redDiv = document.createElement("div");
 
+redDiv.effect = "red";
+redDiv.classList.add('heroBox');
+redDiv.innerText = `Totem of Haste
+This totem grants a 25% increase in speed to the player for the entirety of the run.
+`;
+redDiv.classList.add('redDiv');
+redDiv.onclick = () => {
+  initTotem("red");
+}
+
+totemServerList.appendChild(redDiv);
+
+const blueDiv = document.createElement("div");
+
+blueDiv.effect = "blue";
+blueDiv.classList.add('heroBox');
+blueDiv.innerText = `Totem of Mana
+This totem grants a 25% increase in regen to the player for the entirety of the run.
+`;
+blueDiv.classList.add('blueDiv');
+blueDiv.onclick = () => {
+  initTotem("blue");
+}
+
+totemServerList.appendChild(blueDiv);
+
+const magicDiv = document.createElement("div");
+
+magicDiv.effect = "magic";
+magicDiv.classList.add('heroBox');
+magicDiv.innerText = `Totem of Magic
+This totem grants a reduction of all ability cooldowns by 15%.
+`;
+magicDiv.classList.add('magicDiv');
+magicDiv.onclick = () => {
+  initTotem("magic");
+}
+
+totemServerList.appendChild(magicDiv);
+
+const gameDiv = document.createElement("div");
+
+gameDiv.effect = "game";
+gameDiv.classList.add('heroBox');
+gameDiv.innerText = `Totem of Gaming
+This totem grants an ego boost (no in-game effects). Warning: only for true gamers.
+`;
+gameDiv.classList.add('gameDiv');
+gameDiv.onclick = () => {
+  initTotem("game");
+}
+
+totemServerList.appendChild(gameDiv);
 
 function Resize() {
   let scale = window.innerWidth / canvas.width;

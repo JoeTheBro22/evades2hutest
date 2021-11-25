@@ -306,10 +306,6 @@ wss.on("connection", ws => {
 				if (player.op) {
 					player.areaSkipTen = true;
 				}
-			} else if (d.kD == '11') {
-				// v key
-			} else if (d.kD == '12') {
-				// b key
 			}
 		}
 
@@ -429,7 +425,7 @@ wss.on("connection", ws => {
 			}
 		}
 
-		//Player initialization (Client hit Play button)
+		//Player initialization (Client hit hero Play button)
 		if (d.begin) {
 			player.inGame = true;
 			player.name = d.begin;
@@ -440,8 +436,15 @@ wss.on("connection", ws => {
 			player.hero = d.hero;
 
 			player.mouseOn = false;
+		}
+		//Player initialization (Client hit totem Play button)
+		if(d.totem){
+			player.mouseOn = false;
+			if(d.totem != undefined){
+				player.totem = d.totem;
+			}
 
-
+			// Begin game
 			//If there is only one player in the server on connection, then spawn enemies in their area. This will probably be changed later for more efficency.
 			let spawnEmpty = true;
 			for (let p of Object.keys(players)) {

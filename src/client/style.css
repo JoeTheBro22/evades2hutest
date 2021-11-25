@@ -90,7 +90,7 @@ button:hover {
 .playDiv {
     margin-top: 10px;
 }
-.menu, .joinDiv, .createDiv{
+.menu, .joinDiv, .totemDiv, .createDiv{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -115,6 +115,14 @@ canvas {
   align-items: center;
 }
 .serverList {
+  border-radius: 20px;
+  text-align: center;
+  width: 80vw;
+  height: 60vh;
+  background-color: rgb(100, 100, 100);
+  overflow: auto;
+}
+.totemServerList {
   border-radius: 20px;
   text-align: center;
   width: 80vw;
@@ -468,6 +476,78 @@ canvas {
   border-color: rgba(20, 20, 20, 0);
   color: rgba(200, 200, 200, 0);
   overflow: hidden;
+}
+
+.redDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #9A0000;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.redDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
+.blueDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #00009A;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.blueDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
+.gameDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #009A00;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.gameDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
+.magicDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #9A9A9A;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.gameDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
 }
 
 .permanent:hover {

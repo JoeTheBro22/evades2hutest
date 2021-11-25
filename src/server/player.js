@@ -7,6 +7,7 @@ class Player {
 	constructor(id, client) {
 		this.id = id;
 		this.name = "";
+		this.totem = '';
 		this.pos = { x: 100 + (Math.random() * 210), y: 100 + (Math.random() * 315) };
 		this.areaX = 1;
 		this.areaY = 1;
@@ -524,6 +525,11 @@ class Player {
 			this.pos.y += this.vel.y * delta;
 		}
 
+		//Totem
+		if (this.totem == 'red'){
+			this.speedMult *= 1.25;
+		}
+
 		//Dev hacks
 		if (this.areaSkipLeft < 0) {
 			if(this.area > -this.areaSkipLeft){
@@ -1033,7 +1039,12 @@ ability(delta, enemies, projectiles) {
 		return;
 	}
     this.lastEnergy = this.energy;
-    this.energy += delta * this.regen / 1000;
+	if(this.totem == 'blue'){
+		this.energy += delta * 1.25 * this.regen / 1000;
+	} else {
+		this.energy += delta * this.regen / 1000;
+	}
+    
     if (this.energy > this.maxEnergy){
       this.energy = this.maxEnergy;
     }
@@ -1043,8 +1054,13 @@ ability(delta, enemies, projectiles) {
 		if (this.hero == "parvulus" || this.hero == "ptah") {
 			this.timer += delta;
 		}
-		this.ability1cooldown -= delta;
-		this.ability2cooldown -= delta;
+		if(this.totem == 'magic'){
+			this.ability1cooldown -= delta*1.15;//1.15
+			this.ability2cooldown -= delta*1.15;
+		} else {
+			this.ability1cooldown -= delta;
+			this.ability2cooldown -= delta;
+		}	
 
 		if (this.hero == "parvulus") {
 			if (this.timer > 750) {
@@ -1766,7 +1782,6 @@ ability(delta, enemies, projectiles) {
 		}
 
 		if (this.hero == "zenith") {
-			console.log(this.zenithTimer);
 			this.zenithTimer -= delta;
 			if(this.zenithTimer < 0 && this.guardAlertTimer <= 0){
 				this.oradius = 100;
