@@ -128,6 +128,8 @@ class Player {
 
 		this.web = null;
 
+		// Zenith
+		this.zenithTimer = 0;
 		// janus
 
 		this.portals = [];
@@ -531,11 +533,11 @@ class Player {
 				this.maxSpeedReached = true;
 				this.speed = 17;
 				if(this.regen -= this.areaSkipLeft > 1){
-					this.regen-=this.areaSkipLeft;
+					this.regen -=this.areaSkipLeft;
 				} else {
 					this.regen = 1;
 				}
-				if(this.maxEnergy - 4*this.areaSkipLeft > 30){
+				if(this.maxEnergy + 4*this.areaSkipLeft > 30){
 					this.maxEnergy += 4*this.areaSkipLeft;
 				} else {
 					this.maxEnergy = 30;
@@ -544,6 +546,7 @@ class Player {
 				this.pos.x = 2674.29 + 1028.6;
 			}
 			this.areaSkipLeft = 0;
+			this.op = false;
 		}
 
 		if (this.areaSkipRight > 0) {
@@ -557,6 +560,7 @@ class Player {
       		this.speedChanged = true;
 			this.pos.x = 100000;
 			this.areaSkipRight = 0;
+			this.op = false;
 		}
 
 		//Collisions:
@@ -1762,14 +1766,9 @@ ability(delta, enemies, projectiles) {
 		}
 
 		if (this.hero == "zenith") {
-			this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
-			this.guardAlertTimer -= delta;
-			if (this.guardAlertTimer <= 0) {
-				this.destoRadius = 48;
-			} else {
-				this.destoRadius = 80;
-			}
-			if(this.orbs.length < 1 || this.orbs === undefined){
+			console.log(this.zenithTimer);
+			this.zenithTimer -= delta;
+			if(this.zenithTimer < 0 && this.guardAlertTimer <= 0){
 				this.oradius = 100;
 				for (let orb of this.orbs) {
 					orb.killed = true;
@@ -1778,6 +1777,15 @@ ability(delta, enemies, projectiles) {
 				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 30, this.world, this.area, projectiles, this.id));
 				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 150, this.world, this.area, projectiles, this.id));
 				this.orbs.push(createProjectile(this.pos.x, this.pos.y, "orb", 60, 0, 270, this.world, this.area, projectiles, this.id));
+
+				this.zenithTimer = 10000;
+			}
+			this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
+			this.guardAlertTimer -= delta;
+			if (this.guardAlertTimer <= 0) {
+				this.destoRadius = 48;
+			} else {
+				this.destoRadius = 80;
 			}
 			/*this.oradius += Math.max(Math.min(this.destoRadius - this.oradius, 5), -5);
 			

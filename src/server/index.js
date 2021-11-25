@@ -354,10 +354,10 @@ wss.on("connection", ws => {
 			if (d.chat.toLowerCase() == "godmodeon") {
 				d.chat = "";
 				player.op = !player.op;
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
+				player.left = false;
+				player.right = false;
+				player.up = false;
+				player.down = false;
 			} else if(d.chat == "/rev" || d.chat == "/revive" ){
 				d.chat = "";
 				player.dead = false;
@@ -371,6 +371,11 @@ wss.on("connection", ws => {
 				player.hero = "???";
 			} else if(d.chat.slice(0,5) == "/skip" || d.chat.slice(0,5) == "/goto"){
 				//if(player.op){
+					player.left = false;
+					player.right = false;
+					player.up = false;
+					player.down = false;
+					player.op = true;
 					if(d.chat.slice(5,6) == '-'){
 						player.areaSkipLeft = parseInt(d.chat.slice(5));
 					} else {
