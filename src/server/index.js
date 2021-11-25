@@ -344,8 +344,10 @@ wss.on("connection", ws => {
 					d.chat = 'skill issue';
 				} else if (randomNum < 0.8){
 					d.chat = 'bruh u noob';
-				} else if (randomNum < 1){
+				} else if (randomNum < 0.95){
 					d.chat = 'why u suck lmao ?? 😂';
+				} else {
+					d.chat = 'u sure u have eyes bro? Imao so bad.';
 				}
 				
 			}
@@ -427,7 +429,7 @@ wss.on("connection", ws => {
 			player.inGame = true;
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd" && d.hero != "necromancer") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -980,7 +982,6 @@ function mainLoop() {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
 					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps.amount <= 0) {
 						// THIS IS FPS RELIANT IF SERVER FPS IS CHANGED MUST CHNAGE THIS PART (DONT DELETE)
-	
 						if (Math.sqrt((enemy.x - enemy.lastx) ** 2 + (enemy.y - enemy.lasty) ** 2) / (delta / 30) > 7 || enemy.radius > Math.sqrt(3) * 17) {
 						  if (players[i].invincible == false) {
 							players[i].dead = true;
@@ -1044,21 +1045,34 @@ function mainLoop() {
 						players[i].warps.amount--;
 					}
 				} else {
-					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
-						if (players[i].invincible == false) {
-						  players[i].dead = true;
-						  players[i].deadChanged = true;
-						} else {
-						  if(enemy.corrosive == false){
-							players[i].bandage = false;
-						  }else{
-							players[i].bandage = false;
-							players[i].dead = true;
-							players[i].deadChanged = true;
-						  }
+					if(enemy.friend < 0){
+						if (players[i].inGame && players[i].op != true && players[i].harden == false) {
+							if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
+								if (players[i].invincible == false) {
+								players[i].dead = true;
+								players[i].deadChanged = true;
+								} else {
+								if(enemy.corrosive == false){
+									players[i].bandage = false;
+								} else{
+									players[i].bandage = false;
+									players[i].dead = true;
+									players[i].deadChanged = true;
+								}
+							}
 						}
-			 	      }
+						}
+					} else {
+						for (let otherEnemy of area) {
+							if(otherEnemy != enemy && Math.sqrt((otherEnemy.x - enemy.x) ** 2 + (otherEnemy.y - enemy.y) ** 2) < enemy.radius + otherEnemy.radius && !otherEnemy.immune && otherEnemy.friend < 0){
+								if (otherEnemy.deadTime < 10000){
+									otherEnemy.deadTime = 10000;
+								  }
+								  if (otherEnemy.disableTime < 12000){
+									otherEnemy.disableTime = 12000;
+								  }
+							}
+						}
 					}
 				  }
 			  	}

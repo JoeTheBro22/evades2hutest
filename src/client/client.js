@@ -505,6 +505,17 @@ function renderGame() {
         ctx.fillText("Passive", canvas.width - 110, canvas.height - 15);
         ctx.font = "30px 'Exo 2'";
       }
+      if (player.hero == "necromancer") {
+        ctx.fillStyle = "#1c301c";
+        ctx.fillText("Necromancer", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Necromancer", canvas.width - 110, canvas.height - 140);
+        ctx.fillStyle = '#70c474';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175, 10);
+        ctx.fillStyle = '#1c301c';
+        ctx.fillRect(canvas.width - 200, canvas.height - 25, 175*player.ability1cooldown/1750, 10);
+        ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/8500, 10);
+      }
       if (player.hero == "thornstick") {
         ctx.fillStyle = "#6ba72a";
         ctx.fillText("Thornstick", canvas.width - 110, canvas.height - 140);
@@ -1903,7 +1914,11 @@ function renderGame() {
         ctx.stroke();
         ctx.closePath();
       }
-      if (enemies[i].type == "normal") {
+      if(enemies[i].friend > 3000){
+        ctx.fillStyle = "rgba(20,255,20,0.1)";
+      } else if(enemies[i].friend > 0){
+        ctx.fillStyle = "rgba(20,255,20,"+ (1-enemies[i].friend/3000*0.9+0.1) +")";
+      }else if (enemies[i].type == "normal") {
         ctx.fillStyle = "rgba(120,120,120,1)";
       } else if (enemies[i].type == "switch") {
         ctx.fillStyle = "#565656";
@@ -2240,6 +2255,12 @@ function renderGame() {
         else if (projectiles[i].type == "enemypusher") {
           ctx.fillStyle = "#03eaff";
         }
+        else if (projectiles[i].type == "hook") {
+          ctx.fillStyle = "rgba(20,20,20,0.8)";
+        }
+        /*else if (projectiles[i].type == "friend") {
+          ctx.fillStyle = "rgba(0,225,0,0.4)";
+        }*/
         else if(projectiles[i].type == "thorn"){
           if(projectiles[i].guardAlertTimer > 0){
             ctx.fillStyle = 'red';
@@ -2606,6 +2627,19 @@ proDiv.onclick = () => {
   init('pro hero xd');
 }
 serverList.appendChild(proDiv);
+
+const necroDiv = document.createElement("div");
+necroDiv.hero = "necromancer";
+necroDiv.classList.add(`heroBox`);
+necroDiv.innerText = `Necromancer
+Hook: On activation, creates 3 'hooks' that target the 3 closest enemies and bring them to their original location and kill them for 10 seconds. Cooldown 1.75 seconds. Costs 10 energy.
+Hypnotize: Up to 10 hooked/ killed enemies will be released with a vengance! Vengeful enemies act normally, except they kill other enemies on collision. Cooldown 8.5 seconds. Enemies expire after 5 seconds. Replenishes all energy.`;
+
+necroDiv.classList.add('necroDiv');
+necroDiv.onclick = () => {
+  init('necromancer');
+}
+serverList.appendChild(necroDiv);
 
 const secretDiv = document.createElement("div");
 secretDiv.hero = "???";

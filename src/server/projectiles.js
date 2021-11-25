@@ -20,8 +20,7 @@ class Projectile {
 		this.spawny = this.y;
 		this.lastRadius = this.radius;
 		this.guardAlertTimer = 0;
-		this.closestEnemy = undefined;
-    this.baseRadius = this.radius;
+    	this.baseRadius = this.radius;
 		this.exploding = false;
 		if (map[this.world].width !== undefined){
 			areaBoundaries.width = map[this.world].width[this.area-1];
@@ -33,7 +32,7 @@ class Projectile {
 		} else {
 			areaBoundaries.height = 514.29;
 		}
-		if (this.type == "clay" || this.type == "guard" || this.type == "orb" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher") {
+		if (this.type == "clay" || this.type == "guard" || this.type == "orb" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher" || this.type == 'hook') {
 			this.touched = [];
 		}
 		if (this.type == "portal") {
@@ -52,7 +51,9 @@ class Projectile {
 			this.life = 3000;
 		} else if(this.type == "wallLatcher"){
 			this.life = 10000;
-		}else {
+		} else if(this.type == "friend"){
+			this.life = 8000;
+		} else {
 			this.life = Infinity;
 		}
 		if (this.type == "portalBomb") {
@@ -132,7 +133,7 @@ class Projectile {
 			}
 		}
 		this.lastRadius = this.radius;
-		if (!['portal'].includes(this.type)) {
+		if (!['portal', 'friend'].includes(this.type)) {
 			if (this.type == "kindleBomb") {
 				if (!this.exploding) {
 					this.x += this.vx * delta / 30;
@@ -153,7 +154,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'orb', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
+		if (!['guard', 'orb', 'friend', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -463,6 +464,63 @@ class Projectile {
 				} 
 				break;
 			}
+			case "hook": {
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				if(Object.keys(enemies) !== undefined){
+					let minDist = 999999;
+					let closestEnemy = undefined;
+					for(let i of Object.keys(enemies)){
+						const enemy = enemies[i];
+						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune) {
+							if(enemy.deadTime < 0 && enemy.disableTime < 0){
+								this.touched.push(0);
+								if(parent.enemiesTaken.length < 10){
+									parent.enemiesTaken.push(enemies[i]);
+								}
+							}
+							if (enemy.deadTime < 1500){
+								enemy.deadTime = 1500;
+							}
+							if (enemy.disableTime < 2500){
+								enemy.disableTime = 2500;
+							}
+							enemies[i].x = this.x;
+							enemies[i].y = this.y;
+							enemies[i].xChanged = true;
+							enemies[i].yChanged = true;
+						} else {
+							if(Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < minDist && !enemy.immune){
+								minDist = Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2);
+								closestEnemy = enemies[i];
+							}
+						}
+					}
+					if(closestEnemy !== undefined && this.touched.length < 3){
+						var dX = closestEnemy.x - this.x;//closestEnemy
+						var dY = closestEnemy.y - this.y;
+						this.angle = Math.atan2(dY, dX);
+						this.vx = Math.cos(this.angle) * this.speed;
+						this.vy = Math.sin(this.angle) * this.speed;
+					}
+					
+					if(this.touched.length >= 3){
+						// return to startX
+						var dx = parent.pos.x - this.x;
+						var dy = parent.pos.y - this.y;
+						this.angle = Math.atan2(dy, dx);
+						this.vx = Math.cos(this.angle) * this.speed;
+						this.vy = Math.sin(this.angle) * this.speed;
+						if(Math.abs(dx) < 20 && Math.abs(dy) < 20){
+							this.killed = true;
+						}
+					}
+				}
+				break;
+			}
 			case "orb": {
 				const parent = players[this.parentId];
 				if (parent == undefined) {
@@ -523,6 +581,36 @@ class Projectile {
 				}
 				break;
 			}
+			/*case "friend": {
+				this.x += this.vx * delta / 30;
+				this.y += this.vy * delta / 30;
+				for(let i of Object.keys(enemies)){
+					const enemy = enemies[i];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune) {
+						if (enemy.deadTime < 8500){
+							enemy.deadTime = 8500;
+						}
+						if (enemy.disableTime < 10000){
+							enemy.disableTime = 10000;
+						}
+					}
+				}
+				if (this.x - this.radius < areaBoundaries.x) {
+					this.x = areaBoundaries.x + this.radius;
+					this.vx *= -1;
+				} else if (this.x + this.radius > areaBoundaries.x + areaBoundaries.width) {
+					this.x = areaBoundaries.x + areaBoundaries.width - this.radius;
+					this.vx *= -1;
+				}
+				if (this.y - this.radius < areaBoundaries.y) {
+					this.y = areaBoundaries.y + this.radius;
+					this.vy *= -1;
+				} else if (this.y + this.radius > areaBoundaries.y + areaBoundaries.height) {
+					this.y = areaBoundaries.y + areaBoundaries.height - this.radius;
+					this.vy *= -1;
+				}
+				break;
+			}*/
 			case "thorn": {
 				const parent = players[this.parentId];
 				if (parent == undefined) {

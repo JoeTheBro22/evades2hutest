@@ -13,6 +13,7 @@ class Enemy{
     this.dead = initPack.dea;
     this.ignited = initPack.ig;
     this.pulseTimer = initPack.pt;
+    this.friend = initPack.f;
 
     this.renderX = this.x;
     this.renderY = this.y;
@@ -43,6 +44,9 @@ class Enemy{
     }
     if (updatePack.s != undefined){
       this.shattered = updatePack.s;
+    }
+    if (updatePack.f != undefined){
+      this.friend = updatePack.f;
     }
     if (updatePack.dea != undefined){
       this.dead = updatePack.dea;

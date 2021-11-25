@@ -78,6 +78,9 @@ class Player{
     if (this.hero == "pro hero xd"){
       this.color = "#0c0e4a";
     }
+    if (this.hero == 'necromancer'){
+      this.color = "#1c301c";
+    }
     if (this.hero == "???"){
       this.color = "rgba(0,0,0,0.1)";
     }
@@ -262,6 +265,9 @@ class Player{
     }
     if (this.hero == 'zenith'){
       this.color = "#443259";
+    }
+    if (this.hero == 'necromancer'){
+      this.color = "#1c301c";
     }
     if (this.hero == "pro hero xd"){
       let amountOfBlack = 17.14*2/this.radius/10;

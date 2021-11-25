@@ -158,6 +158,9 @@ class Player {
 	//???
 	this.setAbility = false;
 	this.setAbilityNumber = 1;
+
+	// necro
+	this.enemiesTaken = [];
 	}
 	getUpdatePack() {
     let sendId = false;
@@ -1792,6 +1795,30 @@ ability(delta, enemies, projectiles) {
 			if (this.x && this.ability2cooldown <= 0 && this.orbs.length > 0 && this.dead == false) {
 				this.guardAlertTimer = 1500;
 				this.ability2cooldown = 4750 - this.maxEnergy*5;
+			}
+		}
+
+		if (this.hero == "necromancer") {
+			if(this.teleported || this.worldTeleported){
+				this.enemiesTaken = [];
+			}
+			if(this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy > 10){
+				this.ability1cooldown = 1750; // maybe we could disable enemies for like 10 sec for a "held" timer and then add them to a list for use in the 2nd ability :D
+				this.energy -= 10;
+				this.guards.push(createProjectile(this.pos.x+80, this.pos.y+80, "hook", 3, 10, (0 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x-80, this.pos.y+80, "hook", 3, 10, (120 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+				this.guards.push(createProjectile(this.pos.x, this.pos.y-80, "hook", 3, 10, (240 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+			}
+			if(this.x && this.ability2cooldown <= 0 && this.dead == false && this.enemiesTaken.length > 0){ // && this.necromanced.length > 0
+				this.ability2cooldown = 8500;
+				this.energy = this.maxEnergy-1;
+				/*for(let i in this.enemiesTaken){
+					this.guards.push(createProjectile(this.pos.x, this.pos.y, "friend", Math.max(this.enemiesTaken[i].radius, 8), Math.max(this.enemiesTaken[i].speed, 6), (Math.random() *360 * Math.PI / 180), this.world, this.area, projectiles, this.id, this.enemiesTaken[i]));
+				}*/
+				for(let i in this.enemiesTaken){
+					this.enemiesTaken[i].disableTime = -1;
+					this.enemiesTaken[i].friend = 8000;
+				}
 			}
 		}
 

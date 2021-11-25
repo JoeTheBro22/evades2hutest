@@ -1,11 +1,10 @@
 const CORRUPTED_CORE = {
 	"index": 0,
-	//pulse: works like pulse blocks from graviamo
-	//mousepulse: works like cursorz.io boxes. Timer will increase by 1 sec if mouse is not over it and it's not over max, although when mouse is over it then timer will decrease to -3. If it's <0, it will not kill the player. Otherwise, it will. 
+	//idea: bloodthirsty enemy that dies once it kills someone (until they are revived?)
 	"1": [{
 		type: "normal",
-		amount: 20,
-		radius: 10,
+		amount: 120,
+		radius: 3,
 		speed: 1,
 	}],
 	"2": [{

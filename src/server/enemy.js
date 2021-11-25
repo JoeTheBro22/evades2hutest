@@ -79,6 +79,7 @@ class Enemy {
 		this.coolType = false;
 		this.baseType = this.type;
 		this.shattered = -1000;
+		this.friend = -1000;
 		this.decay = 0;
 		this.dwindleFactor = 1;
 		if (map[this.world].width !== undefined){
@@ -307,6 +308,9 @@ class Enemy {
 		if (this.shattered > -100) {
 			pack.s = this.shattered;
 		}
+		if (this.friend > -100) {
+			pack.f = this.friend;
+		}
 		if (this.ignited != this.lastIgnited) {
 			pack.ig = this.ignited;
 		}
@@ -329,6 +333,7 @@ class Enemy {
 			ig: this.ignited,
 			aur: this.auraRadius,
 			pt: this.pulseTimer,
+			f: this.friend,
 		};
 		this.toInit = false;
 		return pack;
@@ -368,6 +373,7 @@ class Enemy {
 			this.yChanged = true;
 		}
 		this.shattered -= delta;
+		this.friend -= delta;
 		this.frozen -= delta;
 		this.deadTime -= delta;
 		this.disableTime -= delta;
@@ -443,6 +449,7 @@ class Enemy {
 			this.decay = 0;
 			this.lastDecay = 0;
 			this.shattered = -1000;
+			this.friend = -1000;
 			this.slowdown = 1;
 			this.disabled = false;
 			this.dead = false;
