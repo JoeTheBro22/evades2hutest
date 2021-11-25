@@ -3,7 +3,7 @@ const CORRUPTED_CORE = {
 	//idea: bloodthirsty enemy that dies once it kills someone (until they are revived?)
 	"1": [{
 		type: "slower",
-		amount: 20,
+		amount: 220,
 		radius: 3,
 		speed: 1,
 	}],

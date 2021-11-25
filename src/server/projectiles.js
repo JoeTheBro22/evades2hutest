@@ -475,7 +475,7 @@ class Projectile {
 					let closestEnemy = undefined;
 					for(let i of Object.keys(enemies)){
 						const enemy = enemies[i];
-						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune) {
+						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune && enemy.friend < 0) {
 							if(enemy.deadTime < 0 && enemy.disableTime < 0){
 								this.touched.push(0);
 								parent.enemiesTaken.push(enemies[i]);
@@ -491,7 +491,7 @@ class Projectile {
 							enemies[i].xChanged = true;
 							enemies[i].yChanged = true;
 						} else {
-							if(Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < minDist && !enemy.immune){
+							if(Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < minDist && !enemy.immune && enemy.friend < 0){
 								minDist = Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2);
 								closestEnemy = enemies[i];
 							}
