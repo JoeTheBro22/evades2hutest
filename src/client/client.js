@@ -2633,7 +2633,7 @@ necroDiv.hero = "necromancer";
 necroDiv.classList.add(`heroBox`);
 necroDiv.innerText = `Necromancer
 Hook: On activation, creates 3 'hooks' that target the 3 closest enemies and bring them to their original location, killing them for 1.5 seconds and disabling them for 2.5 seconds. Cooldown 1.75 seconds. Costs 10 energy.
-Hypnotize: Up to 10 hooked/ killed enemies will be released with a vengance! Vengeful enemies act normally, except they kill other enemies on collision and revive you on collision. Cooldown 8.5 seconds. Enemies expire after 8 seconds. Replenishes all energy.`;
+Hypnotize: Hooked/ killed enemies will be released with a vengance! Vengeful enemies act normally, except they kill other enemies on collision and revive you on collision. Cooldown 8.5 seconds. Enemies expire after 8 seconds. Replenishes all energy.`;
 
 necroDiv.classList.add('necroDiv');
 necroDiv.onclick = () => {

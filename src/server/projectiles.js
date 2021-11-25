@@ -478,9 +478,7 @@ class Projectile {
 						if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius + this.speed && !enemy.immune) {
 							if(enemy.deadTime < 0 && enemy.disableTime < 0){
 								this.touched.push(0);
-								if(parent.enemiesTaken.length < 10){
-									parent.enemiesTaken.push(enemies[i]);
-								}
+								parent.enemiesTaken.push(enemies[i]);
 							}
 							if (enemy.deadTime < 1500){
 								enemy.deadTime = 1500;
