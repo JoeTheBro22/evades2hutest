@@ -708,6 +708,7 @@ class Enemy {
 					if (player.area == this.area && player.world == this.world) {
 						let _dist = distance(player.pos.x, player.pos.y, this.x, this.y)
 						if (_dist < player.radius + this.aura) {
+							if(this.friend < 0){
 							if (player.pos.x - player.radius > 342.86 && player.pos.x + player.radius < areaBoundaries.x + areaBoundaries.width) {
 								if (this.type == "slower") {
 									player.speedMult = Math.min(player.speedMult, 0.7);
@@ -724,50 +725,50 @@ class Enemy {
 								} else if (this.type == "tornado") {
 									player.pos.x += Math.cos(this.x) * 10;
 									player.pos.y += Math.sin(this.y) * 10;
-                  player.xChanged = true;
-                  player.yChanged = true;
+									player.xChanged = true;
+									player.yChanged = true;
 								} else if (this.type == "pull" || this.type == "immunepull") {
 									if (player.dead == false) {
 										let pull = 6.2 / _dist;
 										let ang = Math.atan2(player.pos.y - this.y, player.pos.x - this.x);
-                    if(pull > 0.2){
-                      pull = 0.2;
-                    }else if(pull < -0.2){
-                      pull = -0.2;
-                    }
+										if(pull > 0.2){
+										pull = 0.2;
+										}else if(pull < -0.2){
+										pull = -0.2;
+										}
 										player.pos.x -= (pull * Math.cos(ang)) * (baseDelta);
 										player.pos.y -= (pull * Math.sin(ang)) * (baseDelta);
-                    player.xChanged = true;
-                    player.yChanged = true;
+										player.xChanged = true;
+										player.yChanged = true;
 									}
 								} else if (this.type == "push" || this.type == "immunepush") {
 									if (player.dead == false) {
 										let push = -6.2 / _dist;
 										let ang = Math.atan2(player.pos.y - this.y, player.pos.x - this.x);
-                    if(push > 0.2){
-                      push = 0.2;
-                    }else if(push < -0.2){
-                      push = -0.2;
-                    }
+										if(push > 0.2){
+										push = 0.2;
+										}else if(push < -0.2){
+										push = -0.2;
+										}
 										player.pos.x -= (push * Math.cos(ang)) * (baseDelta);
 										player.pos.y -= (push * Math.sin(ang)) * (baseDelta);
-                    player.xChanged = true;
-                    player.yChanged = true;
+										player.xChanged = true;
+										player.yChanged = true;
 									}
 								} else if (this.type == "blackhole") {
 									if (player.dead == false) {
 										let pull = 6.2 / _dist * 10;
 										let ang = Math.atan2(player.pos.y - this.y, player.pos.x - this.x);
-                    if(pull > 0.2){
-                      pull = 0.2;
-                    }else if(pull < -0.2){
-                      pull = -0.2;
-                    }
-                    player.disabled = true;
+										if(pull > 0.2){
+										pull = 0.2;
+										}else if(pull < -0.2){
+										pull = -0.2;
+										}
+										player.disabled = true;
 										player.pos.x -= (pull * Math.cos(ang)) * (baseDelta);
 										player.pos.y -= (pull * Math.sin(ang)) * (baseDelta);
-                    player.xChanged = true;
-                    player.yChanged = true;
+										player.xChanged = true;
+										player.yChanged = true;
 									}
 								}  else if (this.type == "tpstart") {
 									if (player.dead == false && player.harden == false) {
@@ -837,6 +838,9 @@ class Enemy {
 									}
 								}
 							}
+						} else {
+							player.speedMult = 1.5;
+						}
 						}
 					}
 				}

@@ -2,8 +2,8 @@ const CORRUPTED_CORE = {
 	"index": 0,
 	//idea: bloodthirsty enemy that dies once it kills someone (until they are revived?)
 	"1": [{
-		type: "normal",
-		amount: 120,
+		type: "slower",
+		amount: 20,
 		radius: 3,
 		speed: 1,
 	}],

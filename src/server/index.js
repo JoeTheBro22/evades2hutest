@@ -1063,14 +1063,18 @@ function mainLoop() {
 						}
 						}
 					} else {
+						if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius) {
+							players[i].dead = false;
+							players[i].deadChanged = true;
+						}
 						for (let otherEnemy of area) {
 							if(otherEnemy != enemy && Math.sqrt((otherEnemy.x - enemy.x) ** 2 + (otherEnemy.y - enemy.y) ** 2) < enemy.radius + otherEnemy.radius && !otherEnemy.immune && otherEnemy.friend < 0){
 								if (otherEnemy.deadTime < 10000){
 									otherEnemy.deadTime = 10000;
-								  }
-								  if (otherEnemy.disableTime < 12000){
-									otherEnemy.disableTime = 12000;
-								  }
+								}
+								if (otherEnemy.disableTime < 12000){
+								otherEnemy.disableTime = 12000;
+								}
 							}
 						}
 					}
