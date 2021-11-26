@@ -1187,8 +1187,6 @@ const CENTRAL_CROSSING = {
 		amount: 18,
 		radius: 8,
 		speed: 4,
-		minTimer: 2000,
-		maxTimer: 2000,
 	}],
 	"48": [{
 		type: "normal",
@@ -1203,8 +1201,6 @@ const CENTRAL_CROSSING = {
 		amount: 14,
 		radius: 8,
 		speed: 2,
-		minTimer: 1500,
-		maxTimer: 1500,
 	}],
 	"49": [{
 		type: "path",

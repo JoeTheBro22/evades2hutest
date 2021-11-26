@@ -530,7 +530,7 @@ class Player {
 		//Totem
 		if (this.totem == 'red'){
 			this.speedMult *= 1.25;
-		} else if (this.totem == 'fortification'){
+		} else if (this.totem == 'fortification' && this.world != "Central Crossing"){
 			this.speedMult *= 0.75;
 		}
 
@@ -1033,6 +1033,7 @@ class Player {
 ability(delta, enemies, projectiles) {
 	if(this.world == "Central Crossing"){
 		this.invincibilityTimer -= delta;
+		this.radius = 17.14;
 		if(this.invincibilityTimer > 0){
 			this.lastInvincible = Date.now();
 			this.invincible = true;
