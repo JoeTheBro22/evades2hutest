@@ -2290,6 +2290,9 @@ function renderGame() {
             ctx.fillStyle = "rgba(68, 50, 89, 0.2)";
           }
         }
+        else if(projectiles[i].type == "totemShield"){
+          ctx.fillStyle = "rgba(111, 83, 31,0.2)";
+        }
         else if (projectiles[i].type == "enemypusher") {
           ctx.fillStyle = "#03eaff";
         }
@@ -2759,6 +2762,20 @@ magicDiv.onclick = () => {
 }
 
 totemServerList.appendChild(magicDiv);
+
+const fortDiv = document.createElement("div");
+
+fortDiv.effect = "fortification";
+fortDiv.classList.add('heroBox');
+fortDiv.innerText = `Totem of Fortification
+This totem grants a small shield, although movement speed is slowed to 75%. The shield disable enemies inside it.
+`;
+fortDiv.classList.add('fortDiv');
+fortDiv.onclick = () => {
+  initTotem("fortification");
+}
+
+totemServerList.appendChild(fortDiv);
 
 const gameDiv = document.createElement("div");
 

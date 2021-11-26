@@ -95,6 +95,8 @@ class Player {
     	this.deathTimer = 60;
 		this.areaWidth = 3085.74;
 		this.areaHeight = 514.29;
+		this.totemSheild = null;
+		this.shieldTimer = 0;
 		// Ptah
 
 		this.clay = 0;
@@ -528,6 +530,8 @@ class Player {
 		//Totem
 		if (this.totem == 'red'){
 			this.speedMult *= 1.25;
+		} else if (this.totem == 'fortification'){
+			this.speedMult *= 0.75;
 		}
 
 		//Dev hacks
@@ -1133,7 +1137,7 @@ ability(delta, enemies, projectiles) {
 			else if (this.hero == "rameses") {
 				if (this.z) {
 					if (this.bandage == false && this.energy > 50 && this.puttingOnBand != true) {
-            this.energy -= 50;
+            			this.energy -= 50;
 						this.puttingOnBand = true;
 					}
 				}
@@ -1818,6 +1822,17 @@ ability(delta, enemies, projectiles) {
 			if (this.x && this.ability2cooldown <= 0 && this.orbs.length > 0 && this.dead == false) {
 				this.guardAlertTimer = 1500;
 				this.ability2cooldown = 4750 - this.maxEnergy*5;
+			}
+		}
+
+		if(this.totem == 'fortification'){
+			this.shieldTimer -= delta;
+			if(this.shieldTimer < 0){
+				if(this.totemSheild != null){
+					this.totemSheild.killed = true;
+				}
+				this.totemSheild = createProjectile(this.pos.x, this.pos.y, "totemShield", 68, 0, 0, this.world, this.area, projectiles, this.id);
+				this.shieldTimer = 5000;
 			}
 		}
 

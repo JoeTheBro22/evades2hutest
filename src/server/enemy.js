@@ -498,8 +498,14 @@ class Enemy {
 			}
 		}
 		if (this.disabled == true) {
-			this.x += this.vx * this.speed * delta;
-			this.y += this.vy * this.speed * delta;
+			if(this.type == 'frog' || this.type == 'dasher' || this.type == 'evilfrog'){
+				this.x += this.vx * this.speed * delta/3;
+				this.y += this.vy * this.speed * delta/3;
+			} else {
+				this.x += this.vx * this.speed * delta;
+				this.y += this.vy * this.speed * delta;
+			}
+			
 			if (this.x - this.radius < areaBoundaries.x) {
 				this.x = areaBoundaries.x + this.radius;
 				this.vx *= -1;

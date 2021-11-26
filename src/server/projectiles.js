@@ -32,7 +32,7 @@ class Projectile {
 		} else {
 			areaBoundaries.height = 514.29;
 		}
-		if (this.type == "clay" || this.type == "guard" || this.type == "orb" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher" || this.type == 'hook') {
+		if (this.type == "clay" || this.type == "guard" || this.type == "orb" || this.type == "portal"|| this.type == "thorn" || this.type == "wallLatcher" || this.type == 'hook' || this.type == "totemShield") {
 			this.touched = [];
 		}
 		if (this.type == "portal") {
@@ -154,7 +154,7 @@ class Projectile {
 				this.exploding = true;
 			}
 		}
-		if (!['guard', 'orb', 'friend', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
+		if (!['guard', 'orb', 'totemShield', 'friend', 'web', 'portal', 'thorn', 'wallLatcher', 'sniperBullet', 'iceSniperBullet', 'octoBullet', 'speedSniperBullet', 'regenSniperBullet', 'tpBullet'].includes(this.type)) {
 			if (this.x - this.radius < 0 || this.x + this.radius > areaBoundaries.width + areaBoundaries.x * 2 || this.y - this.radius < 0 || this.y + this.radius > areaBoundaries.height + areaBoundaries.y) {
 				if (this.type != "kindleBomb") {
 					this.killed = true;
@@ -553,6 +553,40 @@ class Projectile {
 							}
 						}
 						
+					}
+				}
+				break;
+			}
+			case "totemShield": {
+				/*const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				this.x = parent.x;
+				this.y = parent.y;
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
+						this.touched.push(0);
+						enemy.web = true;
+					}
+				}
+				break;*/
+				const parent = players[this.parentId];
+				if (parent == undefined) {
+					this.killed = true;
+					break;
+				}
+				this.x = parent.pos.x;
+				this.y = parent.pos.y;
+				for (let e of Object.keys(enemies)) {
+					const enemy = enemies[e];
+					if (Math.sqrt((this.x - enemy.x) ** 2 + (this.y - enemy.y) ** 2) < this.radius + enemy.radius && !enemy.immune) {
+						this.touched.push(0);
+						if (enemy.disableTime < 2500){
+							enemy.disableTime = 2500;
+						}
 					}
 				}
 				break;
