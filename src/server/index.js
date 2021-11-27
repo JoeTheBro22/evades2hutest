@@ -667,13 +667,12 @@ function mainLoop() {
 					for (let k = 0; k < players[i].addEnemy.count; k++) {
 						let id = findFreeIds();
 						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
-						
+						enemies[players[i].world][players[i].area].push(newEnemy);
+
 						//Push to object
 						for (let j in players) {
 							if (players[j].inGame) {
-								enemies[players[i].world][players[i].area].push(newEnemy);
 								enemyIdsInUse.push(id);
-
 								players[j].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}
@@ -681,29 +680,57 @@ function mainLoop() {
 				}
 
 				let totalSurvivalTimer = 0;
+				let totalExpandedSurvivalTimer = 0;
+				let activePlayers = 0;
+				let activeExpandedPlayers = 0;
 				for(let j in players){
 					if(players[j].inGame){
-						if(players[j].world == 'Strenuous Survival' && players[j].survivalTimer > 0){
+						if(players[j].world == 'Strenuous Survival' && players[j].survivalTimer > 0 && players[j].area == 1){
+							activePlayers++;
 							if(players[j].lastSurvivalTimer){
 								totalSurvivalTimer += players[j].survivalTimer - players[j].lastSurvivalTimer;
 							} else {
 								totalSurvivalTimer += players[j].survivalTimer;
 							}
 							players[j].lastSurvivalTimer = players[j].survivalTimer;
+						} else if(players[j].world == 'Strenuous Survival' && players[j].survivalTimer > 0){
+							activeExpandedPlayers++;
+							if(players[j].lastSurvivalTimer){
+								totalExpandedSurvivalTimer += players[j].survivalTimer - players[j].lastSurvivalTimer;
+							} else {
+								totalExpandedSurvivalTimer += players[j].survivalTimer;
+							}
+							players[j].lastSurvivalTimer = players[j].survivalTimer;
 						}
 					}
 				}
 
-				let typesArray = ['normal', 'homing', 'tired', 'accelerating', 'accelerating', 'dasher', 'slower', 'disabler', 'immunetoxic', 'wavy', 'oscillating', 'eviljumper', 'soldier', 'jumper', 'immune'];
-				if(totalSurvivalTimer > 0 && Math.random() > 0.98 && enemies['Strenuous Survival'][1].length < 250){
+				let typesArray = ['normal', 'homing', 'tired', 'accelerating', 'accelerating', 'dasher', 'slower', 'disabler', 'immunetoxic', 'wavy', 'oscillating', 'eviljumper', 'soldier', 'jumper', 'immune', 'creeper', 'icicle', 'warp'];
+				let expandedTypesArray = ['normal', 'warp', 'transangle', 'slower', 'lag', 'spiral', 'ultraspiral', 'amogus', 'tornado', 'oscillating', 
+				'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch',
+				'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zigzag', 'pull',
+				'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'lifeswitcher',
+				'toxic', 'immunetoxic', 'tired', 'icicle', 'scared', 'soldier', 'creeper', 'wall', 'dasher', 'wallsprayer', 'frog', 
+				'evilfrog', 'tp', 'homing', 'superhoming', 'liquid'];
+				if(totalSurvivalTimer > 0 && Math.random() > 0.98 + 0.02*1/Math.ceil(totalSurvivalTimer) && enemies['Strenuous Survival'][1].length < 250 && players[i].area == 1){
 					let id = findFreeIds();
-					let newEnemy = new Enemy({ type: typesArray[Math.floor(Math.random()*(typesArray.length-0.0000001))], radius: 8+Math.floor(totalSurvivalTimer*3), speed: 3+Math.floor(totalSurvivalTimer*1.5), world: 'Strenuous Survival', area: 1, id: id, count: 1, index: 0});
+					let newEnemy = new Enemy({ type: typesArray[Math.floor(Math.random()*(typesArray.length))], radius: (8+Math.random()*3), speed: (3+Math.random()*1.5), world: 'Strenuous Survival', area: 1, id: id, count: 1, index: 0});
+					enemies[players[i].world][players[i].area].push(newEnemy);
 					for (let j in players) {
-						if(players[j].world == 'Strenuous Survival'){
+						if(players[j].world == 'Strenuous Survival' && players[j].area == 1){
 							//Push to object
-							enemies[players[j].world][players[j].area].push(newEnemy);
 							enemyIdsInUse.push(id);
-
+							players[j].enemyInitPack.push(newEnemy.getInitPack());
+						}
+					}
+				} else if(totalExpandedSurvivalTimer > 0 && Math.random() > 0.98 + 0.02*1/Math.ceil(totalExpandedSurvivalTimer) && enemies['Strenuous Survival'][2].length < 250){
+					let id = findFreeIds();
+					let newEnemy = new Enemy({ type: expandedTypesArray[Math.floor(Math.random()*(typesArray.length))], radius: (1+Math.random()*25), speed: (3+Math.random()*3), world: 'Strenuous Survival', area: 2, id: id, count: 1, index: 0});
+					enemies[players[i].world][players[i].area].push(newEnemy);
+					for (let j in players) {
+						if(players[j].world == 'Strenuous Survival' && players[j].area == 2){
+							//Push to object
+							enemyIdsInUse.push(id);
 							players[j].enemyInitPack.push(newEnemy.getInitPack());
 						}
 					}
@@ -781,13 +808,12 @@ function mainLoop() {
 					for (let k = 0; k < players[i].addEnemy.count; k++) {
 						let id = findFreeIds();
 						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
-						
-						//Push to object
+						enemies[players[i].world][players[i].area].push(newEnemy);
+
 						for (let j in players) {
 							if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
-								enemies[players[i].world][players[i].area].push(newEnemy);
+								//Push to object
 								enemyIdsInUse.push(id);
-
 								players[i].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}
@@ -967,7 +993,7 @@ function mainLoop() {
 			  let canvas = { width: 1280, height: 720 };
 
 			  //Gunslinger Autocorrect
-			  if(players[i].hero == 'gunslinger' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead && !enemy.dead && Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < 150){
+			  if(players[i].hero == 'gunslinger' && players[i].world != 'Central Crossing' && players[i].world != 'Strenuous Survival' && players[i].pos.x > 342.86 && players[i].pos.x < players[i].areaWidth + 342.86 && !players[i].dead && !enemy.dead && Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < 150){
 				  let amountToPushX = ((players[i].pos.x - enemy.x)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/5;
 				  let amountToPushY = ((players[i].pos.y - enemy.y)/((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2))/5;
 				  if(amountToPushX*6800 < 10 && amountToPushX*6800 > -10){

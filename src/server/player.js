@@ -294,7 +294,7 @@ class Player {
 	}
 
 	if(this.survivalTimer != undefined && this.world == "Strenuous Survival"){
-		pack.st = this.st;
+		pack.st = this.survivalTimer;
 		sendId = true;
 	}
 
@@ -921,8 +921,29 @@ class Player {
           this.won = true;
 				}
 			}
-    } else {
-			if (this.area < 481 && this.world != 'Strenuous Survival') {
+    	}else if (this.world == 'Strenuous Survival') {
+			if (this.area < 2) {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+					//GOes to the start of the next area (area is not victory)
+					this.pos.x = 69 + this.radius;
+					this.oldArea = this.area;
+					this.area++;
+					if (this.maxSpeedReached == false) {
+						this.speed += 1.5;
+						this.speedChanged = true;
+					}
+          			this.maxEnergy += 4;
+          			this.regen += 0.1;
+					this.teleported = true;
+				}
+			} else {
+				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+					//Reached the last area, stops at the wall (area is victory)
+          			this.won = true;
+				}
+			}
+    	} else {
+			if (this.area < 481) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;

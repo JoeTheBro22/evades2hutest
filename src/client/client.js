@@ -165,6 +165,13 @@ ws.addEventListener("message", function (data) {
       }
     }
   }
+  if (message.st) {
+    for (let i in message.st) {
+      if (players[message.st[i].id]) {
+        players[message.st[i].id].updatePack(message.st[i]);
+      }
+    }
+  }
   if (message.prr) {
     projectiles = {};
   }
@@ -1289,6 +1296,10 @@ function renderGame() {
       }else {
         ctx.strokeText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
         ctx.fillText(players[selfId].world + ': Speed = ' + (1 + player.area/40), canvas.width / 2, 40);
+      }
+      if(player.world == 'Strenuous Survival'){
+        ctx.strokeText('Score: ' + Math.floor(player.survivalTimer), canvas.width / 2, 90);
+        ctx.fillText('Score: ' + Math.floor(player.survivalTimer), canvas.width / 2, 90);
       }
       if(player.world == 'Artificial Amalgamation' && player.area == 1){
         ctx.fillStyle = "#0ed472";
