@@ -668,11 +668,11 @@ function mainLoop() {
 						let id = findFreeIds();
 						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
 						enemies[players[i].world][players[i].area].push(newEnemy);
+						enemyIdsInUse.push(id);
 
 						//Push to object
 						for (let j in players) {
 							if (players[j].inGame) {
-								enemyIdsInUse.push(id);
 								players[j].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}
@@ -716,10 +716,10 @@ function mainLoop() {
 					let id = findFreeIds();
 					let newEnemy = new Enemy({ type: typesArray[Math.floor(Math.random()*(typesArray.length))], radius: (8+Math.random()*3), speed: (3+Math.random()*1.5), world: 'Strenuous Survival', area: 1, id: id, count: 1, index: 0});
 					enemies[players[i].world][players[i].area].push(newEnemy);
+					enemyIdsInUse.push(id);
 					for (let j in players) {
 						if(players[j].world == 'Strenuous Survival' && players[j].area == 1){
 							//Push to object
-							enemyIdsInUse.push(id);
 							players[j].enemyInitPack.push(newEnemy.getInitPack());
 						}
 					}
@@ -727,10 +727,10 @@ function mainLoop() {
 					let id = findFreeIds();
 					let newEnemy = new Enemy({ type: expandedTypesArray[Math.floor(Math.random()*(typesArray.length))], radius: (1+Math.random()*25), speed: (3+Math.random()*3), world: 'Strenuous Survival', area: 2, id: id, count: 1, index: 0});
 					enemies[players[i].world][players[i].area].push(newEnemy);
+					enemyIdsInUse.push(id);
 					for (let j in players) {
 						if(players[j].world == 'Strenuous Survival' && players[j].area == 2){
 							//Push to object
-							enemyIdsInUse.push(id);
 							players[j].enemyInitPack.push(newEnemy.getInitPack());
 						}
 					}
@@ -809,11 +809,11 @@ function mainLoop() {
 						let id = findFreeIds();
 						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
 						enemies[players[i].world][players[i].area].push(newEnemy);
+						enemyIdsInUse.push(id);
 
 						for (let j in players) {
 							if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
 								//Push to object
-								enemyIdsInUse.push(id);
 								players[i].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}
