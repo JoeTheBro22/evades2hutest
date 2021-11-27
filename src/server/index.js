@@ -80,6 +80,9 @@ const enemies = {
 "Artificial Amalgamation": {
 
 },
+"Strenuous Survival": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -135,6 +138,9 @@ const projectiles = {
 
 },
 "Artificial Amalgamation": {
+
+},
+"Strenuous Survival": {
 
 },
 }
@@ -215,6 +221,10 @@ for (let i = 82; i--; i > 0) {
 for (let i = 42; i--; i > 0) {
 	enemies['Terrifing Trials'][i] = [];
 	projectiles['Terrifing Trials'][i] = [];
+}
+for (let i = 2; i--; i > 0) {
+	enemies['Strenuous Survival'][i] = [];
+	projectiles['Strenuous Survival'][i] = [];
 }
 
 const map = require("./map");
@@ -640,7 +650,7 @@ function mainLoop() {
 				if(players[i].addEnemy.state == 'clear'){
 					players[i].addEnemy.state = false;
 					for (let j in players) {
-						if (players[j].inGame && players[j].world == players[i].world && players[i].area == players[j].area) {
+						if (players[j].inGame && players[j].world == 'Make Your Own Map' && players[i].area == players[j].area) {
 							enemies[players[j].world][players[j].area] = [];
 							projectiles[players[j].world][players[j].area] = [];
 							players[j].client.send(msgpack.encode({
@@ -653,18 +663,48 @@ function mainLoop() {
 					if(enemies[players[i].world][players[i].area] === undefined){
 						enemies[players[i].world][players[i].area] = [];
 					}
-					for (let j in players) {
-						if (players[j].inGame) {
-							for (let k = 0; k < players[i].addEnemy.count; k++) {
-								let id = findFreeIds();
-								let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
-								
-								//Push to object
+					
+					for (let k = 0; k < players[i].addEnemy.count; k++) {
+						let id = findFreeIds();
+						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
+						
+						//Push to object
+						for (let j in players) {
+							if (players[j].inGame) {
 								enemies[players[i].world][players[i].area].push(newEnemy);
 								enemyIdsInUse.push(id);
-		
+
 								players[j].enemyInitPack.push(newEnemy.getInitPack());
 							}
+						}
+					}
+				}
+
+				let totalSurvivalTimer = 0;
+				for(let j in players){
+					if(players[j].inGame){
+						if(players[j].world == 'Strenuous Survival' && players[j].survivalTimer > 0){
+							if(players[j].lastSurvivalTimer){
+								totalSurvivalTimer += players[j].survivalTimer - players[j].lastSurvivalTimer;
+							} else {
+								totalSurvivalTimer += players[j].survivalTimer;
+							}
+							players[j].lastSurvivalTimer = players[j].survivalTimer;
+						}
+					}
+				}
+
+				let typesArray = ['normal', 'homing', 'tired', 'accelerating', 'accelerating', 'dasher', 'slower', 'disabler', 'immunetoxic', 'wavy', 'oscillating', 'eviljumper', 'soldier', 'jumper', 'immune'];
+				if(totalSurvivalTimer > 0 && Math.random() > 0.98 && enemies['Strenuous Survival'][1].length < 250){
+					let id = findFreeIds();
+					let newEnemy = new Enemy({ type: typesArray[Math.floor(Math.random()*(typesArray.length-0.0000001))], radius: 8+Math.floor(totalSurvivalTimer*3), speed: 3+Math.floor(totalSurvivalTimer*1.5), world: 'Strenuous Survival', area: 1, id: id, count: 1, index: 0});
+					for (let j in players) {
+						if(players[j].world == 'Strenuous Survival'){
+							//Push to object
+							enemies[players[j].world][players[j].area].push(newEnemy);
+							enemyIdsInUse.push(id);
+
+							players[j].enemyInitPack.push(newEnemy.getInitPack());
 						}
 					}
 				}
@@ -734,19 +774,20 @@ function mainLoop() {
 						}
 					}
 
-					for (let j in players) {
-						if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
-							if(enemies[players[i].world][players[i].area] === undefined){
-								enemies[players[i].world][players[i].area] = [];
-							}
-							for (let k = 0; k < players[i].addEnemy.count; k++) {
-								let id = findFreeIds();
-								let newEnemy = new Enemy({ type: players[j].addEnemy.type, radius: players[j].addEnemy.radius, speed: players[j].addEnemy.speed, world: players[j].world, area: players[j].area, id: id, count: players[j].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
-								
-								//Push to object
+					if(enemies[players[i].world][players[i].area] === undefined){
+						enemies[players[i].world][players[i].area] = [];
+					}
+							
+					for (let k = 0; k < players[i].addEnemy.count; k++) {
+						let id = findFreeIds();
+						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
+						
+						//Push to object
+						for (let j in players) {
+							if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
 								enemies[players[i].world][players[i].area].push(newEnemy);
 								enemyIdsInUse.push(id);
-		
+
 								players[i].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}
@@ -954,7 +995,7 @@ function mainLoop() {
 			  //Collision with player
 			  let mx = -canvas.width / 2 + players[i].mousePos.x + players[i].pos.x;
 			  let my = -canvas.height / 2 + players[i].mousePos.y + players[i].pos.y;
-			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].hero == 'gunslinger' && enemy.dead == false && players[i].world !== "Central Crossing" && enemy.type != 'mousepulse' && !enemy.immune) {
+			  if (Math.sqrt((mx - enemy.x) ** 2 + (my - enemy.y) ** 2) < 20 + enemy.radius*2 && enemy.shattered < 0 && players[i].hero == 'gunslinger' && enemy.dead == false && players[i].world !== "Central Crossing" && players[i].world !== "Strenuous Survival" && enemy.type != 'mousepulse' && !enemy.immune) {
 				if (enemy.deadTime < 3000){
 					enemy.deadTime = 3000;
 				}

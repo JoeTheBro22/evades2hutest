@@ -206,6 +206,7 @@ let becomesus = false;
 let atrociousarena = false;
 let arduousabyss = false;
 let centralcrossing = false;
+let strenuoussurvival = false;
 let terrifingtrials = false;
 
 toilsomeAreas = [
@@ -284,6 +285,7 @@ function renderGame() {
   atrociousarena = false;
   arduousabyss = false;
   centralcrossing = false;
+  strenuoussurvival = false;
   terrifingtrials = false;
 
   for (let i in players) {
@@ -362,6 +364,8 @@ function renderGame() {
         ctx.fillStyle = "#a591a8";
       } else if (world == "Central Crossing") {
         ctx.fillStyle = "#21326b";
+      } else if (world == "Strenuous Survival") {
+        ctx.fillStyle = "#4d4f44";
       } else if (world == "Terrifing Trials") {
         ctx.fillStyle = "black";
       } else if (world == "Acclimating Acceleration") {
@@ -964,6 +968,26 @@ function renderGame() {
             const p = players[j];
 
             if (p.world == "Central Crossing") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
+      else if (player.world == "Strenuous Survival") {
+        ctx.font = "22px 'Exo 2'";
+        strenuoussurvival = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Strenuous Survival") {
               playerCount++;
               ctx.font = "18px 'Exo 2'";
               if (p.dead == false) {
@@ -1632,6 +1656,32 @@ function renderGame() {
       }
     }
   }
+  if (strenuoussurvival == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Strenuous Survival") {
+          playerCount++;
+          if (strenuoussurvival == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            strenuoussurvival = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
   if (terrifingtrials == false) {
     for (let j in players) {
       if (players[j].id != selfId) {
@@ -1971,6 +2021,8 @@ function renderGame() {
       } else if (enemies[i].type == "zigzag") {
         ctx.fillStyle = "#b371f2";
       } else if (enemies[i].type == "turning") {
+        ctx.fillStyle = "#364359";
+      } else if (enemies[i].type == "accelerating") {
         ctx.fillStyle = "#336600";
       } else if (enemies[i].type == "sniper") {
         ctx.fillStyle = "#a05353";

@@ -21,6 +21,7 @@ class Player{
     this.mousePos = initPack.msp;
     this.addEnemy = initPack.ae;
     this.warps = initPack.wps;
+    this.survivalTimer = initPack.st;
     if (initPack.radius != undefined){
       this.radius = initPack.radius;
     }
@@ -163,6 +164,9 @@ class Player{
     }
     if (updatePack.wps != undefined){
       this.warps = updatePack.wps;
+    }
+    if (updatePack.st != undefined && this.world == 'Strenuous Survival'){
+      this.survivalTimer = updatePack.st;
     }
     if (updatePack.ae != undefined){
       this.addEnemy = updatePack.ae;

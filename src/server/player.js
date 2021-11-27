@@ -97,6 +97,7 @@ class Player {
 		this.areaHeight = 514.29;
 		this.totemSheild = null;
 		this.shieldTimer = 0;
+		this.survivalTimer = 0;
 		// Ptah
 
 		this.clay = 0;
@@ -292,6 +293,11 @@ class Player {
 		sendId = true;
 	}
 
+	if(this.survivalTimer != undefined && this.world == "Strenuous Survival"){
+		pack.st = this.st;
+		sendId = true;
+	}
+
 	if(this.addEnemy.state == true && this.addEnemy != undefined){
 		pack.ae = this.addEnemy;
 		sendId = true;
@@ -335,6 +341,7 @@ class Player {
 			wps: this.warps,
 			aw: this.areaWidth,
 			ah: this.areaHeight,
+			st: this.survivalTimer,
 		};
 		if (this.clay > 0) {
 			pack.clay = this.clay;
@@ -403,6 +410,12 @@ class Player {
 		this.oldWorld = this.world;
 		this.lastRadius = this.radius;
 		delta /= 30;
+
+		if(this.world == 'Strenuous Survival' && this.pos.x > 342.86 && this.pos.x < 1342.86 && this.dead == false){
+			this.survivalTimer += delta;
+		} else {
+			this.survivalTimer = 0;
+		}
 
 		if (this.disabled == true) {
 			this.harden = false;
@@ -530,7 +543,7 @@ class Player {
 		//Totem
 		if (this.totem == 'red'){
 			this.speedMult *= 1.25;
-		} else if (this.totem == 'fortification' && this.world != "Central Crossing"){
+		} else if (this.totem == 'fortification' && this.world != "Central Crossing" && this.world != "Strenuous Survival"){
 			this.speedMult *= 0.75;
 		}
 
@@ -808,8 +821,8 @@ class Player {
 						this.speed += 1.5;
 						this.speedChanged = true;
 					}
-          this.maxEnergy += 4;
-          this.regen += 0.1;
+					this.maxEnergy += 4;
+					this.regen += 0.1;
 					this.teleported = true;
 				}
 			} else {
@@ -909,7 +922,7 @@ class Player {
 				}
 			}
     } else {
-			if (this.area < 481) {
+			if (this.area < 481 && this.world != 'Strenuous Survival') {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
 					this.pos.x = 69 + this.radius;
@@ -941,9 +954,8 @@ class Player {
 		}
 		if (this.pos.x - this.radius < 342.86 && this.area == 1) {
 			//If area is one and it can collide with teleporters to switch world: (will need to change this when new worlds come into play)
-
-			if (this.pos.y - this.radius + this.areaHeight - 514.29 < 68.57) {
-				this.pos.y = 445.72 + this.areaHeight - 514.29 - this.radius;
+			if (this.pos.y - this.radius + this.areaHeight - 514.29 < 68.57) {//
+				this.pos.y = 445.72 - this.radius;
 				this.oldWorld = this.world;
 				let currentWorldIndex = map[this.world].index;
 				this.worldTeleported = true;
@@ -958,7 +970,7 @@ class Player {
 					this.world = "Corrupted Core";
 				}
 
-			} else if (this.pos.y + this.radius > 445.72) {
+			} else if (this.pos.y + this.radius - this.area > 445.72 + this.areaHeight - 514.29) {
 				this.pos.y = 68.57 + this.radius;
 				this.oldWorld = this.world;
 				let currentWorldIndex = map[this.world].index;
@@ -1031,7 +1043,7 @@ class Player {
     }
 	}
 ability(delta, enemies, projectiles) {
-	if(this.world == "Central Crossing"){
+	if(this.world == "Central Crossing" || this.world == "Strenuous Survival"){
 		this.invincibilityTimer -= delta;
 		this.radius = 17.14;
 		if(this.invincibilityTimer > 0){
@@ -1895,29 +1907,29 @@ ability(delta, enemies, projectiles) {
 					this.web = null;
 				}
 			}
-      if (this.web != null){
-        this.energy -= delta/1000 * 10;
-        if (this.energy < 0){
-          this.energy = 0;
-          this.web.killed = true;
-          this.web = null;
-        }
-      }
-			if (this.dead) {
+			if (this.web != null){
+				this.energy -= delta/1000 * 10;
+			if (this.energy < 0){
+				this.energy = 0;
+				this.web.killed = true;
+				this.web = null;
+			}
+      	}
+		if (this.dead) {
+			if (this.web != null) {
+				this.web.killed = true;
+				this.web = null;
+			}
+		}
+		else {
+			if (this.z && !this.zLock && this.energy >= 10) {
+          		this.energy -= 10;
 				if (this.web != null) {
 					this.web.killed = true;
-					this.web = null;
 				}
+				this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius / 4, 0, 0, this.world, this.area, projectiles, this.id);
+				this.zLock = true;
 			}
-			else {
-				if (this.z && !this.zLock && this.energy >= 10) {
-          this.energy -= 10;
-					if (this.web != null) {
-						this.web.killed = true;
-					}
-					this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius / 4, 0, 0, this.world, this.area, projectiles, this.id);
-					this.zLock = true;
-				}
 				if (!this.z) {
 					this.zLock = false;
 				}

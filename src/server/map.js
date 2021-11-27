@@ -23,6 +23,7 @@ const { MAKE_YOUR_OWN_MAP } = require("./maps/make your own map");
 const { CENTRAL_CROSSING } = require("./maps/central crossing");
 const { TERRIFING_TRIALS } = require("./maps/terrifing trials");
 const { ARTIFICIAL_AMALGAMATION } = require("./maps/artificial amalgamation");
+const { STRENUOUS_SURVIVAL } = require("./maps/strenuous survival");
 
 const map = {
 "Corrupted Core": CORRUPTED_CORE,
@@ -45,6 +46,7 @@ const map = {
 "Central Crossing": CENTRAL_CROSSING,
 "Terrifing Trials": TERRIFING_TRIALS,
 "Artificial Amalgamation": ARTIFICIAL_AMALGAMATION,
+"Strenuous Survival": STRENUOUS_SURVIVAL,
 }
 
 module.exports = {

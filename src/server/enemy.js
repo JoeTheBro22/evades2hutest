@@ -92,11 +92,31 @@ class Enemy {
 		} else {
 			areaBoundaries.height = 514.29;
 		}
-		if (this.x == undefined) {
-			this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
-		}
-		if (this.y == undefined) {
-			this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
+		if(this.world != 'Strenuous Survival'){
+			if (this.x == undefined) {
+				this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
+			}
+			if (this.y == undefined) {
+				this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
+			}
+		} else {
+			if(Math.random() < 0.25){
+				//x
+				this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
+				this.y = this.radius + areaBoundaries.y;
+			} else if(Math.random() < 0.50){
+				//y
+				this.x = areaBoundaries.x + this.radius;
+				this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
+			} else if(Math.random() < 0.75){
+				//x shifted y
+				this.x = areaBoundaries.x - this.radius + areaBoundaries.width;
+				this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
+			} else{
+				//y shifted x
+				this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
+				this.y = -this.radius + areaBoundaries.y + areaBoundaries.height;
+			}
 		}
 		this.baseX = this.x;
 		this.baseY = this.y;
@@ -136,6 +156,9 @@ class Enemy {
 		this.disabled = false;
 		if (this.type == "turning") {
 			this.turnDir = this.speed / 150 / 30;
+		}
+		if (this.type == "accelerating") {
+			this.deadTime = 1000;
 		}
 		if (this.type == "radiating_bullets") {
 			this.type = "octo";
@@ -549,7 +572,7 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'accelerating', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
 				this.x += this.vx * this.speed * delta;
 				this.y += this.vy * this.speed * delta;
 			}
@@ -1048,6 +1071,9 @@ class Enemy {
 				this.vx = Math.cos(this.angle);
 				this.vy = Math.sin(this.angle);
 			}
+			if(this.type == 'accelerating'){
+				this.vx += 0.0001*delta;
+			}
 			if (this.type == "ultraspiral") {
 				this.angle = Math.atan2(this.vy, this.vx);
 				this.timer++;
@@ -1471,7 +1497,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
+			if (['normal', 'accelerating', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;
