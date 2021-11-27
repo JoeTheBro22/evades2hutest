@@ -437,7 +437,6 @@ wss.on("connection", ws => {
 
 		//Player initialization (Client hit hero Play button)
 		if (d.begin) {
-			player.inGame = true;
 			player.name = d.begin;
 
 			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd" && d.hero != "necromancer") {
@@ -449,6 +448,7 @@ wss.on("connection", ws => {
 		}
 		//Player initialization (Client hit totem Play button)
 		if(d.totem){
+			player.inGame = true;
 			player.mouseOn = false;
 			if(d.totem != undefined){
 				player.totem = d.totem;

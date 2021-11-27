@@ -954,7 +954,7 @@ class Player {
 		}
 		if (this.pos.x - this.radius < 342.86 && this.area == 1) {
 			//If area is one and it can collide with teleporters to switch world: (will need to change this when new worlds come into play)
-			if (this.pos.y - this.radius + this.areaHeight - 514.29 < 68.57) {//
+			if (this.pos.y - this.radius < 68.57) {
 				this.pos.y = 445.72 - this.radius;
 				this.oldWorld = this.world;
 				let currentWorldIndex = map[this.world].index;
@@ -968,6 +968,25 @@ class Player {
 				}
 				if (this.world == this.oldWorld) {
 					this.world = "Corrupted Core";
+				}
+
+				if(map[this.world].width !== undefined){
+					this.areaWidth = map[this.world].width[this.area-1];
+				}
+				if(this.areaWidth === undefined){
+					this.areaWidth = map[this.world].width[map[this.world].width.length - 1];
+					if (this.areaWidth === undefined){
+						this.areaWidth = 3085.74;
+					}
+				}
+				if(map[this.world].height !== undefined){
+					this.areaHeight = map[this.world].height[this.area-1];
+				}
+				if(this.areaHeight === undefined){
+					this.areaHeight = map[this.world].height[map[this.world].height.length - 1];
+					if (this.areaHeight === undefined){
+						this.areaHeight = 514.29;
+					}
 				}
 
 			} else if (this.pos.y + this.radius - this.area > 445.72 + this.areaHeight - 514.29) {

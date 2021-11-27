@@ -2463,7 +2463,7 @@ function init(hero) {
 
   menu.style.display = "none";
   join.style.display = "none";
-  game.style.display = "";
+  game.style.display = "none";
   totemJoin.style.display = "";
   inGame = false;
   ws.send(msgpack.encode({ begin: name, hero: hero }))
