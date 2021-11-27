@@ -1055,7 +1055,7 @@ function mainLoop() {
 					}
 				  } else if (players[i].newtonian == false) {
 					if (players[i].inGame && players[i].op != true && players[i].harden == false) {
-					  if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps.amount <= 0) {
+					  if (enemy.x !== undefined && enemy.y !== undefined && Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + players[i].clay * 2 + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false && players[i].warps.amount <= 0) {
 						// THIS IS FPS RELIANT IF SERVER FPS IS CHANGED MUST CHNAGE THIS PART (DONT DELETE)
 						if (Math.sqrt((enemy.x - enemy.lastx) ** 2 + (enemy.y - enemy.lasty) ** 2) / (delta / 30) > 7 || enemy.radius > Math.sqrt(3) * 17) {
 						  if (players[i].invincible == false) {
