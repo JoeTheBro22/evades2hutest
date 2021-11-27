@@ -1422,6 +1422,10 @@ function renderGame() {
           ctx.fillStyle = "rgb(255,0,0)";
         }
         ctx.fillText(player.name, player.renderX + playerOffset.x, player.renderY - 35 + playerOffset.y);
+        if(player.world == 'Strenuous Survival' && Math.floor(player.survivalTimer) > 0){
+          ctx.fillStyle = "#5c5c5c";
+          ctx.fillText('Score: ' + (Math.floor(player.survivalTimer)), player.renderX + playerOffset.x, player.renderY - 50 + playerOffset.y);
+        }
         ctx.globalAlpha = 1;
         ctx.lineWidth = 1;
         ctx.strokeStyle = "darkblue";
