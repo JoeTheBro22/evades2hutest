@@ -2829,6 +2829,20 @@ fortDiv.onclick = () => {
 
 totemServerList.appendChild(fortDiv);
 
+const projDiv = document.createElement("div");
+
+projDiv.effect = "archery";
+projDiv.classList.add('heroBox');
+projDiv.innerText = `Totem of Archery
+This totem grants a 15% increase in both speed and size of projectiles created by the player for the entirety of the run.
+`;
+projDiv.classList.add('projDiv');
+projDiv.onclick = () => {
+  initTotem("archery");
+}
+
+totemServerList.appendChild(projDiv);
+
 const gameDiv = document.createElement("div");
 
 gameDiv.effect = "game";

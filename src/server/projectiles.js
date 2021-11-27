@@ -444,8 +444,14 @@ class Projectile {
 					this.killed = true;
 					break;
 				}
-				let speed = 8 + parent.area/10;
-				if (parent.guardAlertTimer > 0) speed = 50;
+				let speed = 0;
+				if(parent.totem == 'archery'){
+					speed = 8*1.15 + parent.area/10*1.15;
+					if (parent.guardAlertTimer > 0) speed = 50*1.15;
+				} else {
+					speed = 8 + parent.area/10;
+					if (parent.guardAlertTimer > 0) speed = 50;
+				}
 				this.angle = (this.angle + speed * delta / 45) % 360;
 				var pos;
 				pos = circular_move(parent.pos.x, parent.pos.y, parent.oradius, this.angle);
@@ -526,11 +532,20 @@ class Projectile {
 					break;
 				}
 				let speed = 0;
-				if (parent.guardAlertTimer > 0){
-					speed = 16;
-					this.radius = 80 + parent.clay*10;
+				if(parent.totem == 'archery'){
+					if (parent.guardAlertTimer > 0){
+						speed = 16*1.15;
+						this.radius = 80*1.15 + parent.clay*10*1.15;
+					} else {
+						this.radius = 60*1.15;
+					}
 				} else {
-					this.radius = 60;
+					if (parent.guardAlertTimer > 0){
+						speed = 16;
+						this.radius = 80 + parent.clay*10;
+					} else {
+						this.radius = 60;
+					}
 				}
 				this.guardAlertTimer = parent.guardAlertTimer;
 				this.angle = (this.angle + speed * delta / 45) % 360;

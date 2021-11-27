@@ -1391,9 +1391,15 @@ ability(delta, enemies, projectiles) {
 					if (this.mouseOn == true) {
 						angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 					}
-					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle+20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
-					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
-					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle-20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					if(this.totem == 'archery'){
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32*1.15, 27*1.15, ((angle+20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32*1.15, 27*1.15, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32*1.15, 27*1.15, ((angle-20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					} else {
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle+20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 32, 27, ((angle-20) * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					}
 				}
 				if (this.x && this.ability2cooldown < 0 && this.energy >= 15) {
           this.energy -= 15;
@@ -1448,7 +1454,11 @@ ability(delta, enemies, projectiles) {
 					if (this.mouseOn == true) {
 						latcherAngle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 					}
-					createProjectile(this.pos.x, this.pos.y, "wallLatcher", 22, 20, (latcherAngle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					if(this.totem == 'archery'){
+						createProjectile(this.pos.x, this.pos.y, "wallLatcher", 22*1.15, 20*1.15, (latcherAngle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					} else {
+						createProjectile(this.pos.x, this.pos.y, "wallLatcher", 22, 20, (latcherAngle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					}
 				}
 				if (this.x && this.ability2cooldown <= 0 && this.dead == false && this.energy >= 10) {
 					this.energy -= 10;
@@ -1551,7 +1561,11 @@ ability(delta, enemies, projectiles) {
 							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (330 * Math.PI / 180), this.world, this.area, projectiles, this.id);
 							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (360 * Math.PI / 180), this.world, this.area, projectiles, this.id);
 						} else {
-							createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							if(this.totem == 'archery'){
+								createProjectile(this.pos.x, this.pos.y, "enemypusher", 18*1.15, 32*1.15, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							} else {
+								createProjectile(this.pos.x, this.pos.y, "enemypusher", 18, 32, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+							}
 						}
 					} else {
 						this.intervalTimer--;
@@ -1659,7 +1673,11 @@ ability(delta, enemies, projectiles) {
 					if (this.mouseOn == true) {
 						angle = Math.atan2(this.lastvy, this.lastvx) * 180 / Math.PI;
 					}
-					createProjectile(this.pos.x, this.pos.y, "kindleBomb", 22, 20, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					if(this.totem == 'archery'){
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 22*1.15, 20*1.15, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					} else {
+						createProjectile(this.pos.x, this.pos.y, "kindleBomb", 22, 20, (angle * Math.PI / 180), this.world, this.area, projectiles, this.id);
+					}
 				} else if(randomAbilityNumber <= 7){
 					// Neuid
 					this.newtonian = !this.newtonian;
@@ -1875,9 +1893,15 @@ ability(delta, enemies, projectiles) {
 			if(this.z && this.ability1cooldown <= 0 && this.dead == false && this.energy > 10){
 				this.ability1cooldown = 1750; // maybe we could disable enemies for like 10 sec for a "held" timer and then add them to a list for use in the 2nd ability :D
 				this.energy -= 10;
-				this.guards.push(createProjectile(this.pos.x+80, this.pos.y+80, "hook", 3, 10, (0 * Math.PI / 180), this.world, this.area, projectiles, this.id));
-				this.guards.push(createProjectile(this.pos.x-80, this.pos.y+80, "hook", 3, 10, (120 * Math.PI / 180), this.world, this.area, projectiles, this.id));
-				this.guards.push(createProjectile(this.pos.x, this.pos.y-80, "hook", 3, 10, (240 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+				if(this.totem == 'archery'){
+					this.guards.push(createProjectile(this.pos.x+80, this.pos.y+80, "hook", 4, 12, (0 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x-80, this.pos.y+80, "hook", 4, 12, (120 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y-80, "hook", 4, 12, (240 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+				} else {
+					this.guards.push(createProjectile(this.pos.x+80, this.pos.y+80, "hook", 3, 10, (0 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x-80, this.pos.y+80, "hook", 3, 10, (120 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+					this.guards.push(createProjectile(this.pos.x, this.pos.y-80, "hook", 3, 10, (240 * Math.PI / 180), this.world, this.area, projectiles, this.id));
+				}
 			}
 			if(this.x && this.ability2cooldown <= 0 && this.dead == false && this.enemiesTaken.length > 0){ // && this.necromanced.length > 0
 				this.ability2cooldown = 8500;
@@ -1946,7 +1970,11 @@ ability(delta, enemies, projectiles) {
 				if (this.web != null) {
 					this.web.killed = true;
 				}
-				this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius / 4, 0, 0, this.world, this.area, projectiles, this.id);
+				if(this.totem == 'archery'){
+					this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius*2, 0, 0, this.world, this.area, projectiles, this.id);
+				} else {
+					this.web = createProjectile(this.pos.x, this.pos.y, "web", this.radius*2, 0, 0, this.world, this.area, projectiles, this.id);
+				}
 				this.zLock = true;
 			}
 				if (!this.z) {
@@ -2014,8 +2042,13 @@ ability(delta, enemies, projectiles) {
 				const spawnInFront = 100; // how much it spawns in front
 				// speed property will be how far it is from player
 				this.portalCharge = Math.min(Math.max(this.portalCharge, 10000), 30000);
-				this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, spawnInFront, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
-				this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, (this.portalCharge / 1000 - 10) * 15 + spawnInFront + 200, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+				if(this.totem == 'archery'){
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30*1.15, spawnInFront, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30*1.15, (this.portalCharge / 1000 - 10) * 15 * 1.5 + spawnInFront * 1.5 + 200 * 1.5, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+				} else {
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, spawnInFront, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+					this.portals.push(createProjectile(this.pos.x, this.pos.y, "portal", 30, (this.portalCharge / 1000 - 10) * 15 + spawnInFront + 200, angle * Math.PI / 180, this.world, this.area, projectiles, this.id));
+				}
 
 				this.portalCharge = 0;
 			}
@@ -2023,7 +2056,11 @@ ability(delta, enemies, projectiles) {
         this.energy -= 20;
 				for (let portal of this.portals) {
 					portal.killed = true;
-					createProjectile(portal.x, portal.y, "portalBomb", 30, 0, 0, this.world, this.area, projectiles, this.id)
+					if(this.totem == 'archery'){
+						createProjectile(portal.x, portal.y, "portalBomb", 30*1.5, 0, 0, this.world, this.area, projectiles, this.id);
+					} else {
+						createProjectile(portal.x, portal.y, "portalBomb", 30*1.5, 0, 0, this.world, this.area, projectiles, this.id);
+					}
 				}
 				this.portals = [];
 
@@ -2041,7 +2078,11 @@ ability(delta, enemies, projectiles) {
       if (this.ability1cooldown < 0 && this.z && this.energy >= 15){
         this.energy -= 15;
         this.ability1cooldown = 5000;
-        this.turrets.push(createProjectile(this.pos.x, this.pos.y, "turr", this.radius * 2, 0, 0, this.world, this.area, projectiles, this.id));
+		if(this.totem == 'archery'){
+			this.turrets.push(createProjectile(this.pos.x, this.pos.y, "turr", this.radius * 2*1.15, 0, 0, this.world, this.area, projectiles, this.id));
+		} else {
+			this.turrets.push(createProjectile(this.pos.x, this.pos.y, "turr", this.radius * 2*1.15, 0, 0, this.world, this.area, projectiles, this.id));
+		}
       }
       if (this.x && this.energy >= 40 && this.xLock == false){
         this.xLock = true;

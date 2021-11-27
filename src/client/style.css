@@ -568,6 +568,24 @@ canvas {
   z-index: 1;
 }
 
+.projDiv {
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+  background-color: #35827c;
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgb(20, 20, 20);
+  color: rgb(200, 200, 200);
+  overflow: hidden;
+}
+.projDiv:hover {
+  bottom: auto;
+  overflow: visible;
+  z-index: 1;
+}
+
 .permanent:hover {
   background-color: rgb(35, 35, 35);
 }
