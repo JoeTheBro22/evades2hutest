@@ -491,6 +491,11 @@ function renderGame() {
           ctx.fillRect(canvas.width - 200, canvas.height - 10, 175*player.ability2cooldown/1000, 10);
         }
       }
+      if (player.hero == "auto") {
+        ctx.fillStyle = "rgb(128,128,128)";
+        ctx.fillText("Auto", canvas.width - 110, canvas.height - 140);
+        ctx.strokeText("Auto", canvas.width - 110, canvas.height - 140);
+      }
       if (player.hero == "pro hero xd") {
         ctx.fillStyle = "#0c0e4a";
         ctx.fillText("pro hero xd", canvas.width - 110, canvas.height - 140);
@@ -2775,6 +2780,18 @@ necroDiv.onclick = () => {
   init('necromancer');
 }
 serverList.appendChild(necroDiv);
+
+/*const autoDiv = document.createElement("div");
+autoDiv.hero = "auto";
+autoDiv.classList.add(`heroBox`);
+autoDiv.innerText = `Auto
+Auto navigates levels by itself using AI`;
+
+autoDiv.classList.add('autoDiv');
+autoDiv.onclick = () => {
+  init('auto');
+}
+serverList.appendChild(autoDiv);*/
 
 const secretDiv = document.createElement("div");
 secretDiv.hero = "???";

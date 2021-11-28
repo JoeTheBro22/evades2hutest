@@ -439,7 +439,7 @@ wss.on("connection", ws => {
 		if (d.begin) {
 			player.name = d.begin;
 
-			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd" && d.hero != "necromancer") {
+			if (d.hero != "magmax" && d.hero != "rameses" && d.hero != "parvulus" && d.hero != "ptah" && d.hero != "jotunn" && d.hero != "kindle" && d.hero != "neuid" && d.hero != "orbital" && d.hero != "cimex" && d.hero != "janus" && d.hero != "turr" && d.hero != "gunslinger"&& d.hero != "warper"&& d.hero != "thornstick"&& d.hero != "flylie" && d.hero != "???" && d.hero != "rogue"  && d.hero != "zenith" && d.hero != "pro hero xd" && d.hero != "necromancer" && d.hero != "auto") {
 				d.hero = "magmax";
 			}
 			player.hero = d.hero;
@@ -706,8 +706,8 @@ function mainLoop() {
 				}
 
 				let typesArray = ['normal', 'homing', 'tired', 'accelerating', 'accelerating', 'dasher', 'slower', 'disabler', 'immunetoxic', 'wavy', 'oscillating', 'eviljumper', 'soldier', 'jumper', 'immune', 'creeper', 'icicle', 'warp'];
-				let expandedTypesArray = ['normal', 'warp', 'transangle', 'slower', 'lag', 'spiral', 'ultraspiral', 'amogus', 'tornado', 'oscillating', 
-				'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch',
+				let expandedTypesArray = ['normal', 'warp', 'transangle', 'slower', 'lag', 'spiral', 'ultraspiral', 'amogus', 'oscillating', 
+				'megafreezing', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch',
 				'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'slippery', 'zigzag', 'pull',
 				'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'lifeswitcher',
 				'toxic', 'immunetoxic', 'tired', 'icicle', 'scared', 'soldier', 'creeper', 'wall', 'dasher', 'wallsprayer', 'frog', 
@@ -1120,12 +1120,13 @@ function mainLoop() {
 						players[i].warps.amount--;
 					}
 				} else {
-					if(enemy.friend < 0){
+					if(enemy.friend < 0 /*&& !(players[i].hero == 'auto' && enemy.type == 'wall')*/){
 						if (players[i].inGame && players[i].op != true && players[i].harden == false) {
 							if (Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2) < players[i].radius + enemy.radius && enemy.shattered < 0 && players[i].retaliating != true && enemy.dead == false) {
 								if (players[i].invincible == false) {
 								players[i].dead = true;
 								players[i].deadChanged = true;
+								//console.log(enemy);
 								} else {
 								if(enemy.corrosive == false){
 									players[i].bandage = false;
@@ -1157,6 +1158,45 @@ function mainLoop() {
 			  	}
           	  }
         	}
+
+			
+			/*for(let i in players){
+				if(players[i].hero == 'auto' && players[i].world != 'Central Crossing' && players[i].world != 'Strenuous Survival' && !players[i].dead){
+					let closestDist = 0.8;
+					for (let enemy of area){
+						if(Math.abs(enemy.x - players[i].pos.x) < 300 && Math.abs(enemy.y - players[i].pos.y) < 300 && !enemy.dead && enemy.type != 'wall'){
+							let rawDistance = 1/(Math.sqrt((players[i].pos.x - enemy.x) ** 2 + (players[i].pos.y - enemy.y) ** 2));
+							let amountToPushX = 0;
+							let amountToPushY = 0;
+							if(players[i].pos.x - enemy.x > 0){
+								amountToPushX = rawDistance;
+							} else {
+								amountToPushX = -rawDistance;
+							}
+
+							if(players[i].pos.y - enemy.y > 0){
+								amountToPushY = rawDistance;
+							} else {
+								amountToPushY = -rawDistance;
+							}
+							
+							players[i].pos.x += amountToPushX**2*100000;
+							players[i].pos.y -= amountToPushY**2*100000;
+							//if(Math.sqrt((enemy.x - players[i].pos.x)**2 + (enemy.y - players[i].pos.y)**2) < players[i].radius + enemy.radius + enemy.speed+50){// <- is where enemy will be
+								//if(Math.abs(Math.atan2(players[i].pos.y - enemy.y, players[i].pos.x - enemy.x) - Math.atan2(enemy.y - enemy.lasty, enemy.x - enemy.lastx)) < 1/2*Math.PI){ // Player and enemy are within 90 degrees of each other
+									//players[i].pos.x += enemy.vx*20;
+									//players[i].pos.y += enemy.vy*20;
+								//}
+								//players[i].xChanged = true;
+								//players[i].yChanged = true;
+							//}
+						}
+					}
+					//players[i].pos.x+=Math.min(closestDist/10,0.08);
+					players[i].xChanged = true;
+					players[i].yChanged = true;
+				}
+			}*/
       	}
     }
 }
