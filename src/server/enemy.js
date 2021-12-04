@@ -82,6 +82,10 @@ class Enemy {
 		this.friend = -1000;
 		this.decay = 0;
 		this.dwindleFactor = 1;
+		this.radiusMult = 0;
+		this.lightAffected = false;
+		this.speedMultBuff = false;
+		this.speedAffected = false;
 		if (map[this.world].width !== undefined){
 			areaBoundaries.width = map[this.world].width[this.area-1];
 		} else {
@@ -175,7 +179,9 @@ class Enemy {
 		this.ignitedTimer = 0;
 		if (this.type == "tornado" || this.type == "slower" || this.type == "megafreezing" || this.type == "invert" || this.type == "disabler" || this.type == "immunedisabler" || this.type == "draining" || this.type == "slippery" || this.type == "pull" || this.type == "push" || this.type == "immunepull" || this.type == "immunepush" || this.type == "spinner") {
 			this.aura = 160;
-		} else if (this.type == "freezing" || this.type == "subzero" || this.type == "megaDraining" || this.type == "immunefreezing") {
+		} else if(this.type == "light" || this.type == 'enemySpeed'){
+			this.aura = 130;
+		}else if (this.type == "freezing" || this.type == "subzero" || this.type == "megaDraining" || this.type == "immunefreezing") {
 			this.aura = 100;
     } else if (this.type == "nebula") {
       this.aura = 200;
@@ -387,7 +393,14 @@ class Enemy {
 		this.disabled = false;
 		this.type = this.baseType;
 		if (this.type != "sizing" && this.type != 'expanding') {
-			this.radius = this.baseRadius;
+			this.radius = this.baseRadius + this.radiusMult;
+			if(this.radiusMult > 0){
+				this.radius = Math.max(this.baseRadius + this.radiusMult, 3);
+			}
+			if(!this.lightAffected){
+				this.radiusMult = 0;
+			}
+			this.lightAffected = false;
 		} else {
 			this.radius = this.sizingRadius;
 		}
@@ -572,9 +585,13 @@ class Enemy {
 					this.vy = 0;
 				}
 			}
-			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'accelerating', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
-				this.x += this.vx * this.speed * delta;
-				this.y += this.vy * this.speed * delta;
+			if (['normal', 'warp', 'cancer', 'trap', 'aaaa', 'wallsprayer', 'speeder', 'transangle', 'wipeu', 'wipeu2', 'sweepu', 'nut', 'slower', 'lag', 'spiral', 'ultraspiral', 'trolled', 'amogus', 'become', 'ok', 'lmao', 'tornado', 'oscillating', 'megafreezing', 'invert', 'jumper', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'draining', 'megaDraining', 'wavy', 'sizing', 'expanding', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'turning', 'accelerating', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'rain', 'push', 'evilsnake', 'eviljumper', 'immunefreezing', 'immunepull', 'immunepush', 'nebula', 'blackhole', 'enemySpeed', 'light', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
+				if(!this.speedAffected){
+					this.speedMultBuff = 0;
+				}
+				this.x += this.vx * this.speed * (1+this.speedMultBuff) * delta;
+				this.y += this.vy * this.speed * (1+this.speedMultBuff) * delta;
+				this.speedAffected = false;
 			}
 			if (this.type == "tired") {
 				this.stop -= baseDelta;
@@ -731,7 +748,7 @@ class Enemy {
 					}
 				}
 			}
-			if (['slower', 'tornado', 'megafreezing', 'invert', 'subzero', 'disabler', 'immunedisabler', 'draining', 'megaDraining', 'freezing', 'slippery', 'pull', 'push', 'immunefreezing', 'immunepush', 'immunepull', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
+			if (['slower', 'tornado', 'megafreezing', 'invert', 'subzero', 'disabler', 'immunedisabler', 'draining', 'megaDraining', 'freezing', 'slippery', 'pull', 'push', 'immunefreezing', 'immunepush', 'immunepull', 'blackhole', 'tpstart', 'light', 'enemySpeed', 'lifeswitcher', 'playershield', 'spinner'].includes(this.type)) {
 				for (let p of Object.keys(players)) {
 					const player = players[p];
 					if (player.area == this.area && player.world == this.world) {
@@ -1497,7 +1514,7 @@ class Enemy {
 					this.stop = 1000 + Math.random() * 500;
 				}
 			}
-			if (['normal', 'accelerating', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
+			if (['normal', 'accelerating', 'dasher', 'seizure', 'rotate', 'lag', 'homing', 'superhoming', 'tp', 'glitch', 'trap', 'aaaa', 'diagonal', 'wallsprayer', 'speeder', 'liquid', 'expanding', 'mine', 'frog', 'yeet', 'sideways', 'transangle', 'wipeu', 'wipeu2', 'nut', 'blind', 'sidestep', 'spiral', 'flappy', 'ultraspiral', 'trolled', 'amogus', 'become', 'B.A.L.L', 'ok', 'lmao', 'oscillating', 'tornado', 'slower', 'megafreezing', 'invert', 'tired', 'subzero', 'disabler', 'retracing', 'disabled', 'immune', 'immunedisabler', 'sniper', 'tpshooter', 'octo', 'offsetocto', 'switch', 'wavy', 'draining', 'megaDraining', 'sizing', 'freezing', 'ice sniper', 'regen sniper', 'speed sniper', 'slippery', 'zoning', 'zigzag', 'pull', 'snake', 'scared', 'sneaky', 'push', 'evilfrog', 'evilsnake', 'immunefreezing', 'nebula', 'immunepull', 'immunepush', 'blackhole', 'tpstart', 'enemySpeed', 'light', 'lifeswitcher', 'playershield', 'spinner', 'toxic', 'immunetoxic', 'pulse', 'mousepulse'].includes(this.type)) {
 				if (this.x - this.radius < areaBoundaries.x) {
 					this.x = areaBoundaries.x + this.radius;
 					this.vx *= -1;

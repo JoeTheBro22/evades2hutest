@@ -83,6 +83,9 @@ const enemies = {
 "Strenuous Survival": {
 
 },
+"Sneaky Speculation": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -141,6 +144,9 @@ const projectiles = {
 
 },
 "Strenuous Survival": {
+
+},
+"Sneaky Speculation": {
 
 },
 }
@@ -225,6 +231,10 @@ for (let i = 42; i--; i > 0) {
 for (let i = 2; i--; i > 0) {
 	enemies['Strenuous Survival'][i] = [];
 	projectiles['Strenuous Survival'][i] = [];
+}
+for (let i = 22; i--; i > 0) {
+	enemies['Sneaky Speculation'][i] = [];
+	projectiles['Sneaky Speculation'][i] = [];
 }
 
 const map = require("./map");
@@ -982,6 +992,31 @@ function mainLoop() {
         for (let enemy of area) {
           enemyIdsInUse.push(enemy.id);
           enemy.move(delta, players, area, projectiles);
+
+		if(enemy.type == 'light'){
+			if(enemy.radius > enemy.aura){
+				enemy.disableTime = 1000;
+			}
+			for(let affectedEnemy of area){
+				if(Math.sqrt((enemy.x - affectedEnemy.x) ** 2 + (enemy.y - affectedEnemy.y) ** 2) < enemy.radius + enemy.aura + affectedEnemy.radius && affectedEnemy != enemy){
+					affectedEnemy.radiusMult+=0.01;
+					affectedEnemy.lightAffected = true;
+				}
+			}
+		}
+
+		if(enemy.type == 'enemySpeed'){
+			for(let affectedEnemy of area){
+				if(Math.sqrt((enemy.x - affectedEnemy.x) ** 2 + (enemy.y - affectedEnemy.y) ** 2) < enemy.radius + enemy.aura + affectedEnemy.radius && affectedEnemy != enemy){
+					if(affectedEnemy.speedMultBuff < 40){
+						if(affectedEnemy.radius < 100){
+							affectedEnemy.speedMultBuff+=0.01;
+						}
+					}
+					affectedEnemy.speedAffected = true;
+				}
+			}
+		}
 
           for (let i in players) {
             //If same area

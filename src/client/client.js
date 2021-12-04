@@ -215,6 +215,7 @@ let arduousabyss = false;
 let centralcrossing = false;
 let strenuoussurvival = false;
 let terrifingtrials = false;
+let sneakyspeculation = false;
 
 toilsomeAreas = [
   "Desert 1-1", "Desert 1-2", "Desert 1-3", "Desert 1-4",
@@ -294,6 +295,7 @@ function renderGame() {
   centralcrossing = false;
   strenuoussurvival = false;
   terrifingtrials = false;
+  sneakyspeculation = false;
 
   for (let i in players) {
     players[i].interp(delt);
@@ -367,6 +369,8 @@ function renderGame() {
         ctx.fillStyle = "#3eed72";
       } else if (world == "Strange Space") {
         ctx.fillStyle = "#3338a3";
+      } else if (world == "Sneaky Speculation") {
+        ctx.fillStyle = "#6e6c65";
       } else if (world == "Tireless Trek") {
         ctx.fillStyle = "#a591a8";
       } else if (world == "Central Crossing") {
@@ -384,6 +388,8 @@ function renderGame() {
       }
 
       if(area % 40 == 1 && area != 1){
+        ctx.fillStyle = '#e0d897';
+      } else if(world == "Sneaky Speculation" && area % 30 == 1 && area != 1){
         ctx.fillStyle = '#e0d897';
       }
       ctx.fillRect(playerOffset.x, playerOffset.y, areaWidth + 960/1.4, 720 / 1.4 + areaHeight - 514.29);
@@ -952,6 +958,26 @@ function renderGame() {
           }
         }
       }
+      else if (player.world == "Sneaky Speculation") {
+        ctx.font = "22px 'Exo 2'";
+        sneakyspeculation = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Sneaky Speculation") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
       else if (player.world == "Tireless Trek") {
         ctx.font = "22px 'Exo 2'";
         tirelesstrek = true;
@@ -1260,8 +1286,10 @@ function renderGame() {
         if (player.area % 40 == 1 && player.area > 1) {
           ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
           ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
-        }
-        else {
+        } else if(player.area % 30 == 1 && player.area > 1 && player.world == 'Sneaky Speculation'){
+          ctx.strokeText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+          ctx.fillText(players[selfId].world + ': Area ' + player.area + " Victory!", canvas.width / 2, 40);
+        } else {
           if (player.area % 10 == 0) {
             ctx.strokeText(players[selfId].world + ': Area ' + player.area + " BOSS", canvas.width / 2, 40);
             ctx.fillText(players[selfId].world + ': Area ' + player.area + " BOSS", canvas.width / 2, 40);
@@ -1311,6 +1339,19 @@ function renderGame() {
         ctx.strokeStyle = "#04863e";
         ctx.strokeText("Use /goto to explore all 1200 areas!", canvas.width / 2, canvas.height - 40);
         ctx.fillText("Use /goto to explore all 1200 areas!", canvas.width / 2, canvas.height - 40);
+      }
+      if(player.world == 'Sneaky Speculation'){
+        if(player.area == 3){
+          ctx.fillStyle = "#0ed472";
+          ctx.strokeStyle = "#04863e";
+          ctx.strokeText("No, this is not a glitch. Figure it out.", canvas.width / 2, canvas.height - 40);
+          ctx.fillText("No, this is not a glitch. Figure it out.", canvas.width / 2, canvas.height - 40);
+        } else if(player.area == 20){
+          ctx.fillStyle = "#0ed472";
+          ctx.strokeStyle = "#04863e";
+          ctx.strokeText("Try speedrunning it!", canvas.width / 2, canvas.height - 40);
+          ctx.fillText("Try speedrunning it!", canvas.width / 2, canvas.height - 40);
+        }
       }
 
       //Minimap (scale 9.149, 7.346)
@@ -1612,6 +1653,32 @@ function renderGame() {
             ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
             worldCount++;
             strangespace = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
+  if (sneakyspeculation == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Sneaky Speculation") {
+          playerCount++;
+          if (sneakyspeculation == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            sneakyspeculation = true;
           }
           ctx.font = "18px 'Exo 2'";
           if (p.dead == false) {
@@ -2144,6 +2211,10 @@ function renderGame() {
         ctx.fillStyle = "#1aacbf";
       } else if (enemies[i].type == "tpstart") {
         ctx.fillStyle = "#4d1c4b";
+      } else if (enemies[i].type == "light") {
+        ctx.fillStyle = "#cccc00";
+      } else if (enemies[i].type == "enemySpeed") {
+        ctx.fillStyle = "#5d0096";
       } else if (enemies[i].type == "toxic") {
         ctx.fillStyle = "#0dff00";
       } else if(enemies[i].type == "immunetoxic"){
@@ -2425,6 +2496,17 @@ function renderGame() {
     } else {
       delete projectiles[projectiles[i].id]
     }
+  }
+
+  if(world == "Sneaky Speculation" && area > 10 && area != 31){
+    ctx.beginPath();
+    //(area-1)/30 is 0-1 when going thru 1-31
+    var grd = ctx.createRadialGradient(640, 360, 300-(area-1)/30*300, 640, 360, 800+500-(area-1)/30*500);
+    grd.addColorStop(0, "rgba(0,0,0,0)");
+    grd.addColorStop(1, "rgba(0,0,0," + (0.5+(area-1)/60) + ")");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, 1280, 720);
+    ctx.closePath();
   }
 
   if (state == "lose") {

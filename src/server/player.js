@@ -801,7 +801,37 @@ class Player {
           this.won = true;
 				}
 			}
-    } else if (this.world == "Corrupted Core" || this.world == "Central Crossing") {
+    } else if(this.world == 'Sneaky Speculation'){
+		if (this.area < 31) {
+			if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+				//GOes to the start of the next area (area is not victory)
+				this.pos.x = 69 + this.radius;
+				this.oldArea = this.area;
+				this.area++;
+				if(this.warpDebt >= 0){
+					if(this.warps.amount < 10){
+						if(this.hero == 'warper' || this.hero == '???'){
+							this.warps.amount++;
+						}
+					}
+				} else {
+					this.warpDebt++;
+				}
+				if (this.maxSpeedReached == false) {
+					this.speed += 1.5;
+					this.speedChanged = true;
+				}
+				this.maxEnergy += 4;
+				this.regen += 0.1;
+				this.teleported = true;
+			}
+		} else {
+			if (this.pos.x + this.radius > this.areaWidth + 617.15) {
+				//Reached the last area, stops at the wall (area is victory)
+	  			this.won = true;
+			}
+		}
+	} else if (this.world == "Corrupted Core" || this.world == "Central Crossing") {
 			if (this.area < 82) {
 				if (this.pos.x + this.radius > this.areaWidth + 617.15) {
 					//GOes to the start of the next area (area is not victory)
