@@ -2498,7 +2498,7 @@ function renderGame() {
     }
   }
 
-  if(world == "Sneaky Speculation" && area > 10 && area != 31){
+  if(world == "Sneaky Speculation" && area > 10 && area != 31){ // Drawing Gradient
     ctx.beginPath();
     //(area-1)/30 is 0-1 when going thru 1-31
     var grd = ctx.createRadialGradient(640, 360, 300-(area-1)/30*300, 640, 360, 800+500-(area-1)/30*500);
@@ -2507,7 +2507,7 @@ function renderGame() {
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, 1280, 720);
     ctx.closePath();
-  }
+  }//calamatous cavern (name for map w/ a lotta effects)
 
   if (state == "lose") {
     ctx.fillStyle = "#333333";
