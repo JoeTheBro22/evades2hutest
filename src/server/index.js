@@ -86,6 +86,9 @@ const enemies = {
 "Sneaky Speculation": {
 
 },
+"Calamatous Cavern": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -147,6 +150,9 @@ const projectiles = {
 
 },
 "Sneaky Speculation": {
+
+},
+"Calamatous Cavern": {
 
 },
 }
@@ -235,6 +241,10 @@ for (let i = 2; i--; i > 0) {
 for (let i = 22; i--; i > 0) {
 	enemies['Sneaky Speculation'][i] = [];
 	projectiles['Sneaky Speculation'][i] = [];
+}
+for (let i = 42; i--; i > 0) {
+	enemies['Calamatous Cavern'][i] = [];
+	projectiles['Calamatous Cavern'][i] = [];
 }
 
 const map = require("./map");
@@ -674,14 +684,14 @@ function mainLoop() {
 						enemies[players[i].world][players[i].area] = [];
 					}
 					
-					for (let k = 0; k < players[i].addEnemy.count; k++) {
-						let id = findFreeIds();
-						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
-						enemies[players[i].world][players[i].area].push(newEnemy);
-						enemyIdsInUse.push(id);
-
-						//Push to object
-						for (let j in players) {
+					
+					for (let j in players) {
+							for (let k = 0; k < players[i].addEnemy.count; k++) {
+							let id = findFreeIds();
+							let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null})
+							enemies[players[i].world][players[i].area].push(newEnemy);
+							enemyIdsInUse.push(id);
+							//Push to object
 							if (players[j].inGame) {
 								players[j].enemyInitPack.push(newEnemy.getInitPack());
 							}
@@ -741,7 +751,7 @@ function mainLoop() {
 					for (let j in players) {
 						if(players[j].world == 'Strenuous Survival' && players[j].area == 2){
 							//Push to object
-							players[j].enemyInitPack.push(newEnemy.getInitPack());
+							players[j].enemyInitPack.push(newEnemy.getInitPack()); 
 						}
 					}
 				}
@@ -815,13 +825,13 @@ function mainLoop() {
 						enemies[players[i].world][players[i].area] = [];
 					}
 							
-					for (let k = 0; k < players[i].addEnemy.count; k++) {
-						let id = findFreeIds();
-						let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
-						enemies[players[i].world][players[i].area].push(newEnemy);
-						enemyIdsInUse.push(id);
-
-						for (let j in players) {
+					
+					for (let j in players) {
+						for (let k = 0; k < players[i].addEnemy.count; k++) {
+							let id = findFreeIds();
+							let newEnemy = new Enemy({ type: players[i].addEnemy.type, radius: players[i].addEnemy.radius, speed: players[i].addEnemy.speed, world: players[i].world, area: players[i].area, id: id, count: players[i].addEnemy.count, index: k, path: null, maxTimer: null, minTimer: null, definiteOffset: null, randomOffset: null })
+							enemies[players[i].world][players[i].area].push(newEnemy);
+							enemyIdsInUse.push(id);
 							if (players[j].inGame && players[j].addEnemy.state && players[j].world == players[i].world && players[j].area == players[i].area) {
 								//Push to object
 								players[i].enemyInitPack.push(newEnemy.getInitPack());
@@ -917,7 +927,6 @@ function mainLoop() {
 								//Push to object
 								enemies[players[i].world][players[i].area].push(newEnemy);
 								enemyIdsInUse.push(id);
-
 								players[i].enemyInitPack.push(newEnemy.getInitPack());
 							}
 						}

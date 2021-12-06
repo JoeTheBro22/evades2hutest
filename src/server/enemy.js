@@ -89,20 +89,21 @@ class Enemy {
 		if (map[this.world].width !== undefined){
 			areaBoundaries.width = map[this.world].width[this.area-1];
 		} else {
-			areaBoundaries.width = 3085.74;
+			areaBoundaries.width = 3085.75;
 		}
 		if (map[this.world].height !== undefined){
 			areaBoundaries.height = map[this.world].height[this.area-1];
 		} else {
-			areaBoundaries.height = 514.29;
+			areaBoundaries.height = 514.3;
 		}
-		if(this.world != 'Strenuous Survival'){
-			if (this.x == undefined) {
-				this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
-			}
-			if (this.y == undefined) {
-				this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
-			}
+		if (this.x == undefined) {
+			this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
+		}
+		if (this.y == undefined) {
+			this.y = Math.random() * (areaBoundaries.height - this.radius) + areaBoundaries.y + this.radius;
+		}
+		/*if(this.world != 'Strenuous Survival'){
+			
 		} else {
 			if(Math.random() < 0.25){
 				//x
@@ -121,7 +122,7 @@ class Enemy {
 				this.x = Math.random() * (areaBoundaries.width - this.radius) + areaBoundaries.x + this.radius;
 				this.y = -this.radius + areaBoundaries.y + areaBoundaries.height;
 			}
-		}
+		}*/
 		this.baseX = this.x;
 		this.baseY = this.y;
 		this.toPush = false;

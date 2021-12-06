@@ -216,6 +216,7 @@ let centralcrossing = false;
 let strenuoussurvival = false;
 let terrifingtrials = false;
 let sneakyspeculation = false;
+let calamatouscavern = false;
 
 toilsomeAreas = [
   "Desert 1-1", "Desert 1-2", "Desert 1-3", "Desert 1-4",
@@ -296,6 +297,7 @@ function renderGame() {
   strenuoussurvival = false;
   terrifingtrials = false;
   sneakyspeculation = false;
+  calamatouscavern = false;
 
   for (let i in players) {
     players[i].interp(delt);
@@ -371,7 +373,9 @@ function renderGame() {
         ctx.fillStyle = "#3338a3";
       } else if (world == "Sneaky Speculation") {
         ctx.fillStyle = "#6e6c65";
-      } else if (world == "Tireless Trek") {
+      } else if(world == "Calamatous Cavern"){
+        ctx.fillStyle = "#3d362a";
+      }else if (world == "Tireless Trek") {
         ctx.fillStyle = "#a591a8";
       } else if (world == "Central Crossing") {
         ctx.fillStyle = "#21326b";
@@ -978,6 +982,26 @@ function renderGame() {
           }
         }
       }
+      else if (player.world == "Calamatous Cavern") {
+        ctx.font = "22px 'Exo 2'";
+        calamatouscavern = true;
+        for (let j in players) {
+          if (players[j].id != selfId) {
+            const p = players[j];
+
+            if (p.world == "Calamatous Cavern") {
+              playerCount++;
+              ctx.font = "18px 'Exo 2'";
+              if (p.dead == false) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+              } else {
+                ctx.fillStyle = "rgb(255,0,0)";
+              }
+              ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            }
+          }
+        }
+      }
       else if (player.world == "Tireless Trek") {
         ctx.font = "22px 'Exo 2'";
         tirelesstrek = true;
@@ -1353,6 +1377,13 @@ function renderGame() {
           ctx.fillText("Try speedrunning it!", canvas.width / 2, canvas.height - 40);
         }
       }
+      if(player.world == 'Make Your Own Map'){
+        ctx.fillStyle = "#0ed472";
+        ctx.strokeStyle = "#04863e";
+        ctx.font = "24px 'Exo 2'";
+        ctx.strokeText("Use /add [type] [speed] [radius] [amount]. For example, /add normal 10 12 32 22", canvas.width / 2, canvas.height - 40);
+        ctx.fillText("Use /add [type] [speed] [radius] [amount]. For example, /add normal 10 12 32 22", canvas.width / 2, canvas.height - 40);
+      }
 
       //Minimap (scale 9.149, 7.346)
       ctx.fillStyle = "rgba(100,100,100,0.1)";
@@ -1679,6 +1710,32 @@ function renderGame() {
             ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
             worldCount++;
             sneakyspeculation = true;
+          }
+          ctx.font = "18px 'Exo 2'";
+          if (p.dead == false) {
+            ctx.fillStyle = "rgb(0, 0, 0)";
+          } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+          }
+          ctx.fillText(p.name + " [" + p.area + "]", canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+        }
+      }
+    }
+  }
+  if (calamatouscavern == false) {
+    for (let j in players) {
+      if (players[j].id != selfId) {
+        const p = players[j];
+
+        if (p.world == "Calamatous Cavern") {
+          playerCount++;
+          if (calamatouscavern == false) {
+            ctx.font = "22px 'Exo 2'";
+            ctx.fillStyle = "white";
+            ctx.fillText(p.world, canvas.width - 110, 110 + (playerCount * 20) + (worldCount * 30));
+            ctx.fillText("_________", canvas.width - 110, 110 + (playerCount * 20) + 6 + (worldCount * 30));
+            worldCount++;
+            calamatouscavern = true;
           }
           ctx.font = "18px 'Exo 2'";
           if (p.dead == false) {
