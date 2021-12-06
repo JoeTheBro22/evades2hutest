@@ -374,7 +374,15 @@ function renderGame() {
       } else if (world == "Sneaky Speculation") {
         ctx.fillStyle = "#6e6c65";
       } else if(world == "Calamatous Cavern"){
-        ctx.fillStyle = "#3d362a";
+        if(area <= 10){
+          ctx.fillStyle = "#3d362a";
+        } else if(area <= 20){
+          ctx.fillStyle = "#1d691d";
+        } else if(area <= 30){
+          ctx.fillStyle = "#7bc2e0";
+        } else if(area <= 41){
+          ctx.fillStyle = "#720aa6";
+        }
       }else if (world == "Tireless Trek") {
         ctx.fillStyle = "#a591a8";
       } else if (world == "Central Crossing") {
