@@ -374,8 +374,10 @@ function renderGame() {
       } else if (world == "Sneaky Speculation") {
         ctx.fillStyle = "#6e6c65";
       } else if(world == "Calamatous Cavern"){
-        if(area <= 10){
-          ctx.fillStyle = "#3d362a";
+        if(area == 1){
+            ctx.fillStyle = "#3d362a";
+        } else if(area <= 10){
+          ctx.fillStyle = "rgba(61, 54, 42,"+(area/10)+")";
         } else if(area <= 20){
           ctx.fillStyle = "#1d691d";
         } else if(area <= 30){
@@ -1385,6 +1387,38 @@ function renderGame() {
           ctx.fillText("Try speedrunning it!", canvas.width / 2, canvas.height - 40);
         }
       }
+      if(player.world == 'Calamatous Cavern'){
+        ctx.fillStyle = "#0ed472";
+        ctx.strokeStyle = "#04863e";
+        let textToFill = '';
+        if(player.area == 31){
+          textToFill = "But all along ...";
+        } else if(player.area == 32){
+          textToFill = "... they were ...";
+        } else if(player.area == 33){
+          textToFill = "... trapped ...";
+        } else if(player.area == 34){
+          textToFill = "... waiting for someone ...";
+        } else if(player.area == 35){
+          textToFill = "... to set ...";
+        } else if(player.area == 36){
+          textToFill = "... them free.";
+        } else if(player.area == 37){
+          textToFill = "... You, traveler ...";
+        } else if(player.area == 38){
+          textToFill = "... have overcame the perils ...";
+        } else if(player.area == 39){
+          textToFill = "... and all along ...";
+        } else if(player.area == 40){
+          textToFill = "... awoke the beast.";
+        } else if(player.area == 41){
+          textToFill = "You will see next update ;)";
+        }
+        if(textToFill !== ''){
+          ctx.strokeText(textToFill, canvas.width / 2, canvas.height - 40);
+          ctx.fillText(textToFill, canvas.width / 2, canvas.height - 40);
+        }
+      }
       if(player.world == 'Make Your Own Map'){
         ctx.fillStyle = "#0ed472";
         ctx.strokeStyle = "#04863e";
@@ -2149,10 +2183,14 @@ function renderGame() {
       if (enemies[i].shattered <= 0) {
         ctx.lineWidth = 4;
         ctx.beginPath();
+        if(world == "Calamatous Cavern" && area > 20 && area <= 30){
+          ctx.globalAlpha = 1-Math.sqrt((enemies[i].renderX + playerOffset.x-640)/1280);
+        }
         ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
         ctx.strokeStyle = "rgb(0, 0, 0)";
         ctx.stroke();
         ctx.closePath();
+        ctx.globalAlpha = 1;
       }
       if(enemies[i].friend > 3000){
         ctx.fillStyle = "rgba(20,255,20,0.1)";
@@ -2334,8 +2372,36 @@ function renderGame() {
       }
       if (enemies[i].shattered <= 0) {
         ctx.beginPath();
+        if(world == "Calamatous Cavern" && area > 20 && area <= 30){
+          ctx.globalAlpha = 1-Math.sqrt((enemies[i].renderX + playerOffset.x-640)/1280);
+        }
         ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
         ctx.fill();
+        ctx.globalAlpha = 1;
+        if(world == "Calamatous Cavern"){
+          if(area <= 10){
+            ctx.fillStyle = "rgba(255,255,255,"+area/10*0.5+")";
+            ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius*1.5, 0, 6.28318531);
+            ctx.fill();
+          } else if(area <= 20){
+            ctx.globalAlpha = (area-10)/10*0.4;
+            ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius * (1 + (Date.now()/100)%3), 0, 6.28318531);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          } else if(area <= 30){
+            
+            //ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
+            //ctx.fill();
+            ctx.globalAlpha = 1;
+          } else if(area <= 41){
+            var grd = ctx.createRadialGradient(enemies[i].renderX + playerOffset.x,enemies[i].renderY + playerOffset.y, enemies[i].radius, enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y,enemies[i].radius*1.5+20);
+            grd.addColorStop(0, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",1)");
+            grd.addColorStop(1, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",0)");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0,0,1280, 720);
+            //fill a reverse vinette around all enemies (so it will b like avoid darkness & evil idk)
+          } 
+        }
       }
       else {
         let time = enemies[i].shattered;
