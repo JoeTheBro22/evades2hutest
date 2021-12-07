@@ -465,7 +465,7 @@ const CALAMATOUS_CAVERN = {//idea for this map is to alternate between crazy har
 	}],//vinette on enemies
   "32": [{
 		type: "immune",
-		amount: 184,
+		amount: 164,
 		radius: 1,
 		speed: 4
 	}],
@@ -482,9 +482,9 @@ const CALAMATOUS_CAVERN = {//idea for this map is to alternate between crazy har
 	}],
   "34": [{
     type: "snake",
-    amount: 62,
-    radius: 42,
-    speed: 5
+    amount: 32,
+    radius: 56,
+    speed: 6
   }],
   "35": [{
     type: "snake",
@@ -504,31 +504,31 @@ const CALAMATOUS_CAVERN = {//idea for this map is to alternate between crazy har
     speed: 9
   }],
   "37": [{
-    type: "warp",
-    amount: 48,
+    type: "slower",
+    amount: 42,
     radius: 20,
-    speed: 9
+    speed: 8
   }],
   "38": [{
     type: "snake",
-    amount: 22,
+    amount: 20,
     radius: 18,
     speed: 4
   }, {
     type: "oscillating",
-    amount: 22,
+    amount: 20,
     radius: 18,
     speed: 4
   }, {
     type: "slower",
-    amount: 22,
+    amount: 20,
     radius: 24,
-    speed: 6
+    speed: 5
   }, {
     type: "turning",
-    amount: 22,
+    amount: 20,
     radius: 24,
-    speed: 6
+    speed: 5
   }],
   "39": [{
     type: "snake",
@@ -542,16 +542,26 @@ const CALAMATOUS_CAVERN = {//idea for this map is to alternate between crazy har
     speed: 3
   }, {
     type: "megafreezing",
-    amount: 32,
+    amount: 24,
     radius: 48,
-    speed: 5
+    speed: 3
   }, {
     type: "turning",
     amount: 12,
     radius: 12,
     speed: 3
   }],
-  "40": [],
+  "40": [{
+    type: "sizing",
+    amount: 124,
+    radius: 6,
+    speed: 5
+  },{
+    type: "sizing",
+    amount: 4,
+    radius: 62,
+    speed: 9
+  }],
 }
 // additional effects ideas if we go to 80:
 // all enemies are rainbow colored (hides type)

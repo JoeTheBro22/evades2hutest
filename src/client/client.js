@@ -377,7 +377,7 @@ function renderGame() {
         if(area == 1){
             ctx.fillStyle = "#3d362a";
         } else if(area <= 10){
-          ctx.fillStyle = "rgba(61, 54, 42,"+(area/10)+")";
+          ctx.fillStyle = "rgba(" + (61-(61*(area/10))) + "," + (54-(54*(area/10))) + ","+ (42-(42*(area/10))) +",1)";//+((255-42)*(area/10))
         } else if(area <= 20){
           ctx.fillStyle = "#1d691d";
         } else if(area <= 30){
@@ -2186,7 +2186,9 @@ function renderGame() {
         if(world == "Calamatous Cavern" && area > 20 && area <= 30){
           ctx.globalAlpha = 1-Math.sqrt((enemies[i].renderX + playerOffset.x-640)/1280);
         }
-        ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
+        if(world != "Calamatous Cavern" || area <= 30){
+          ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
+        }
         ctx.strokeStyle = "rgb(0, 0, 0)";
         ctx.stroke();
         ctx.closePath();
@@ -2389,16 +2391,19 @@ function renderGame() {
             ctx.fill();
             ctx.globalAlpha = 1;
           } else if(area <= 30){
-            
-            //ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius, 0, 6.28318531);
-            //ctx.fill();
             ctx.globalAlpha = 1;
           } else if(area <= 41){
             var grd = ctx.createRadialGradient(enemies[i].renderX + playerOffset.x,enemies[i].renderY + playerOffset.y, enemies[i].radius, enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y,enemies[i].radius*1.5+20);
-            grd.addColorStop(0, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",1)");
+            if(Math.sqrt((enemies[i].renderX + playerOffset.x - 640)**2+(enemies[i].renderY + playerOffset.y - 360)**2) < enemies[i].radius + 100){
+              grd.addColorStop(0, "rgb(255,0,0)");
+            } else {
+              grd.addColorStop(0, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",1)");
+            }
+            
             grd.addColorStop(1, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",0)");
             ctx.fillStyle = grd;
             ctx.fillRect(0,0,1280, 720);
+            ctx.fillStyle = "rgba(0,0,0,0.3)"
             //fill a reverse vinette around all enemies (so it will b like avoid darkness & evil idk)
           } 
         }
