@@ -89,6 +89,9 @@ const enemies = {
 "Calamatous Cavern": {
 
 },
+"Him Him": {
+
+},
 }
 const projectiles = {
 "Corrupted Core": {
@@ -154,6 +157,8 @@ const projectiles = {
 },
 "Calamatous Cavern": {
 
+},
+"Him Him": {
 },
 }
 
@@ -245,6 +250,10 @@ for (let i = 22; i--; i > 0) {
 for (let i = 42; i--; i > 0) {
 	enemies['Calamatous Cavern'][i] = [];
 	projectiles['Calamatous Cavern'][i] = [];
+}
+for (let i = 88; i--; i > 0) {
+	enemies['Him Him'][i] = [];
+	projectiles['Him Him'][i] = [];
 }
 
 const map = require("./map");
