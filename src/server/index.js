@@ -259,6 +259,12 @@ let id = 1;
 //Ids for enemies
 let enemyId = 0;
 
+const rateLimits = {};
+
+setInterval(() => {
+	rateLimits = {};
+}, 1000)
+
 wss.on("connection", ws => {
 	ws.binaryType = "arraybuffer"
 
@@ -290,6 +296,9 @@ wss.on("connection", ws => {
 	})
 
 	ws.on('message', data => {
+		if(rateLimits[clientId] === undefined) rateLimits[clientId] = 0;
+		rateLimits[clientId]++;
+		if(rateLimits[clientId] > 200) return;
 		let d = msgpack.decode(new Uint8Array(data));
 
 		//Mouse on
