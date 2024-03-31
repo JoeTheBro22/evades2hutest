@@ -636,7 +636,7 @@ function findFreeIds(){
 }
 
 //Connection to server:
-const PORT = process.env.PORT || 6942;
+const PORT = 3000;//process.env.PORT || 6942;
 const server = app.listen(PORT);
 
 server.on('upgrade', (request, socket, head) => {
