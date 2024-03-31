@@ -259,7 +259,7 @@ let id = 1;
 //Ids for enemies
 let enemyId = 0;
 
-const rateLimits = {};
+let rateLimits = {};
 
 setInterval(() => {
 	rateLimits = {};
